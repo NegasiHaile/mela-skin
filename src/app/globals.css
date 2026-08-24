@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/*
+  Brand tokens.
+  The six `--color-ms-*` values below are the PRIMARY COLOURS as labelled in
+  "MELA SKIN - Visual Identity Branding Presentation.pdf" (p.6). Do not round
+  or substitute them. `cream` is the applied background sampled from the
+  social/letterhead artwork, which sits warmer than the ivory primary.
+*/
+@theme {
+  --color-ms-espresso: #31180a;
+  --color-ms-terracotta: #c6722c;
+  --color-ms-bronze: #8e714b;
+  --color-ms-sand: #d5c6af;
+  --color-ms-ivory: #fdfce8;
+
+  --color-ms-cocoa: #4a2308;
+  --color-ms-cream: #f3e7d6;
+  --color-ms-clay: #b57035;
+
+  /*
+    Both sampled from the brand artwork rather than invented: `paper` is the
+    deck's own page ground, `panel` the deep brown used behind reversed type.
+    The layout floats rounded cards on `paper`, so it is the one colour that
+    shows between every section.
+  */
+  --color-ms-paper: #f4efeb;
+  --color-ms-panel: #542b15;
+  --color-ms-shell: #fdfcf8;
+
+  /*
+    The signature field. Also from the artwork — it is the saturated middle of
+    the brand's dark-to-caramel gradient, and the one colour the immersive
+    sections are flooded with. Ivory sits on it at 8.8:1.
+  */
+  --color-ms-field: #74370c;
+
+  /*
+    Accent for text on the flooded sections. Taken from the monogram's gold
+    ramp. Clay and terracotta both collapse on the field (2.3:1 and 2.5:1) and
+    cannot carry small type there; this clears AA at 4.9:1 on the field and
+    9:1 on espresso. Clay stays the accent on light grounds only.
+  */
+  --color-ms-gold: #dcbc63;
+
+  /*
+    Terracotta darkened until small text clears WCAG AA on cream. The primary
+    #c6722c only reaches 2.97:1 there, so it is limited to fills, rules and
+    large type; this shade carries the 11px eyebrows at 5.6:1. On the espresso
+    sections the primary itself clears AA and is used directly.
+  */
+  --color-ms-terracotta-deep: #8f4713;
+
+  --font-display: var(--font-larken), Didot, "Bodoni MT", Georgia, serif;
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ms-shell);
+    color: var(--color-ms-espresso);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-ms-terracotta);
+    color: var(--color-ms-ivory);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ms-terracotta);
+    outline-offset: 3px;
+  }
+}
+
+/* The headline voice for the immersive direction: Larken caps, light, opened up. */
+@utility display-caps {
+  font-family: var(--font-display);
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+  line-height: 1.07;
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+/*
+  Paper grain. Keeps the large cream fields from reading as flat digital fill,
+  which is what the printed brand collateral does with uncoated stock.
+*/
+@utility grain {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Hide scrollbar on horizontal treatment rails while keeping scroll accessible. */
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Stationery note — snipped top-right & bottom-left corners, no radius. */
+@utility paper-notch {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 1.125rem) 0,
+    100% 1.125rem,
+    100% 100%,
+    1.125rem 100%,
+    0 calc(100% - 1.125rem)
+  );
+}
