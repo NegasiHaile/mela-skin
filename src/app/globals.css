@@ -139,3 +139,100 @@
     0 calc(100% - 1.125rem)
   );
 }
+
+/* ==========================================================================
+   Motion
+   Everything below is CSS-only on purpose. The page ships no client-side
+   JavaScript of our own (see README), so the hero rotation runs on keyframes
+   and the scroll reveals on scroll-driven timelines rather than on an observer.
+   ========================================================================== */
+
+/*
+  Hero slide transitions are driven in HeroFrames (client component).
+*/
+
+/*
+  Section reveals, driven by scroll position rather than by time.
+
+  Gated behind @supports so that a browser without scroll-driven animations
+  gets no animation at all and every element renders in its final state. That
+  is the whole fallback — there is no JS path for reveals, and an unsupported
+  browser must not be left with content stuck at opacity 0.
+
+  Ranges end inside `entry` rather than `cover` so that a block finishes
+  revealing as it comes into view. Blocks are always shorter than the viewport;
+  applying these to a full-height section would leave it mid-animation, because
+  a subject taller than the scrollport never completes its entry range.
+*/
+@keyframes ms-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* For images and panels: no travel, just a settle out of a slight overscale. */
+@keyframes ms-rise {
+  from {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media not (prefers-reduced-motion: reduce) {
+    .reveal,
+    .rise {
+      animation-timeline: view();
+      animation-fill-mode: both;
+      animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+      animation-range: entry 4% entry 58%;
+    }
+
+    .reveal {
+      animation-name: ms-reveal;
+    }
+
+    .rise {
+      animation-name: ms-rise;
+    }
+
+    /* Stagger by starting later in the same entry phase, not by delay —
+       time delays mean nothing on a scroll timeline. */
+    .reveal-d1 {
+      animation-range: entry 12% entry 66%;
+    }
+
+    .reveal-d2 {
+      animation-range: entry 20% entry 74%;
+    }
+
+    .reveal-d3 {
+      animation-range: entry 28% entry 82%;
+    }
+  }
+}
+
+/* ==========================================================================
+   Ornament
+   ========================================================================== */
+
+/* Gold hairline that fades out at both ends — the rule above section heads. */
+@utility hairline-gold {
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklab, var(--color-ms-gold) 55%, transparent),
+    transparent
+  );
+}
+

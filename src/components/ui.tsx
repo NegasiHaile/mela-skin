@@ -7,6 +7,12 @@ import { Sparkle } from "./brand/Marks";
  * gutters — the opposite of /editorial, which uses floating rounded panels.
  */
 
+/** Scroll-timeline stagger classes (`.reveal-d1`…`-d3`). Index 0 is unstaggered. */
+export function revealStagger(index: number): string {
+  if (index <= 0) return "";
+  return `reveal-d${Math.min(index, 3)}`;
+}
+
 export function Section({
   children,
   className,
@@ -50,32 +56,20 @@ export function Eyebrow({
 }
 
 export function SectionHead({
-  index,
-  label,
   title,
   tone = "light",
   className,
 }: {
-  index: string;
-  label: string;
   title: ReactNode;
   tone?: "light" | "dark";
   className?: string;
 }) {
-  const accent = tone === "dark" ? "text-ms-gold" : "text-ms-terracotta-deep";
-  const muted = tone === "dark" ? "text-ms-sand" : "text-ms-bronze";
-  const rule = tone === "dark" ? "bg-ms-sand/35" : "bg-ms-bronze/35";
   const head = tone === "dark" ? "text-ms-ivory" : "text-ms-cocoa";
 
   return (
     <div className={className}>
-      <div className="flex items-center gap-3.5">
-        <span className={`eyebrow ${accent}`}>{index}</span>
-        <span className={`h-px w-8 ${rule}`} aria-hidden="true" />
-        <span className={`eyebrow font-normal ${muted}`}>{label}</span>
-      </div>
       <h2
-        className={`display-caps mt-7 text-[clamp(2.15rem,4vw,3.5rem)] ${head}`}
+        className={`display-caps text-[clamp(2.15rem,4vw,3.5rem)] ${head}`}
       >
         {title}
       </h2>

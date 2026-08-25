@@ -1,5 +1,5 @@
 import { todo } from "@/lib/brand";
-import { SectionHead, Wrap } from "./ui";
+import { revealStagger, SectionHead, Wrap } from "./ui";
 
 /*
   The four beats here follow the patient journey the clinic set out for itself
@@ -34,15 +34,16 @@ export function Visit() {
     <section id="visit" className="bg-ms-shell py-24 lg:py-36">
       <Wrap>
         <SectionHead
-          index="03"
-          label="Your visit"
-          title="What actually happens, start to finish"
+          title="What actually happens on your visit"
           className="max-w-[640px]"
         />
 
         <ol className="mt-16 grid gap-x-14 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((step) => (
-            <li key={step.n} className="border-t border-ms-bronze/25 pt-7">
+          {STEPS.map((step, index) => (
+            <li
+              key={step.n}
+              className={`reveal ${revealStagger(index)} border-t border-ms-bronze/25 pt-7`}
+            >
               <span className="font-display text-[2.6rem] font-light leading-none text-ms-clay">
                 {step.n}
               </span>

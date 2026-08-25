@@ -34,6 +34,22 @@ export const brand = {
   },
 } as const;
 
+/** Portrait frames for the hero push-slider. Order = autoplay order. */
+export const heroSlides = [
+  {
+    src: "/images/hero.png",
+    alt: "Woman with radiant melanin-rich skin — the Mela Skin patient aesthetic",
+  },
+  {
+    src: "/images/pigmentation-melasma.png",
+    alt: "Melanin-rich skin with a calm, luminous finish",
+  },
+  {
+    src: "/images/acne-acne_scarring.png",
+    alt: "Clear, treated skin after dermatology care",
+  },
+] as const;
+
 /**
  * TODO — every value here is a placeholder. Each renders visibly bracketed on
  * the page so it cannot ship unnoticed. Replace with real information before

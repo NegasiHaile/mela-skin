@@ -1,5 +1,5 @@
 import { Sparkle } from "./brand/Marks";
-import { SectionHead, Wrap } from "./ui";
+import { revealStagger, SectionHead, Wrap } from "./ui";
 
 /*
   Deliberately empty quotes. The clinic has not opened, so there are no
@@ -27,11 +27,14 @@ export function Reviews() {
   return (
     <section id="reviews" className="bg-ms-shell py-24 lg:py-36">
       <Wrap>
-        <SectionHead index="06" label="Reviews" title="In their words" />
+        <SectionHead title="In their words" />
 
         <ul className="mt-16 grid gap-x-14 gap-y-12 lg:grid-cols-3">
-          {SLOTS.map((slot) => (
-            <li key={slot.hint} className="border-t border-ms-bronze/25 pt-7">
+          {SLOTS.map((slot, index) => (
+            <li
+              key={slot.hint}
+              className={`reveal ${revealStagger(index)} border-t border-ms-bronze/25 pt-7`}
+            >
               <Sparkle width={12} height={24} fill="url(#ms-gold)" />
               <p className="mt-6 font-display text-[20px] font-normal italic leading-[1.6] text-ms-espresso/80">
                 {slot.hint}

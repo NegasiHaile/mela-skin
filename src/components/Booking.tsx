@@ -41,7 +41,7 @@ function ContactForm() {
 
       <p className="eyebrow text-ms-gold">Write to us</p>
       <p className="mt-2 font-sans text-[14px] font-light text-ms-sand">
-        We reply within one working day.
+        We reply within hours.
       </p>
 
       <div className="mt-7 grid gap-5 sm:grid-cols-2">
@@ -142,7 +142,7 @@ export function Booking() {
 
       <Wrap className="relative py-20 lg:py-28">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-          <div>
+          <div className="reveal">
             <p className="eyebrow text-ms-gold">Contact</p>
             <h2 className="display-caps mt-5 max-w-[14ch] text-[clamp(2.1rem,4vw,3.2rem)] text-ms-ivory">
               Book a consultation

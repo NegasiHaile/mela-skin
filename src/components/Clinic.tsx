@@ -16,7 +16,7 @@ export function Clinician() {
     <section id="clinic" className="bg-ms-field py-24 lg:py-32">
       <Wrap>
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
-          <div className="relative h-[440px] w-full overflow-hidden lg:col-span-5 lg:h-[600px]">
+          <div className="rise relative h-[440px] w-full overflow-hidden ring-1 ring-ms-gold/25 lg:col-span-5 lg:h-[600px]">
             <Image
               src="/images/dermatologist.png"
               alt="The lead clinician at Mela Skin"
@@ -27,18 +27,13 @@ export function Clinician() {
           </div>
 
           <div className="lg:col-span-6 lg:col-start-7">
-            <SectionHead
-              index="04"
-              label="Who you'll see"
-              tone="dark"
-              title={todo.clinicianName}
-            />
+            <SectionHead tone="dark" title={todo.clinicianName} />
 
-            <p className="eyebrow mt-5 font-normal text-ms-gold">
+            <p className="reveal reveal-d1 eyebrow mt-5 font-normal text-ms-gold">
               {todo.clinicianRole} &nbsp;&middot;&nbsp; {todo.clinicianReg}
             </p>
 
-            <p className="mt-8 font-sans text-[17px] font-light leading-[1.85] text-ms-cream/80">
+            <p className="reveal reveal-d1 mt-8 font-sans text-[17px] font-light leading-[1.85] text-ms-cream/80">
               [Two or three sentences: where they trained, the subspecialty
               interest that led to this clinic, and why Nairobi needed one built
               around melanin-rich skin. This is the most-read paragraph on a
@@ -46,7 +41,7 @@ export function Clinician() {
               third person.]
             </p>
 
-            <ul className="mt-10 flex flex-col">
+            <ul className="reveal reveal-d2 mt-10 flex flex-col">
               {CREDENTIALS.map((line) => (
                 <li
                   key={line}
@@ -77,19 +72,15 @@ export function Premises() {
       <Wrap>
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
           <div className="lg:col-span-6">
-            <SectionHead
-              index="05"
-              label="The clinic"
-              title={brand.address.line2}
-            />
-            <p className="mt-8 max-w-[52ch] font-sans text-[17px] font-light leading-[1.85] text-ms-espresso/80">
+            <SectionHead title={brand.address.line2} />
+            <p className="reveal reveal-d1 mt-8 max-w-[52ch] font-sans text-[17px] font-light leading-[1.85] text-ms-espresso/80">
               [Describe the space in two or three sentences &mdash; the
               treatment rooms, the lighting, parking and access, and anything a
               patient would want to know before a first visit.] Doors open{" "}
               {todo.openingDate}.
             </p>
 
-            <dl className="mt-10 grid gap-x-12 gap-y-7 sm:grid-cols-2">
+            <dl className="reveal reveal-d2 mt-10 grid gap-x-12 gap-y-7 sm:grid-cols-2">
               <div className="border-t border-ms-bronze/25 pt-5">
                 <dt className="eyebrow font-normal text-ms-bronze">Address</dt>
                 <dd className="mt-2.5 font-sans text-[15.5px] font-light leading-[1.7] text-ms-espresso">
@@ -111,7 +102,7 @@ export function Premises() {
             </dl>
           </div>
 
-          <div className="grid gap-4 lg:col-span-5 lg:col-start-8">
+          <div className="rise grid gap-4 lg:col-span-5 lg:col-start-8">
             <PhotoSlot label="[Reception or treatment room]" className="h-60" />
             <div className="grid grid-cols-2 gap-4">
               <PhotoSlot label="[Detail shot]" className="h-44" />

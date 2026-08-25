@@ -6,10 +6,15 @@ no runtime data fetching.
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm run build    # static prerender
-npm run lint     # eslint (flat config in eslint.config.mjs)
+npm run dev          # http://localhost:3000
+npm run build        # static prerender
+npm run lint         # eslint (flat config in eslint.config.mjs)
+npm run hero:frames  # rebuild the hero cross-fade stills
 ```
+
+The two asset scripts (`brand:assets`, `hero:frames`) are Python and need
+Pillow, NumPy and SciPy. They are only run when the source artwork changes;
+their output is committed.
 
 ## Where the design came from
 
@@ -111,6 +116,38 @@ Two conventions hold the tone together:
 The nav lives inside the hero card rather than in a sticky bar, so it scrolls
 away. The booking card and footer repeat every route out of the page.
 
+## Motion
+
+Two moving parts, both CSS-only — there is still no client-side JavaScript of
+ours on the page.
+
+**The hero cross-fade.** Two stills share one 14s keyframe cycle, offset by half
+of it, so each fades up through the other's fade-out. The offsets are
+`i x 7s - 3s` rather than `i x -7s`: a plain negative step leaves the first
+frame at opacity 0 on load, which would paint the *second* frame first and put
+the `priority` hint and the alt text on the wrong image. All of the timing lives
+in `.ms-hero-frame` in `globals.css` and is a function of the frame count — the
+comment there says which three numbers to change.
+
+The frames themselves are built by `scripts/build-hero-frames.py`. They have to
+be transparent cut-outs, because they sit directly on the field colour with no
+plate behind them, and that is what limits the rotation to two: every PNG in
+`public/images` is a cut-out, but in all but two of them the opaque silhouette
+includes the diagnostic circles, leader lines and product clusters, so cropping
+to the model either keeps a fragment or cuts through her face.
+`dermatologist.png` has no alpha at all. To add frames, drop cut-out PNGs of
+just a person into `public/images`, give each a builder in that script, and
+update the cycle numbers.
+
+**Section reveals.** Scroll-driven (`animation-timeline: view()`), gated behind
+`@supports` so a browser without them renders every element in its final state
+rather than stranding it at opacity 0. There is no JS fallback and there should
+not be one. Stagger is expressed as a later start in the element's entry range
+(`.reveal-d1`…`-d3`), not as `animation-delay` — delays mean nothing on a scroll
+timeline. Reveals go on content blocks, never on a full-height section: a
+subject taller than the viewport never completes its `entry` range and would sit
+half-faded forever.
+
 ## Structure
 
 ```
@@ -119,7 +156,8 @@ src/
   components/
     brand/       BrandPattern, Marks (wordmark, monogram, sparkle)
     *.tsx        one file per page section
-    ui.tsx       Container, SectionLabel, buttons, PhotoSlot
+    ui.tsx       Wrap, SectionHead, pills, PhotoSlot, reveal stagger
+    HeroFrames   the hero cross-fade stack
     icons.tsx    treatment icons
   fonts/         Larken — 4 cuts (the family is not variable despite the
                  archive naming, so each extra weight costs ~95KB)

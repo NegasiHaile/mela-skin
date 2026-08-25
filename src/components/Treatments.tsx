@@ -101,7 +101,7 @@ function MedicalScrollCards({
   items: TreatmentCard[];
 }) {
   return (
-    <div>
+    <div className="reveal">
       <h3 className="eyebrow text-ms-terracotta-deep">{label}</h3>
 
       <div className="relative mt-10 bg-transparent lg:mt-12">
@@ -159,7 +159,7 @@ function CosmeticPaperCards({
   items: TreatmentCard[];
 }) {
   return (
-    <div>
+    <div className="reveal">
       <h3 className="eyebrow text-ms-terracotta-deep">{label}</h3>
 
       <div className="mt-10 lg:mt-12">
@@ -231,12 +231,7 @@ export function Treatments() {
   return (
     <section id="treatments" className="bg-ms-paper py-28 lg:py-40">
       <Wrap>
-        <SectionHead
-          index="02"
-          label="Treatments"
-          title="Medical and cosmetic, one roof"
-          className="max-w-[520px]"
-        />
+        <SectionHead title="Treatments" className="max-w-[520px]" />
 
         <div className="mt-20 lg:mt-24">
           <MedicalScrollCards label="Medical Dermatology" items={MEDICAL} />

@@ -6,15 +6,8 @@ export function Focus() {
     <section className="bg-ms-shell py-24 lg:py-36">
       <Wrap>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-20">
-          <div className="lg:col-span-5">
-            <div className="flex items-center gap-3.5">
-              <span className="eyebrow text-ms-terracotta-deep">01</span>
-              <span className="h-px w-8 bg-ms-bronze/35" aria-hidden="true" />
-              <span className="eyebrow font-normal text-ms-bronze">
-                Why Mela Skin
-              </span>
-            </div>
-            <h2 className="display-caps mt-8 text-[clamp(2.15rem,4vw,3.5rem)] text-ms-cocoa">
+          <div className="reveal lg:col-span-5">
+            <h2 className="display-caps text-[clamp(2.15rem,4vw,3.5rem)] text-ms-cocoa">
               Deeper skin isn&rsquo;t harder to treat
             </h2>
             <p className="mt-6 font-display text-[23px] italic leading-snug text-ms-terracotta-deep">
@@ -22,7 +15,7 @@ export function Focus() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-6 lg:col-span-6 lg:col-start-7 lg:pt-3">
+          <div className="reveal reveal-d1 flex flex-col gap-6 lg:col-span-6 lg:col-start-7 lg:pt-3">
             <p className="font-sans text-[17px] font-light leading-[1.85] text-ms-espresso/80">
               Dermatology teaching images are overwhelmingly of white skin. On
               deeper complexions, inflammation reads violet or grey rather than
