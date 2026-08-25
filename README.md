@@ -1,13 +1,14 @@
 # Mela Skin — landing page
 
-Next.js 15 (App Router) + Tailwind CSS v4 + TypeScript. Static: the whole page
-prerenders, there is no client-side JavaScript of our own, and no runtime data
-fetching.
+Next.js 16 (App Router, Turbopack) + Tailwind CSS v4 + TypeScript. Static:
+the whole page prerenders, there is no client-side JavaScript of our own, and
+no runtime data fetching.
 
 ```bash
 npm install
 npm run dev      # http://localhost:3000
 npm run build    # static prerender
+npm run lint     # eslint (flat config in eslint.config.mjs)
 ```
 
 ## Where the design came from
