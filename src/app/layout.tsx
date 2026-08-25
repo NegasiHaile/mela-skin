@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Space_Grotesk } from "next/font/google";
+import { MotionProvider } from "@/components/MotionProvider";
 import { brand } from "@/lib/brand";
 import { clinicJsonLd } from "@/lib/jsonld";
 import "./globals.css";
@@ -131,12 +132,31 @@ export default function RootLayout({
 
   return (
     <html lang="en-KE" className={`${larken.variable} ${grotesk.variable}`}>
+      <head>
+        {/*
+          Framer Motion renders its `initial` state into the server HTML, which
+          means roughly eighty blocks ship at opacity 0 and are revealed on
+          hydration. If the bundle never arrives — JS off, a failed chunk, a
+          text-mode reader — the page would be blank. Every wrapper that ships
+          hidden carries `data-motion`, so this puts all of them back.
+        */}
+        <noscript>
+          <style>{`
+            [data-motion] {
+              opacity: 1 !important;
+              transform: none !important;
+              clip-path: none !important;
+            }
+            [data-motion="progress"] { display: none !important; }
+          `}</style>
+        </noscript>
+      </head>
       <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

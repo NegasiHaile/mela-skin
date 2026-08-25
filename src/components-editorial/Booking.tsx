@@ -1,5 +1,6 @@
 import { brand, todo } from "@/lib/brand";
-import { BrandPattern } from "./brand/BrandPattern";
+import { Reveal, Stagger, StaggerItem } from "@/motion";
+import { PatternField } from "./brand/PatternField";
 import { ButtonGhost, ButtonPrimary, Card, Inner, Shell } from "./ui";
 
 const DETAILS = [
@@ -15,48 +16,59 @@ export function Booking() {
   return (
     <Shell>
       <Card id="book" className="mt-4 bg-ms-panel">
-        <BrandPattern
-          id="book"
-          from="#3d1e0b"
-          to="#6b3d16"
-          sparkle="#4a2510"
+        <PatternField
+          id="ed-book"
+          tone="panel"
+          fade="none"
           scale={200}
-          className="absolute inset-0 h-full w-full opacity-60"
+          opacity={0.6}
+          drift={44}
         />
 
         <Inner className="relative">
           <div className="flex flex-col items-center text-center">
-            <p className="eyebrow text-ms-clay">Book</p>
+            <Reveal y={14}>
+              <p className="eyebrow text-ms-clay">Book</p>
+            </Reveal>
 
-            <h2 className="mt-7 max-w-[18ch] font-display text-[clamp(2.1rem,4vw,3.2rem)] font-normal leading-[1.08] tracking-[-0.016em] text-ms-ivory">
-              Start with one{" "}
-              <em className="italic text-ms-clay">consultation</em>.
-            </h2>
+            <Reveal delay={0.1}>
+              <h2 className="mt-7 max-w-[18ch] font-display text-[clamp(2.1rem,4vw,3.2rem)] font-normal leading-[1.08] tracking-[-0.016em] text-ms-ivory">
+                Start with one{" "}
+                <em className="italic text-ms-clay">consultation</em>.
+              </h2>
+            </Reveal>
 
+            <Reveal delay={0.18}>
             <p className="mt-6 max-w-[54ch] font-sans text-[16px] font-light leading-[1.85] text-ms-cream/80">
               {todo.consultLength} minutes with {todo.clinicianName}: an
               examination, a diagnosis in plain language, and a written plan you
               leave with. {todo.consultFee}, redeemable against treatment
               [confirm your policy].
             </p>
+            </Reveal>
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              <ButtonPrimary href={brand.phoneHref} tone="dark">
-                Call {brand.phone}
-              </ButtonPrimary>
-              <ButtonGhost href={`mailto:${brand.email}`} tone="dark">
-                Email the clinic
-              </ButtonGhost>
-            </div>
+            <Reveal delay={0.26}>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+                <ButtonPrimary href={brand.phoneHref} tone="dark">
+                  Call {brand.phone}
+                </ButtonPrimary>
+                <ButtonGhost href={`mailto:${brand.email}`} tone="dark">
+                  Email the clinic
+                </ButtonGhost>
+              </div>
+            </Reveal>
 
-            <p className="mt-7 font-sans text-[12px] font-light tracking-[0.05em] text-ms-sand/65">
-              Online booking opens {todo.bookingOpens}.
-            </p>
+            <Reveal delay={0.34}>
+              <p className="mt-7 font-sans text-[12px] font-light tracking-[0.05em] text-ms-sand/65">
+                Online booking opens {todo.bookingOpens}.
+              </p>
+            </Reveal>
 
-            <dl className="mt-16 grid w-full gap-4 md:grid-cols-3">
+            <Stagger as="dl" step={0.11} className="mt-16 grid w-full gap-4 md:grid-cols-3">
               {DETAILS.map((detail) => (
-                <div
+                <StaggerItem
                   key={detail.label}
+                  y={22}
                   className="flex flex-col gap-2.5 rounded-[18px] border border-ms-sand/20 bg-ms-espresso/45 px-7 py-7 text-left backdrop-blur-[2px]"
                 >
                   <dt className="eyebrow font-normal text-ms-clay">
@@ -69,9 +81,9 @@ export function Booking() {
                       </span>
                     ))}
                   </dd>
-                </div>
+                </StaggerItem>
               ))}
-            </dl>
+            </Stagger>
           </div>
         </Inner>
       </Card>

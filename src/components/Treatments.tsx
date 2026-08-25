@@ -10,6 +10,8 @@ import {
   IconPigment,
   IconScar,
 } from "./icons";
+import { PatternField } from "./brand/PatternField";
+import { DrawRule, Lift, Reveal, Stagger, StaggerItem } from "@/motion";
 import { SectionHead, Wrap } from "./ui";
 
 type Treatment = {
@@ -101,51 +103,69 @@ function MedicalScrollCards({
   items: TreatmentCard[];
 }) {
   return (
-    <div className="reveal">
-      <h3 className="eyebrow text-ms-terracotta-deep">{label}</h3>
+    <div>
+      <Reveal y={18}>
+        <h3 className="eyebrow text-ms-terracotta-deep">{label}</h3>
+      </Reveal>
 
-      <div className="relative mt-10 bg-transparent lg:mt-12">
-        <div
-          className="scrollbar-hide -mr-6 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto bg-transparent pb-3 pt-1 pr-6 sm:-mr-10 sm:gap-5 sm:pr-10 lg:-mr-14 lg:pr-14"
+      {/*
+        The rail staggers left-to-right off one trigger, so the row deals
+        itself out like a hand of cards. Items travel a little further than
+        body copy does (34px) because they are competing with a photograph.
+      */}
+      <div className="relative mt-10 -mb-6 bg-transparent lg:mt-12">
+        <Stagger
+          step={0.1}
+          delay={0.12}
+          className="scrollbar-hide -mr-6 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto bg-transparent pb-10 pt-4 pr-6 sm:-mr-10 sm:gap-5 sm:pr-10 lg:-mr-14 lg:pr-14"
           role="list"
           aria-label={label}
         >
           {items.map(({ title, body, image }) => (
-            <article
+            <StaggerItem
+              as="article"
               key={title}
+              y={34}
               role="listitem"
               className={`flex shrink-0 snap-start ${TREATMENT_CARD_WIDTH}`}
             >
-              <div className="relative flex w-full flex-col overflow-hidden rounded-[28px] bg-gradient-to-b from-ms-shell via-ms-cream/90 to-ms-sand/70 ring-1 ring-ms-bronze/15">
-                <div className="relative min-h-[15.5rem] w-full sm:min-h-[17rem] lg:min-h-[19rem]">
-                  <Image
-                    src={image}
-                    alt={`${title} — Mela Skin medical dermatology`}
-                    fill
-                    sizes="300px"
-                    className="object-contain object-center p-2 sm:p-3"
-                  />
-                </div>
+              <Lift amount={10} className="w-full">
+                <div className="group relative flex w-full flex-col overflow-hidden rounded-[28px] bg-gradient-to-b from-ms-shell via-ms-cream/90 to-ms-sand/70 ring-1 ring-ms-bronze/15 transition-shadow duration-500 hover:shadow-[0_28px_60px_-30px_rgba(49,24,10,0.55)]">
+                  <div className="relative min-h-[15.5rem] w-full overflow-hidden sm:min-h-[17rem] lg:min-h-[19rem]">
+                    <Image
+                      src={image}
+                      alt={`${title} — Mela Skin medical dermatology`}
+                      fill
+                      sizes="300px"
+                      className="object-contain object-center p-2 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] sm:p-3"
+                    />
+                  </div>
 
-                <div className="shrink-0 bg-gradient-to-b from-transparent via-ms-ivory/70 to-ms-ivory p-4 sm:p-5">
-                  <h4 className="font-display text-[1.28rem] leading-[1.2] tracking-[-0.01em] text-ms-cocoa sm:text-[1.35rem] lg:text-[1.22rem]">
-                    {title}
-                  </h4>
-                  <p className="mt-2.5 font-sans text-[14px] font-light leading-[1.65] text-ms-espresso/80 sm:text-[15px] sm:leading-[1.7]">
-                    {body}
-                  </p>
-                  <a
-                    href="#book"
-                    className="mt-4 inline-flex min-h-10 items-center gap-1.5 rounded-full bg-ms-field/90 px-5 font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-ms-ivory transition-colors hover:bg-ms-panel sm:text-[11.5px]"
-                  >
-                    Book
-                    <span aria-hidden="true">&rarr;</span>
-                  </a>
+                  <div className="shrink-0 bg-gradient-to-b from-transparent via-ms-ivory/70 to-ms-ivory p-4 sm:p-5">
+                    <h4 className="font-display text-[1.28rem] leading-[1.2] tracking-[-0.01em] text-ms-cocoa sm:text-[1.35rem] lg:text-[1.22rem]">
+                      {title}
+                    </h4>
+                    <p className="mt-2.5 font-sans text-[14px] font-light leading-[1.65] text-ms-espresso/80 sm:text-[15px] sm:leading-[1.7]">
+                      {body}
+                    </p>
+                    <a
+                      href="#book"
+                      className="mt-4 inline-flex min-h-10 items-center gap-1.5 rounded-full bg-ms-field/90 px-5 font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-ms-ivory transition-colors hover:bg-ms-panel sm:text-[11.5px]"
+                    >
+                      Book
+                      <span
+                        aria-hidden="true"
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      >
+                        &rarr;
+                      </span>
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </article>
+              </Lift>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </div>
   );
@@ -159,23 +179,30 @@ function CosmeticPaperCards({
   items: TreatmentCard[];
 }) {
   return (
-    <div className="reveal">
-      <h3 className="eyebrow text-ms-terracotta-deep">{label}</h3>
+    <div>
+      <Reveal y={18}>
+        <h3 className="eyebrow text-ms-terracotta-deep">{label}</h3>
+      </Reveal>
 
-      <div className="mt-10 lg:mt-12">
-        <div
-          className="scrollbar-hide -mr-6 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto pb-4 pt-1 pr-6 sm:-mr-10 sm:gap-5 sm:pr-10 lg:-mr-14 lg:pr-14"
+      <div className="mt-10 -mb-6 lg:mt-12">
+        <Stagger
+          step={0.1}
+          delay={0.12}
+          className="scrollbar-hide -mr-6 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto pb-10 pt-4 pr-6 sm:-mr-10 sm:gap-5 sm:pr-10 lg:-mr-14 lg:pr-14"
           role="list"
           aria-label={label}
         >
           {items.map(({ title, body, image, Icon }, index) => (
-            <article
+            <StaggerItem
+              as="article"
               key={title}
+              y={34}
               role="listitem"
               className={`flex shrink-0 snap-start ${TREATMENT_CARD_WIDTH}`}
             >
+              <Lift amount={10} className="w-full">
               <div
-                className={`paper-notch grain relative flex w-full flex-col overflow-hidden bg-gradient-to-b ${COSMETIC_GROUNDS[index % COSMETIC_GROUNDS.length]} shadow-[4px_6px_0_0_rgba(198,114,44,0.18),0_20px_44px_-24px_rgba(49,24,10,0.32)] ring-1 ring-ms-bronze/25`}
+                className={`paper-notch grain group relative flex w-full flex-col overflow-hidden bg-gradient-to-b ${COSMETIC_GROUNDS[index % COSMETIC_GROUNDS.length]} shadow-[4px_6px_0_0_rgba(198,114,44,0.18),0_20px_44px_-24px_rgba(49,24,10,0.32)] ring-1 ring-ms-bronze/25`}
               >
                 <span
                   aria-hidden="true"
@@ -188,13 +215,13 @@ function CosmeticPaperCards({
                   style={{ clipPath: "polygon(0 100%, 0 0, 100% 100%)" }}
                 />
 
-                <div className="relative min-h-[15.5rem] w-full shrink-0 border-b border-dashed border-ms-bronze/30 bg-ms-paper/35 sm:min-h-[17rem] lg:min-h-[19rem]">
+                <div className="relative min-h-[15.5rem] w-full shrink-0 overflow-hidden border-b border-dashed border-ms-bronze/30 bg-ms-paper/35 sm:min-h-[17rem] lg:min-h-[19rem]">
                   <Image
                     src={image}
                     alt={`${title} — Mela Skin cosmetic dermatology`}
                     fill
                     sizes="300px"
-                    className="object-contain object-center p-2 sm:p-3"
+                    className="object-contain object-center p-2 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] sm:p-3"
                   />
                 </div>
 
@@ -215,13 +242,19 @@ function CosmeticPaperCards({
                     className="mt-4 inline-flex items-center gap-1.5 self-start border-b border-ms-terracotta/60 pb-0.5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-ms-terracotta-deep transition-colors hover:border-ms-field hover:text-ms-field sm:text-[11.5px]"
                   >
                     Enquire
-                    <span aria-hidden="true">&rarr;</span>
+                    <span
+                      aria-hidden="true"
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    >
+                      &rarr;
+                    </span>
                   </a>
                 </div>
               </div>
-            </article>
+              </Lift>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </div>
   );
@@ -229,16 +262,27 @@ function CosmeticPaperCards({
 
 export function Treatments() {
   return (
-    <section id="treatments" className="bg-ms-paper py-28 lg:py-40">
-      <Wrap>
+    <section
+      id="treatments"
+      className="relative overflow-hidden bg-ms-paper py-28 lg:py-40"
+    >
+      <PatternField
+        id="treatments"
+        tone="paper"
+        fade="top"
+        scale={560}
+        opacity={0.9}
+        drift={56}
+      />
+
+      <Wrap className="relative">
         <SectionHead title="Treatments" className="max-w-[520px]" />
 
         <div className="mt-20 lg:mt-24">
           <MedicalScrollCards label="Medical Dermatology" items={MEDICAL} />
 
-          <div
-            aria-hidden="true"
-            className="my-20 h-px bg-ms-bronze/20 lg:my-28"
+          <DrawRule
+            className="my-20 h-px w-full bg-ms-bronze/20 lg:my-28"
           />
 
           <CosmeticPaperCards label="Cosmetic Dermatology" items={COSMETIC} />

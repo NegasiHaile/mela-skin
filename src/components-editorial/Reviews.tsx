@@ -1,3 +1,5 @@
+import { Lift, Reveal, Stagger, StaggerItem } from "@/motion";
+import { PatternField } from "./brand/PatternField";
 import { Sparkle } from "./brand/Marks";
 import { Card, Inner, SectionLabel, Shell } from "./ui";
 
@@ -27,20 +29,31 @@ export function Reviews() {
   return (
     <Shell>
       <Card id="reviews" className="mt-4 bg-ms-sand/35">
+        <PatternField
+          id="ed-reviews"
+          tone="sand"
+          fade="radial"
+          scale={460}
+          opacity={0.85}
+          drift={32}
+        />
         <Inner>
           <div className="flex flex-col items-center text-center">
             <SectionLabel index="06">Reviews</SectionLabel>
-            <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] tracking-[-0.014em] text-ms-cocoa">
-              In their <em className="italic text-ms-clay">words</em>.
-            </h2>
+            <Reveal delay={0.12}>
+              <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] tracking-[-0.014em] text-ms-cocoa">
+                In their <em className="italic text-ms-clay">words</em>.
+              </h2>
+            </Reveal>
           </div>
 
-          <ul className="mt-14 grid gap-4 lg:grid-cols-3">
+          <Stagger as="ul" step={0.12} className="mt-14 grid gap-4 lg:grid-cols-3">
             {SLOTS.map((slot) => (
-              <li
-                key={slot.hint}
-                className="flex flex-col gap-6 rounded-[18px] border border-ms-bronze/15 bg-ms-shell px-8 py-9"
-              >
+              <StaggerItem as="li" key={slot.hint} y={28} className="flex">
+                <Lift
+                  amount={6}
+                  className="flex w-full flex-col gap-6 rounded-[18px] border border-ms-bronze/15 bg-ms-shell px-8 py-9"
+                >
                 <Sparkle width={13} height={26} fill="url(#ms-gold)" />
                 <p className="font-display text-[18px] font-normal italic leading-[1.6] text-ms-espresso/80">
                   {slot.hint}
@@ -48,9 +61,10 @@ export function Reviews() {
                 <p className="eyebrow mt-auto font-normal text-ms-terracotta-deep">
                   {slot.meta}
                 </p>
-              </li>
+                </Lift>
+              </StaggerItem>
             ))}
-          </ul>
+          </Stagger>
         </Inner>
       </Card>
     </Shell>

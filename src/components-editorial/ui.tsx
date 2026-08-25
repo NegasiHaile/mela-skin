@@ -1,10 +1,21 @@
+"use client";
+
+import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { DrawRule, EASE } from "@/motion";
 import { Sparkle } from "./brand/Marks";
 
 /**
  * The page is a stack of rounded cards floating on `ms-paper`, so almost
  * everything below is about that shell: `Shell` sets the outer gutter, `Card`
  * is the rounded surface, `Inner` the padding inside one.
+ *
+ * Motion lives in `Card` rather than in the sections, because in this
+ * direction the card IS the section. Each one settles onto the paper as it
+ * enters — a short rise out of a 1.5% underscale, which reads as a sheet being
+ * laid down rather than as a block sliding in. Everything inside a card then
+ * staggers against that single arrival, so the page has one rhythm and not
+ * nine competing ones.
  */
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -14,18 +25,32 @@ export function Shell({ children }: { children: ReactNode }) {
 export function Card({
   children,
   className,
-  as: Tag = "section",
+  as = "section",
   id,
+  still = false,
 }: {
   children: ReactNode;
   className?: string;
   as?: "section" | "footer" | "div";
   id?: string;
+  /** Opt out of the arrival — for the hero, which is already on screen. */
+  still?: boolean;
 }) {
+  const Tag = motion[as];
+
   return (
     <Tag
       id={id}
+      data-motion={still ? undefined : ""}
       className={`relative overflow-hidden rounded-[22px] shadow-[0_1px_2px_rgba(49,24,10,0.04),0_18px_40px_-24px_rgba(49,24,10,0.16)] ${className ?? ""}`}
+      {...(still
+        ? {}
+        : {
+            initial: { opacity: 0, y: 34, scale: 0.985 },
+            whileInView: { opacity: 1, y: 0, scale: 1 },
+            viewport: { once: true, margin: "0px 0px -10% 0px" },
+            transition: { duration: 0.9, ease: EASE },
+          })}
     >
       {children}
     </Tag>
@@ -40,7 +65,9 @@ export function Inner({
   className?: string;
 }) {
   return (
-    <div className={`px-7 py-16 sm:px-10 lg:px-16 lg:py-24 ${className ?? ""}`}>
+    <div
+      className={`relative px-7 py-16 sm:px-10 lg:px-16 lg:py-24 ${className ?? ""}`}
+    >
       {children}
     </div>
   );
@@ -62,7 +89,7 @@ export function SectionLabel({
   return (
     <div className="flex items-center gap-3.5">
       <span className={`eyebrow ${accent}`}>{index}</span>
-      <span className={`h-px w-8 ${rule}`} aria-hidden="true" />
+      <DrawRule className={`h-px w-8 ${rule}`} />
       <span className={`eyebrow font-normal ${muted}`}>{children}</span>
     </div>
   );

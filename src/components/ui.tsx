@@ -1,17 +1,12 @@
 import type { ReactNode } from "react";
 import { Sparkle } from "./brand/Marks";
+import { DrawRule, Lines } from "@/motion";
 
 /**
  * Primitives for the immersive direction: full-bleed sections flooded with a
  * single colour, wide-tracked Larken caps, pill controls. No cards, no
  * gutters — the opposite of /editorial, which uses floating rounded panels.
  */
-
-/** Scroll-timeline stagger classes (`.reveal-d1`…`-d3`). Index 0 is unstaggered. */
-export function revealStagger(index: number): string {
-  if (index <= 0) return "";
-  return `reveal-d${Math.min(index, 3)}`;
-}
 
 export function Section({
   children,
@@ -55,23 +50,33 @@ export function Eyebrow({
   return <p className={`eyebrow ${className ?? ""}`}>{children}</p>;
 }
 
+/**
+ * Section heading. The gold hairline draws itself in from the left, then the
+ * words rise out from behind their own masks — so the head announces the
+ * section rather than simply being present when you arrive at it.
+ *
+ * `title` is a plain string, not a node: `Lines` has to split it into words to
+ * mask them individually.
+ */
 export function SectionHead({
   title,
   tone = "light",
   className,
+  rule = true,
 }: {
-  title: ReactNode;
+  title: string;
   tone?: "light" | "dark";
   className?: string;
+  /** Set false where the head sits tight under other ornament. */
+  rule?: boolean;
 }) {
   const head = tone === "dark" ? "text-ms-ivory" : "text-ms-cocoa";
 
   return (
     <div className={className}>
-      <h2
-        className={`display-caps text-[clamp(2.15rem,4vw,3.5rem)] ${head}`}
-      >
-        {title}
+      {rule ? <DrawRule className="hairline-gold mb-7 w-full max-w-[220px]" /> : null}
+      <h2 className={`display-caps text-[clamp(2.15rem,4vw,3.5rem)] ${head}`}>
+        <Lines text={title} />
       </h2>
     </div>
   );

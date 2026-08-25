@@ -1,5 +1,7 @@
+import { PatternField } from "./brand/PatternField";
 import { Sparkle } from "./brand/Marks";
-import { revealStagger, SectionHead, Wrap } from "./ui";
+import { Stagger, StaggerItem } from "@/motion";
+import { SectionHead, Wrap } from "./ui";
 
 /*
   Deliberately empty quotes. The clinic has not opened, so there are no
@@ -25,15 +27,32 @@ const SLOTS = [
 
 export function Reviews() {
   return (
-    <section id="reviews" className="bg-ms-shell py-24 lg:py-36">
-      <Wrap>
+    <section
+      id="reviews"
+      className="relative overflow-hidden bg-ms-shell py-24 lg:py-36"
+    >
+      <PatternField
+        id="reviews"
+        tone="shell"
+        fade="radial"
+        scale={600}
+        opacity={0.9}
+        drift={40}
+      />
+
+      <Wrap className="relative">
         <SectionHead title="In their words" />
 
-        <ul className="mt-16 grid gap-x-14 gap-y-12 lg:grid-cols-3">
-          {SLOTS.map((slot, index) => (
-            <li
+        <Stagger
+          as="ul"
+          step={0.13}
+          className="mt-16 grid gap-x-14 gap-y-12 lg:grid-cols-3"
+        >
+          {SLOTS.map((slot) => (
+            <StaggerItem
+              as="li"
               key={slot.hint}
-              className={`reveal ${revealStagger(index)} border-t border-ms-bronze/25 pt-7`}
+              className="border-t border-ms-bronze/25 pt-7"
             >
               <Sparkle width={12} height={24} fill="url(#ms-gold)" />
               <p className="mt-6 font-display text-[20px] font-normal italic leading-[1.6] text-ms-espresso/80">
@@ -42,9 +61,9 @@ export function Reviews() {
               <p className="eyebrow mt-7 font-normal text-ms-terracotta-deep">
                 {slot.meta}
               </p>
-            </li>
+            </StaggerItem>
           ))}
-        </ul>
+        </Stagger>
       </Wrap>
     </section>
   );

@@ -1,5 +1,7 @@
 import { todo } from "@/lib/brand";
-import { revealStagger, SectionHead, Wrap } from "./ui";
+import { PatternField } from "./brand/PatternField";
+import { Stagger, StaggerItem } from "@/motion";
+import { SectionHead, Wrap } from "./ui";
 
 /*
   The four beats here follow the patient journey the clinic set out for itself
@@ -31,18 +33,40 @@ const STEPS = [
 
 export function Visit() {
   return (
-    <section id="visit" className="bg-ms-shell py-24 lg:py-36">
-      <Wrap>
+    <section
+      id="visit"
+      className="relative overflow-hidden bg-ms-shell py-24 lg:py-36"
+    >
+      <PatternField
+        id="visit"
+        tone="shell"
+        fade="bottom"
+        scale={480}
+        opacity={0.85}
+        drift={44}
+      />
+
+      <Wrap className="relative">
         <SectionHead
           title="What actually happens on your visit"
           className="max-w-[640px]"
         />
 
-        <ol className="mt-16 grid gap-x-14 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((step, index) => (
-            <li
+        {/*
+          Read as a sequence, so it animates as one. A wider step than the
+          treatment rails (0.12s) because the four steps are numbered and the
+          eye is already being asked to count them.
+        */}
+        <Stagger
+          as="ol"
+          step={0.12}
+          className="mt-16 grid gap-x-14 gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {STEPS.map((step) => (
+            <StaggerItem
+              as="li"
               key={step.n}
-              className={`reveal ${revealStagger(index)} border-t border-ms-bronze/25 pt-7`}
+              className="border-t border-ms-bronze/25 pt-7"
             >
               <span className="font-display text-[2.6rem] font-light leading-none text-ms-clay">
                 {step.n}
@@ -53,9 +77,9 @@ export function Visit() {
               <p className="mt-4 font-sans text-[15px] font-light leading-[1.8] text-ms-espresso/75">
                 {step.body}
               </p>
-            </li>
+            </StaggerItem>
           ))}
-        </ol>
+        </Stagger>
       </Wrap>
     </section>
   );

@@ -1,8 +1,9 @@
 # Mela Skin — landing page
 
-Next.js 16 (App Router, Turbopack) + Tailwind CSS v4 + TypeScript. Static:
-the whole page prerenders, there is no client-side JavaScript of our own, and
-no runtime data fetching.
+Next.js 16 (App Router, Turbopack) + Tailwind CSS v4 + TypeScript + Framer
+Motion. Static: every route prerenders and nothing is fetched at runtime. The
+markup is still overwhelmingly server-rendered — the client boundaries are the
+motion wrappers, the hero slider and the contact form.
 
 ```bash
 npm install
@@ -28,6 +29,7 @@ Everything visual is lifted from the files in `../Resources`, not invented:
 | Wordmark lockup + descriptor | `Social Media/MELA SKIN - Social Profile_1.jpg` |
 | Tagline "Richer. Radiant. You." | Letterhead + LinkedIn banner |
 | Circle-and-sparkle pattern | Measured off `Letterhead/Picture1.png` |
+| Pattern-as-section-ground | `Social Media/MELA SKIN - SM_Linkedin Banner.jpg` |
 | Address, phone, email | `Brand Identity/Letterhead/…Letterhead_DRAFT.docx` |
 | Patient-journey steps | `Operations/…/Mela Skin - Focus Area.docx` |
 
@@ -41,6 +43,35 @@ Two notes on fidelity:
 - **The monogram is a stand-in.** The M is set in Larken inside the ring with
   the sparkle, which is close, but it is not the real artwork. Drop the vector
   logo into `src/components/brand/Marks.tsx` when it exists as SVG.
+
+## The pattern as a section ground
+
+`BrandPattern` draws the motif. `brand/PatternField.tsx` decides how it is
+worn, and it is what every section actually uses. Three things keep a
+letterhead watermark from turning into wallpaper:
+
+1. **The sparkle colour of each tone is the section's own background colour.**
+   The interstices disappear into the ground and only the circles read, so the
+   pattern never competes with the copy for the same value. Tones are keyed to
+   the grounds they sit on — `field`, `espresso`, `panel`, `shell`, `paper`,
+   `cream`, `sand`.
+2. **A mask decides which edge survives.** `fade` takes `edges | top | bottom |
+   left | right | radial | none`, named for the edge that stays inked. It is
+   how the pattern gets out of the way of a text column.
+3. **It counter-scrolls.** `drift` moves the ground a few dozen pixels against
+   the page, so it sits behind the content rather than locked to it. The layer
+   overhangs its section by 10% vertically, which is what stops the drift from
+   exposing an edge.
+
+Scale is the other lever, and it does most of the work: 300px reads as texture
+(the footer), 500px+ reads as architecture (the light sections). Opacity is
+higher on the light grounds than the dark ones because the tones there sit only
+a few percent off the paper.
+
+A section carrying a `PatternField` must (a) be `relative overflow-hidden` and
+(b) put its own content in a positioned wrapper — usually `<Wrap className=
+"relative">`. The field is absolutely positioned and would otherwise paint over
+static in-flow content.
 
 ## Placeholders
 
@@ -75,8 +106,8 @@ delete the other.
 | `/editorial` | **Editorial** | Rounded cards floating on `ms-paper`, mixed roman/italic headings, square buttons, nav inside the hero card |
 
 `/` uses `src/components`, `/editorial` uses `src/components-editorial`. They
-share `lib/brand.ts`, the fonts and `BrandPattern`, so facts and placeholders
-stay in one place. When you settle on one, delete the other component folder
+share `lib/brand.ts`, the fonts and `motion.tsx`, so facts, placeholders and
+the motion vocabulary stay in one place. When you settle on one, delete the other component folder
 and its route.
 
 ### The immersive direction (`/`)
@@ -112,57 +143,89 @@ Two conventions hold the tone together:
 - **Cards separate by lightness, not by rules.** `ms-shell` sits above
   `ms-paper`, tinted cards use `ms-sand/40`, reversed cards use `ms-panel`.
   Borders are hairlines at low opacity; nothing is boxed in hard strokes.
+- **The card is the section, so the card carries the motion.** `Card` animates
+  itself — a short rise out of a 1.5% underscale as it enters, which reads as a
+  sheet being laid onto the paper. Everything inside then staggers against that
+  single arrival. Pass `still` to opt out; the hero does, because it is already
+  on screen.
 
 The nav lives inside the hero card rather than in a sticky bar, so it scrolls
 away. The booking card and footer repeat every route out of the page.
 
 ## Motion
 
-Two moving parts, both CSS-only — there is still no client-side JavaScript of
-ours on the page.
+All of it is Framer Motion, and all of it comes from one file: `src/motion.tsx`.
+That file sits outside both component folders because it is direction-neutral —
+`/` and `/editorial` import the same primitives.
 
-**The hero cross-fade.** Two stills share one 14s keyframe cycle, offset by half
-of it, so each fades up through the other's fade-out. The offsets are
-`i x 7s - 3s` rather than `i x -7s`: a plain negative step leaves the first
-frame at opacity 0 on load, which would paint the *second* frame first and put
-the `priority` hint and the alt text on the wrong image. All of the timing lives
-in `.ms-hero-frame` in `globals.css` and is a function of the frame count — the
-comment there says which three numbers to change.
+The vocabulary is deliberately small, so the page reads as one object rather
+than as a collection of tricks:
 
-The frames themselves are built by `scripts/build-hero-frames.py`. They have to
-be transparent cut-outs, because they sit directly on the field colour with no
-plate behind them, and that is what limits the rotation to two: every PNG in
-`public/images` is a cut-out, but in all but two of them the opaque silhouette
-includes the diagnostic circles, leader lines and product clusters, so cropping
-to the model either keeps a fragment or cuts through her face.
-`dermatologist.png` has no alpha at all. To add frames, drop cut-out PNGs of
-just a person into `public/images`, give each a builder in that script, and
-update the cycle numbers.
+| Primitive | What it does | Where it is used |
+| --- | --- | --- |
+| `Reveal` | one block rises 28px and fades, once, on entry | paragraphs, standalone blocks |
+| `Stagger` / `StaggerItem` | a list arrives as a wave off a single trigger | card rails, step lists, credentials, footer columns |
+| `Lines` | a heading rises word by word out of its own mask | every `SectionHead` |
+| `Wipe` | an image uncovers from a clip-path and settles out of a 6% overscale | the clinician portrait, the editorial photo slots |
+| `Drift` | counter-scroll, linked to the section's pass across the viewport | the portrait inside its frame, every `PatternField` |
+| `ScrollAway` | the hero copy lifts and fades as the first screen leaves | both heroes |
+| `Mount` / `MountStagger` | the same entrance, fired on load instead of on a trigger | above-the-fold hero content |
+| `Lift` | spring lift on hover, press-down on tap | treatment cards, step cards, review cards |
+| `DrawRule` | a rule that draws itself from the left | section-head hairlines, the editorial `SectionLabel` |
+| `ScrollProgress` | a gold hairline of reading progress across the top of the viewport | both routes |
 
-**Section reveals.** Scroll-driven (`animation-timeline: view()`), gated behind
-`@supports` so a browser without them renders every element in its final state
-rather than stranding it at opacity 0. There is no JS fallback and there should
-not be one. Stagger is expressed as a later start in the element's entry range
-(`.reveal-d1`…`-d3`), not as `animation-delay` — delays mean nothing on a scroll
-timeline. Reveals go on content blocks, never on a full-height section: a
-subject taller than the viewport never completes its `entry` range and would sit
-half-faded forever.
+Two rules hold it together. **Travel is short** — 24–34px, never a slide across
+the screen. **Everything eases on one curve**, the `EASE` expo-out exported from
+that file; the only exceptions are the hover springs, because a pointer can
+reverse mid-gesture and a timed tween would fight it.
+
+Four decisions worth knowing before you change any of it:
+
+- **Viewport triggers fire at 12% and never again** (`once: true`, `margin:
+  "0px 0px -12% 0px"`). `amount` is left at its default on purpose: a block
+  taller than the screen would never satisfy a fractional threshold and would
+  sit faded out forever. That was the failure mode of the CSS scroll-timeline
+  system this replaced.
+- **Stagger belongs to the parent, not the child.** `StaggerItem` carries no
+  timing of its own. Variants propagate through React context, so plain markup
+  between a `Stagger` and its items is fine.
+- **Reduced motion is honoured in two places.** `MotionConfig
+  reducedMotion="user"` in the root layout drops every transform while keeping
+  the fades, so nothing travels but nothing is stranded invisible either. It
+  does not reach `useScroll`/`useTransform`, so the scroll-linked hooks check
+  `useReducedMotion()` themselves.
+- **There is a no-JS fallback and it is not optional.** Framer Motion renders
+  its `initial` state into the server HTML, which means ~80 blocks ship at
+  `opacity: 0` and are revealed on hydration. Every wrapper that ships hidden
+  carries `data-motion`, and a `<noscript>` block in the root layout puts all of
+  them back. **If you add a primitive with a hidden initial state, tag it
+  `data-motion` too**, or it will be invisible whenever the bundle fails to
+  land.
+
+The hero slider (`HeroFrames`) predates this and is still its own component,
+driven by state and CSS transitions rather than by Motion.
 
 ## Structure
 
 ```
 src/
-  app/           layout (fonts, metadata), page, globals.css (brand tokens)
+  app/           layout (fonts, motion policy, metadata), page, globals.css
+  motion.tsx     the motion primitives — shared by BOTH directions
   components/
-    brand/       BrandPattern, Marks (wordmark, monogram, sparkle)
+    brand/       BrandPattern (the motif), PatternField (how it is worn),
+                 Marks (wordmark, monogram, sparkle)
     *.tsx        one file per page section
-    ui.tsx       Wrap, SectionHead, pills, PhotoSlot, reveal stagger
-    HeroFrames   the hero cross-fade stack
+    ui.tsx       Wrap, SectionHead, pills, PhotoSlot
+    HeroFrames   the hero push-slider
     icons.tsx    treatment icons
   fonts/         Larken — 4 cuts (the family is not variable despite the
                  archive naming, so each extra weight costs ~95KB)
   lib/brand.ts   verified facts + the `todo` placeholder map
 ```
+
+`BrandPattern` and `PatternField` are duplicated per direction folder, so
+either folder can be deleted whole when a direction is chosen. `motion.tsx` is
+not — it is direction-neutral and lives one level up.
 
 ## Accessibility
 
@@ -172,5 +235,10 @@ fills, rules and large type; small accent text uses `--color-ms-terracotta-deep`
 (`#8f4713`, 5.6:1). On the espresso sections the primary terracotta clears AA on
 its own and is used directly.
 
-Narrow screens get a `<details>`-based disclosure menu rather than a JS drawer,
-so the nav stays a server component. Tap targets are 44px.
+Narrow screens get a `<details>`-based disclosure menu rather than a JS drawer.
+Tap targets are 44px.
+
+Motion is covered above: reduced motion drops every transform and keeps the
+fades, headings animate word by word but expose a single `aria-label` with the
+words hidden from the accessibility tree, and the `<noscript>` rule guarantees
+nothing is left invisible if the bundle never arrives.

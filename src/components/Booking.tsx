@@ -2,7 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { brand, todo } from "@/lib/brand";
-import { BrandPattern } from "./brand/BrandPattern";
+import { PatternField } from "./brand/PatternField";
+import { Lines, Reveal, Stagger, StaggerItem } from "@/motion";
 import { Wrap } from "./ui";
 
 const FIELD =
@@ -124,15 +125,21 @@ function ContactForm() {
 export function Booking() {
   return (
     <section id="book" className="relative overflow-hidden bg-ms-field">
-      <BrandPattern
+      <PatternField
         id="book"
-        from="#5e2c09"
-        to="#966029"
-        sparkle="#7d3f11"
-        scale={280}
-        className="absolute inset-0 h-full w-full opacity-70"
+        tone="field"
+        fade="none"
+        scale={300}
+        opacity={0.7}
+        drift={52}
       />
+      {/*
+        Vignette over the pattern rather than under it: the motif stays legible
+        at the edges of the band and falls away behind the form, which is the
+        only place on the page carrying 15px type on the field colour.
+      */}
       <div
+        aria-hidden="true"
         className="absolute inset-0"
         style={{
           background:
@@ -142,26 +149,37 @@ export function Booking() {
 
       <Wrap className="relative py-20 lg:py-28">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
-          <div className="reveal">
-            <p className="eyebrow text-ms-gold">Contact</p>
-            <h2 className="display-caps mt-5 max-w-[14ch] text-[clamp(2.1rem,4vw,3.2rem)] text-ms-ivory">
-              Book a consultation
-            </h2>
-            <p className="mt-5 max-w-[34ch] font-sans text-[15px] font-light leading-[1.7] text-ms-cream/80">
-              {todo.consultLength} min with {todo.clinicianName}. Online booking
-              opens {todo.bookingOpens}.
-            </p>
+          <div>
+            <Reveal y={18}>
+              <p className="eyebrow text-ms-gold">Contact</p>
+            </Reveal>
 
-            <dl className="mt-10 space-y-5 border-t border-ms-sand/25 pt-6">
-              <div>
+            <h2 className="display-caps mt-5 max-w-[14ch] text-[clamp(2.1rem,4vw,3.2rem)] text-ms-ivory">
+              <Lines text="Book a consultation" />
+            </h2>
+
+            <Reveal delay={0.2}>
+              <p className="mt-5 max-w-[34ch] font-sans text-[15px] font-light leading-[1.7] text-ms-cream/80">
+                {todo.consultLength} min with {todo.clinicianName}. Online
+                booking opens {todo.bookingOpens}.
+              </p>
+            </Reveal>
+
+            <Stagger
+              as="dl"
+              step={0.1}
+              delay={0.3}
+              className="mt-10 space-y-5 border-t border-ms-sand/25 pt-6"
+            >
+              <StaggerItem y={18}>
                 <dt className="eyebrow font-normal text-ms-gold">Clinic</dt>
                 <dd className="mt-2 font-sans text-[14.5px] font-light leading-[1.65] text-ms-cream">
                   {brand.address.line1}
                   <br />
                   {brand.address.line2}, {brand.address.city}
                 </dd>
-              </div>
-              <div>
+              </StaggerItem>
+              <StaggerItem y={18}>
                 <dt className="eyebrow font-normal text-ms-gold">Reach us</dt>
                 <dd className="mt-2 space-y-1 font-sans text-[14.5px] font-light text-ms-cream">
                   <a
@@ -177,19 +195,21 @@ export function Booking() {
                     {brand.email}
                   </a>
                 </dd>
-              </div>
-              <div>
+              </StaggerItem>
+              <StaggerItem y={18}>
                 <dt className="eyebrow font-normal text-ms-gold">Hours</dt>
                 <dd className="mt-2 font-sans text-[14.5px] font-light leading-[1.65] text-ms-cream">
                   {todo.hoursWeekday}
                   <br />
                   {todo.hoursSaturday}
                 </dd>
-              </div>
-            </dl>
+              </StaggerItem>
+            </Stagger>
           </div>
 
-          <ContactForm />
+          <Reveal delay={0.15}>
+            <ContactForm />
+          </Reveal>
         </div>
       </Wrap>
     </section>

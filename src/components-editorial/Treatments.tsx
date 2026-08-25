@@ -9,6 +9,8 @@ import {
   IconPigment,
   IconScar,
 } from "./icons";
+import { Reveal, Stagger, StaggerItem } from "@/motion";
+import { PatternField } from "./brand/PatternField";
 import { Card, Inner, SectionLabel, Shell } from "./ui";
 
 type Treatment = {
@@ -79,13 +81,17 @@ function TreatmentGroup({
 }) {
   return (
     <div>
-      <h3 className="eyebrow border-b border-ms-bronze/25 pb-4 text-ms-terracotta-deep">
-        {label}
-      </h3>
-      <ul className="mt-1 flex flex-col">
+      <Reveal y={16}>
+        <h3 className="eyebrow border-b border-ms-bronze/25 pb-4 text-ms-terracotta-deep">
+          {label}
+        </h3>
+      </Reveal>
+      <Stagger as="ul" step={0.09} delay={0.1} className="mt-1 flex flex-col">
         {items.map(({ title, body, Icon }) => (
-          <li
+          <StaggerItem
+            as="li"
             key={title}
+            y={20}
             className="flex flex-col gap-3 border-b border-ms-bronze/15 py-7 last:border-b-0"
           >
             <div className="flex items-center gap-3.5">
@@ -97,9 +103,9 @@ function TreatmentGroup({
             <p className="font-sans text-[14.5px] font-light leading-[1.8] text-ms-espresso/75">
               {body}
             </p>
-          </li>
+          </StaggerItem>
         ))}
-      </ul>
+      </Stagger>
     </div>
   );
 }
@@ -108,19 +114,24 @@ export function Treatments() {
   return (
     <Shell>
       <Card id="treatments" className="mt-4 bg-ms-shell">
+        <PatternField id="ed-treatments" tone="shell" fade="right" scale={440} opacity={0.85} drift={40} />
         <Inner>
           <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
             <div>
               <SectionLabel index="02">Treatments</SectionLabel>
+              <Reveal delay={0.12}>
               <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] tracking-[-0.014em] text-ms-cocoa">
                 Medical and cosmetic,{" "}
                 <em className="italic text-ms-clay">one roof</em>.
               </h2>
+              </Reveal>
             </div>
-            <p className="max-w-[34ch] font-sans text-[14.5px] font-light leading-[1.8] text-ms-bronze lg:pb-2">
-              Every path starts with the same consultation. Where you go next
-              depends on what we find.
-            </p>
+            <Reveal delay={0.22}>
+              <p className="max-w-[34ch] font-sans text-[14.5px] font-light leading-[1.8] text-ms-bronze lg:pb-2">
+                Every path starts with the same consultation. Where you go next
+                depends on what we find.
+              </p>
+            </Reveal>
           </div>
 
           <div className="mt-14 grid gap-x-16 gap-y-12 lg:grid-cols-2">

@@ -4,6 +4,7 @@ import { Focus } from "@/components/Focus";
 import { GoldDefs } from "@/components/brand/Marks";
 import { Hero } from "@/components/Hero";
 import { Reviews } from "@/components/Reviews";
+import { ScrollProgress } from "@/motion";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Treatments } from "@/components/Treatments";
 import { Visit } from "@/components/Visit";
@@ -13,6 +14,7 @@ export default function Home() {
   return (
     <>
       <GoldDefs />
+      <ScrollProgress />
       <main>
         <Hero />
         <Focus />

@@ -1,5 +1,7 @@
 import { brand, nav, todo } from "@/lib/brand";
+import { Mount, MountItem, MountStagger, ScrollAway } from "@/motion";
 import { BrandPattern } from "./brand/BrandPattern";
+import { PatternField } from "./brand/PatternField";
 import { Wordmark } from "./brand/Marks";
 import { ButtonGhost, ButtonPrimary, Card, Shell } from "./ui";
 
@@ -8,13 +10,36 @@ import { ButtonGhost, ButtonPrimary, Card, Shell } from "./ui";
   living inside it rather than above it. Left half is the reversed type panel,
   right half is the brand pattern standing in for the hero photograph — swap
   the <BrandPattern> for an <Image> and the layout does not change.
+
+  Motion. The card itself does not animate in (`still`) — it is already on
+  screen — so the entrance runs on mount, top to bottom: nav, then heading,
+  subcopy, buttons. The copy column then lifts and fades against the scroll on
+  the way out, the same exit the immersive hero uses.
 */
 export function Hero() {
   return (
     <Shell>
-      <Card id="top" className="bg-ms-panel" as="section">
+      <Card id="top" className="bg-ms-panel" as="section" still>
+        {/*
+          The letterhead ground behind the type panel, held to the left so it
+          stops before the photograph slot on the right, which carries the
+          pattern at full strength already.
+        */}
+        <PatternField
+          id="ed-hero"
+          tone="panel"
+          fade="left"
+          scale={360}
+          opacity={0.5}
+          drift={0}
+        />
+
         {/* Nav */}
-        <div className="relative z-20 flex items-center justify-between gap-6 border-b border-ms-sand/15 px-6 py-5 sm:px-9">
+        <Mount
+          delay={0.05}
+          y={-12}
+          className="relative z-20 flex items-center justify-between gap-6 border-b border-ms-sand/15 px-6 py-5 sm:px-9"
+        >
           <a href="#top" aria-label={`${brand.name} home`}>
             <Wordmark size="sm" tone="text-ms-ivory" priority />
           </a>
@@ -73,39 +98,54 @@ export function Hero() {
               </nav>
             </details>
           </div>
-        </div>
+        </Mount>
 
         {/* Split */}
-        <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div className="flex flex-col justify-center px-7 py-16 sm:px-10 lg:px-14 lg:py-24">
+        <div className="relative grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <ScrollAway lift={70} className="flex">
+            <MountStagger
+              step={0.11}
+              delay={0.2}
+              className="flex flex-col justify-center px-7 py-16 sm:px-10 lg:px-14 lg:py-24"
+            >
             {/* <p className="eyebrow text-ms-clay">
               {brand.descriptor} &middot; Westlands, Nairobi
             </p> */}
 
-            <h1 className="mt-7 max-w-[15ch] font-display text-[clamp(2.6rem,5vw,4.1rem)] font-normal leading-[1.04] tracking-[-0.02em] text-ms-ivory">
-              Richer. <em className="italic text-ms-clay">Radiant.</em> SKIN of you.
-            </h1>
+              <MountItem y={26}>
+                <h1 className="mt-7 max-w-[15ch] font-display text-[clamp(2.6rem,5vw,4.1rem)] font-normal leading-[1.04] tracking-[-0.02em] text-ms-ivory">
+                  Richer. <em className="italic text-ms-clay">Radiant.</em> SKIN
+                  of you.
+                </h1>
+              </MountItem>
 
-            <p className="mt-7 max-w-[46ch] font-sans text-[16px] font-light leading-[1.8] text-ms-cream/80">
-              Medical and cosmetic dermatology built for melanin-rich skin.
-              Pigmentation, scarring, acne and hair loss read correctly the
-              first time &mdash; then treated with a plan you can keep to.
-            </p>
+              <MountItem>
+                <p className="mt-7 max-w-[46ch] font-sans text-[16px] font-light leading-[1.8] text-ms-cream/80">
+                  Medical and cosmetic dermatology built for melanin-rich skin.
+                  Pigmentation, scarring, acne and hair loss read correctly the
+                  first time &mdash; then treated with a plan you can keep to.
+                </p>
+              </MountItem>
 
-            <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ButtonPrimary href="#book" tone="dark">
-                Book a consultation
-              </ButtonPrimary>
-              <ButtonGhost href="#treatments" tone="dark">
-                The treatments
-              </ButtonGhost>
-            </div>
+              <MountItem>
+                <div className="mt-10 flex flex-wrap items-center gap-3">
+                  <ButtonPrimary href="#book" tone="dark">
+                    Book a consultation
+                  </ButtonPrimary>
+                  <ButtonGhost href="#treatments" tone="dark">
+                    The treatments
+                  </ButtonGhost>
+                </div>
+              </MountItem>
 
-            <p className="mt-9 font-sans text-[12px] font-light tracking-[0.05em] text-ms-sand/70">
-              Opening {todo.openingDate} &nbsp;&middot;&nbsp; {brand.address.line1},{" "}
-              {brand.address.line2}
-            </p>
-          </div>
+              <MountItem>
+                <p className="mt-9 font-sans text-[12px] font-light tracking-[0.05em] text-ms-sand/70">
+                  Opening {todo.openingDate} &nbsp;&middot;&nbsp;{" "}
+                  {brand.address.line1}, {brand.address.line2}
+                </p>
+              </MountItem>
+            </MountStagger>
+          </ScrollAway>
 
           {/* Photograph slot, on the brand pattern */}
           <div className="relative min-h-[300px] lg:min-h-[620px]">

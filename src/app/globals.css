@@ -142,82 +142,25 @@
 
 /* ==========================================================================
    Motion
-   Everything below is CSS-only on purpose. The page ships no client-side
-   JavaScript of our own (see README), so the hero rotation runs on keyframes
-   and the scroll reveals on scroll-driven timelines rather than on an observer.
+
+   Everything that moves is now Framer Motion (src/components/motion.tsx). The
+   scroll-driven CSS timelines that used to live here have gone: they could not
+   stagger a list off one trigger, could not link a value to scroll position,
+   and were unsupported in Safari, so half the audience got no motion at all.
+
+   What is left here is the reduced-motion contract for the plain-CSS parts —
+   smooth scrolling and the hover transitions on links, pills and cards.
+   Framer Motion honours the same preference through `MotionConfig
+   reducedMotion="user"` in the root layout.
    ========================================================================== */
 
-/*
-  Hero slide transitions are driven in HeroFrames (client component).
-*/
-
-/*
-  Section reveals, driven by scroll position rather than by time.
-
-  Gated behind @supports so that a browser without scroll-driven animations
-  gets no animation at all and every element renders in its final state. That
-  is the whole fallback — there is no JS path for reveals, and an unsupported
-  browser must not be left with content stuck at opacity 0.
-
-  Ranges end inside `entry` rather than `cover` so that a block finishes
-  revealing as it comes into view. Blocks are always shorter than the viewport;
-  applying these to a full-height section would leave it mid-animation, because
-  a subject taller than the scrollport never completes its entry range.
-*/
-@keyframes ms-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(26px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* For images and panels: no travel, just a settle out of a slight overscale. */
-@keyframes ms-rise {
-  from {
-    opacity: 0;
-    transform: scale(1.035);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@supports (animation-timeline: view()) {
-  @media not (prefers-reduced-motion: reduce) {
-    .reveal,
-    .rise {
-      animation-timeline: view();
-      animation-fill-mode: both;
-      animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
-      animation-range: entry 4% entry 58%;
-    }
-
-    .reveal {
-      animation-name: ms-reveal;
-    }
-
-    .rise {
-      animation-name: ms-rise;
-    }
-
-    /* Stagger by starting later in the same entry phase, not by delay —
-       time delays mean nothing on a scroll timeline. */
-    .reveal-d1 {
-      animation-range: entry 12% entry 66%;
-    }
-
-    .reveal-d2 {
-      animation-range: entry 20% entry 74%;
-    }
-
-    .reveal-d3 {
-      animation-range: entry 28% entry 82%;
-    }
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
