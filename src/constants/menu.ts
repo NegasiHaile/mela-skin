@@ -23,8 +23,8 @@
  *     botulinum toxin item here.
  *
  * The printed sheet carries no service descriptions — those live in
- * `services.ts`. Every price shown anywhere on the site comes from this file
- * and nowhere else.
+ * `cosmetic.ts`, which maps each family to the menu items it covers. Every
+ * price shown anywhere on the site comes from this file and nowhere else.
  *
  * BEFORE LAUNCH: confirm with the clinic that this menu and these figures are
  * Mela Skin's own. The source PDF is titled for GLO365 and a few item names
@@ -689,18 +689,32 @@ export function fromPriceForItem(itemName: string): number {
   return 0;
 }
 
+/** How many priced items one section lists. */
+export const sectionItemCount = (section: MenuSection): number =>
+  section.groups.reduce((n, group) => n + group.items.length, 0);
+
+/**
+ * Lowest published figure inside one section — the cheapest tier of the
+ * cheapest item, whether that tier is a single session or a course.
+ */
+export const sectionFrom = (section: MenuSection): number =>
+  Math.min(
+    ...section.groups.flatMap((group) =>
+      group.items.flatMap((item) => item.tiers.map((tier) => tier.price)),
+    ),
+  );
+
+/**
+ * The totals, derived from the per-section figures rather than walking the
+ * tree a second time. Both are quoted in page copy, in the header dropdown and
+ * in the JSON-LD, so there is one definition of each.
+ */
+
 /** Total number of priced items on the menu. */
 export const MENU_ITEM_COUNT = MENU.reduce(
-  (total, section) =>
-    total + section.groups.reduce((n, group) => n + group.items.length, 0),
+  (total, section) => total + sectionItemCount(section),
   0,
 );
 
 /** Lowest published figure anywhere on the menu. */
-export const MENU_FROM = Math.min(
-  ...MENU.flatMap((section) =>
-    section.groups.flatMap((group) =>
-      group.items.flatMap((item) => item.tiers.map((tier) => tier.price)),
-    ),
-  ),
-);
+export const MENU_FROM = Math.min(...MENU.map(sectionFrom));

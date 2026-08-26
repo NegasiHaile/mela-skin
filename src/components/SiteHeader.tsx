@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { brand, nav } from "@/constants";
-import type { NavChild, NavItem } from "@/constants";
+import type { NavChild, NavItem, NavList } from "@/constants";
 import { Wordmark } from "./brand/Marks";
 import { Mount } from "@/motion";
 import { PillGhost, Wrap } from "./ui";
@@ -13,22 +14,29 @@ import { PillGhost, Wrap } from "./ui";
   the full screen. The long pages carry their own in-page section nav instead,
   which is the thing you actually want pinned while scanning sixty priced items.
 
-  THE TREATMENTS PANEL (lg and up). Medical and cosmetic used to sit side by
-  side in the bar, which asked a visitor to know which half of dermatology
-  their problem belonged to before they could click anything. They are one
-  panel now: a picture, and a line each saying what the difference is.
+  THE PANELS (lg and up). Two of the four items open one.
 
-  It opens on `group-hover` and on `group-focus-within`, so it works with a
-  pointer, with a keyboard, and with no JavaScript at all. Three details hold
-  it together:
+  Treatments is a pair of picture cards. Medical and cosmetic used to sit side
+  by side in the bar, which asked a visitor to know which half of dermatology
+  their problem belonged to before they could click anything.
 
-  - The panel is positioned against the <nav>, not against the trigger. The nav
-    is `relative`; the trigger sits inside a Framer Motion wrapper that writes
-    a transform, and a transformed element becomes the containing block for
-    absolutely positioned children. Anchoring to the nav also keeps a 46rem
-    panel on screen at 1024px, which centring on the trigger does not. 38rem
-    is the widest it can be and still clear the right gutter at 1024, where the
-    nav starts furthest right relative to the viewport.
+  Menu & prices is a list: the five menu sections, each with how many
+  treatments it holds and where its prices start. Deliberately not a second set
+  of cards -- the question there is what something costs, and a photograph
+  cannot answer it, so the panel is shaped like the price list it opens into.
+
+  Both run through one `Dropdown` shell, so only the contents differ and the
+  open and close behaviour cannot drift apart. It opens on `group-hover` and on
+  `group-focus-within`, so it works with a pointer, with a keyboard, and with
+  no JavaScript at all. Three details hold it together:
+
+  - The panel is positioned against its own trigger: the group is `relative`,
+    which beats the transform Framer Motion writes onto the wrapper further up.
+    Treatments is the first item in the bar, so its panel lands exactly where
+    it did when the whole nav was the anchor; the narrower list panel now
+    follows the item it belongs to instead of the left edge of the nav. 38rem
+    and 24rem are the widest each can be and still clear the right gutter at
+    1024px, where the nav starts furthest right relative to the viewport.
   - The gap between the bar and the card is the panel's own transparent
     padding, so the pointer never leaves the group on the way down. Take the
     padding off and the menu closes as you reach for it.
@@ -36,23 +44,37 @@ import { PillGhost, Wrap } from "./ui";
     of the accessibility tree and out of tab order until the panel is open.
 
   THE MOBILE MENU (below lg). A <details> panel dropping the full width of the
-  screen, with the treatments group as a nested <details> inside it. Still no
+  screen, with both panelled items as nested <details> inside it -- same rows,
+  no pictures, since the panel is already as wide as the screen. Still no
   JavaScript. The panel is `absolute inset-x-0 top-full` against the header's
   own wrapper, which is why neither the <details> nor `Wrap` may carry
   `relative`, and nothing between them may carry a transform.
 */
 
-type GroupItem = NavItem & { children: NavChild[] };
+type CardItem = NavItem & { children: NavChild[] };
+type ListItem = NavItem & { list: NavList };
 
-function DesktopDropdown({
+/** The two items that open a panel rather than only navigating. */
+const opensPanel = (item: NavItem) => Boolean(item.children || item.list);
+
+/**
+ * The trigger, the hover and focus mechanics, and the panel's position and
+ * card. Everything both dropdowns have in common; `children` is the only part
+ * that differs, and `width` the only thing either has to tune.
+ */
+function Dropdown({
   item,
   linkClass,
+  width,
+  children,
 }: {
-  item: GroupItem;
+  item: NavItem;
   linkClass: string;
+  width: string;
+  children: ReactNode;
 }) {
   return (
-    <div className="group/menu">
+    <div className="group/menu relative">
       <Link
         href={item.href}
         aria-haspopup="true"
@@ -67,72 +89,167 @@ function DesktopDropdown({
         </span>
       </Link>
 
-      <div className="invisible absolute left-0 top-full z-50 w-[min(38rem,calc(100vw-3rem))] translate-y-[-6px] pt-4 opacity-0 transition duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/menu:visible group-hover/menu:translate-y-0 group-hover/menu:opacity-100 group-focus-within/menu:visible group-focus-within/menu:translate-y-0 group-focus-within/menu:opacity-100">
-        {/*
-          One row per treatment, and the row is the link. The picture is inside
-          it rather than in a column of its own, so the image and the words it
-          belongs to are the same target: there is no dead strip on the left
-          where a click does nothing.
-
-          No border, and still one hairline dividing the two rows, running the
-          full width with the image included. The card itself is rounded to
-          20px — the same radius the panel cards on the pages use — and
-          `overflow-hidden` is what makes the pictures follow those corners
-          instead of squaring them off again.
-
-          Both files are dense 3:2 collages of labelled treatments and none of
-          those labels can be read at this size. Centre-cropping is what makes
-          them work anyway, landing the medical one on the clinician and
-          patient and the cosmetic one on the model.
-        */}
+      <div
+        className={`invisible absolute left-0 top-full z-50 translate-y-[-6px] pt-4 opacity-0 transition duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/menu:visible group-hover/menu:translate-y-0 group-hover/menu:opacity-100 group-focus-within/menu:visible group-focus-within/menu:translate-y-0 group-focus-within/menu:opacity-100 ${width}`}
+      >
         <div className="overflow-hidden rounded-[20px] bg-ms-espresso shadow-[0_36px_70px_-28px_rgba(20,9,3,0.8)]">
-          {item.children.map((child, index) => (
-            <Link
-              key={child.href}
-              href={child.href}
-              className={`group/row grid grid-cols-[minmax(0,0.6fr)_minmax(0,1fr)] transition-colors hover:bg-ms-panel/70 ${
-                index > 0 ? "border-t border-ms-sand/20" : ""
-              }`}
-            >
-              <span className="relative block min-h-[8.75rem] overflow-hidden bg-ms-panel">
-                <Image
-                  src={child.image}
-                  alt={child.imageAlt}
-                  fill
-                  sizes="240px"
-                  className="object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/row:scale-[1.05]"
-                />
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-ms-espresso/75"
-                />
-              </span>
-
-              <span className="flex flex-col justify-center px-6 py-6">
-                <span className="flex items-center gap-2.5">
-                  <span className="font-display text-[1.3rem] leading-none text-ms-ivory">
-                    {child.label}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="font-sans text-[13px] text-ms-gold transition-transform duration-300 group-hover/row:translate-x-1"
-                  >
-                    &rarr;
-                  </span>
-                </span>
-                <span className="mt-2.5 block max-w-[40ch] font-sans text-[14px] font-light leading-[1.65] text-ms-cream/70">
-                  {child.description}
-                </span>
-              </span>
-            </Link>
-          ))}
+          {children}
         </div>
       </div>
     </div>
   );
 }
 
-function MobileGroup({ item }: { item: GroupItem }) {
+/*
+  One row per treatment, and the row is the link. The picture is inside it
+  rather than in a column of its own, so the image and the words it belongs to
+  are the same target: there is no dead strip on the left where a click does
+  nothing.
+
+  No border, and one hairline dividing the two rows, running the full width
+  with the image included. The 20px radius comes from the shell, whose
+  `overflow-hidden` is what makes the pictures follow those corners instead of
+  squaring them off again.
+
+  Both files are dense 3:2 collages of labelled treatments and none of those
+  labels can be read at this size. Centre-cropping is what makes them work
+  anyway, landing the medical one on the clinician and patient and the cosmetic
+  one on the model.
+*/
+function TreatmentCards({ item }: { item: CardItem }) {
+  return (
+    <>
+      {item.children.map((child, index) => (
+        <Link
+          key={child.href}
+          href={child.href}
+          className={`group/row grid grid-cols-[minmax(0,0.6fr)_minmax(0,1fr)] transition-colors hover:bg-ms-panel/70 ${
+            index > 0 ? "border-t border-ms-sand/20" : ""
+          }`}
+        >
+          <span className="relative block min-h-[8.75rem] overflow-hidden bg-ms-panel">
+            <Image
+              src={child.image}
+              alt={child.imageAlt}
+              fill
+              sizes="240px"
+              className="object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/row:scale-[1.05]"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-ms-espresso/75"
+            />
+          </span>
+
+          <span className="flex flex-col justify-center px-6 py-6">
+            <span className="flex items-center gap-2.5">
+              <span className="font-display text-[1.3rem] leading-none text-ms-ivory">
+                {child.label}
+              </span>
+              <span
+                aria-hidden="true"
+                className="font-sans text-[13px] text-ms-gold transition-transform duration-300 group-hover/row:translate-x-1"
+              >
+                &rarr;
+              </span>
+            </span>
+            <span className="mt-2.5 block max-w-[40ch] font-sans text-[14px] font-light leading-[1.65] text-ms-cream/70">
+              {child.description}
+            </span>
+          </span>
+        </Link>
+      ))}
+    </>
+  );
+}
+
+/*
+  The five menu sections. Each row carries the two things worth knowing before
+  committing to a page of sixty prices: how much is in the section, and what
+  the cheapest thing in it costs. Both figures are read out of the menu data,
+  so they cannot disagree with the page they link into.
+
+  The last row goes to the whole page. The trigger above already does, but a
+  visitor with the panel open has no way of knowing that, and reaching back up
+  to a word that looks like a label is not a thing to ask of anyone.
+*/
+function PriceList({ item }: { item: ListItem }) {
+  return (
+    <ul>
+      {item.list.rows.map((row, index) => (
+        <li key={row.href}>
+          <Link
+            href={row.href}
+            className={`group/row flex items-baseline justify-between gap-5 px-6 py-4 transition-colors hover:bg-ms-panel/70 ${
+              index > 0 ? "border-t border-ms-sand/15" : ""
+            }`}
+          >
+            <span className="min-w-0">
+              <span className="block font-display text-[1.15rem] leading-none text-ms-ivory">
+                {row.label}
+              </span>
+              <span className="mt-2 block font-sans text-[12px] tracking-[0.02em] text-ms-cream/55">
+                {row.meta}
+              </span>
+            </span>
+
+            <span className="flex shrink-0 items-center gap-2.5 font-sans text-[13px] tracking-[0.01em] text-ms-gold">
+              {row.from}
+              <span
+                aria-hidden="true"
+                className="transition-transform duration-300 group-hover/row:translate-x-1"
+              >
+                &rarr;
+              </span>
+            </span>
+          </Link>
+        </li>
+      ))}
+
+      <li>
+        <Link
+          href={item.list.all.href}
+          className="group/row flex items-center justify-between gap-5 border-t border-ms-sand/25 bg-ms-panel/45 px-6 py-4 transition-colors hover:bg-ms-panel/85"
+        >
+          <span className="font-sans text-[11.5px] uppercase tracking-[0.18em] text-ms-cream/75">
+            {item.list.all.label}
+          </span>
+          <span
+            aria-hidden="true"
+            className="font-sans text-[13px] text-ms-gold transition-transform duration-300 group-hover/row:translate-x-1"
+          >
+            &rarr;
+          </span>
+        </Link>
+      </li>
+    </ul>
+  );
+}
+
+/**
+ * Either panel, flattened for the mobile menu: a name and a line under it,
+ * inside a nested <details>. The card panel's line is its description; the
+ * list panel's is its count and its from-price joined, because at this width
+ * there is nothing to gain from holding the price out to the right.
+ */
+function MobileGroup({ item }: { item: NavItem }) {
+  const links = item.children
+    ? item.children.map((child) => ({
+        label: child.label,
+        href: child.href,
+        note: child.description,
+      }))
+    : item.list
+      ? [
+          ...item.list.rows.map((row) => ({
+            label: row.label,
+            href: row.href,
+            note: `${row.meta} · ${row.from}`,
+          })),
+          { label: item.list.all.label, href: item.list.all.href, note: "" },
+        ]
+      : [];
+
   return (
     <details className="group/sub border-b border-ms-sand/15">
       <summary className="flex min-h-[72px] cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
@@ -148,7 +265,7 @@ function MobileGroup({ item }: { item: GroupItem }) {
       </summary>
 
       <div className="pb-5">
-        {item.children.map((child) => (
+        {links.map((child) => (
           <Link
             key={child.href}
             href={child.href}
@@ -157,9 +274,11 @@ function MobileGroup({ item }: { item: GroupItem }) {
             <span className="block font-display text-[1.25rem] leading-none text-ms-cream">
               {child.label}
             </span>
-            <span className="mt-2.5 block font-sans text-[14px] font-light leading-[1.6] text-ms-sand/75">
-              {child.description}
-            </span>
+            {child.note ? (
+              <span className="mt-2.5 block font-sans text-[14px] font-light leading-[1.6] text-ms-sand/75">
+                {child.note}
+              </span>
+            ) : null}
           </Link>
         ))}
       </div>
@@ -206,16 +325,36 @@ export function SiteHeader({
         <Mount delay={0.12} y={-14} className="hidden lg:block">
           <nav
             aria-label="Primary"
-            className="relative flex items-center gap-6 xl:gap-9"
+            className="flex items-center gap-6 xl:gap-9"
           >
-            {nav.map((item) =>
-              item.children ? (
-                <DesktopDropdown
-                  key={item.href}
-                  item={item as GroupItem}
-                  linkClass={link}
-                />
-              ) : (
+            {nav.map((item) => {
+              if (item.children) {
+                return (
+                  <Dropdown
+                    key={item.href}
+                    item={item}
+                    linkClass={link}
+                    width="w-[min(38rem,calc(100vw-3rem))]"
+                  >
+                    <TreatmentCards item={item as CardItem} />
+                  </Dropdown>
+                );
+              }
+
+              if (item.list) {
+                return (
+                  <Dropdown
+                    key={item.href}
+                    item={item}
+                    linkClass={link}
+                    width="w-[min(24rem,calc(100vw-3rem))]"
+                  >
+                    <PriceList item={item as ListItem} />
+                  </Dropdown>
+                );
+              }
+
+              return (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -223,8 +362,8 @@ export function SiteHeader({
                 >
                   {item.label}
                 </Link>
-              ),
-            )}
+              );
+            })}
           </nav>
         </Mount>
 
@@ -288,8 +427,8 @@ export function SiteHeader({
                     className="menu-row"
                     style={{ animationDelay: `${0.06 + index * 0.05}s` }}
                   >
-                    {item.children ? (
-                      <MobileGroup item={item as GroupItem} />
+                    {opensPanel(item) ? (
+                      <MobileGroup item={item} />
                     ) : (
                       <Link
                         href={item.href}
