@@ -79,34 +79,52 @@ function MedicalShelf() {
         width rather than the entries doing it, which is what keeps the two
         rows of rules aligned across the whole shelf.
 
-        No boxes. Every entry is a hanging index number, a name and a line of
-        type sitting on the paper ground under its own hairline — the same
-        ruled-entry language the visit steps and the review slots use. The
-        cosmetic rail below is the one that gets cards, and keeping exactly one
-        of the two in card form is what makes them tell apart at a glance.
+        Square tiles on the brand terracotta at 18%, against the section's
+        `ms-paper` ground. Bare type on the ground read as loose copy rather
+        than as ten things you can click, and a hairline was not enough to hold
+        an entry together.
+
+        18% is the measured answer rather than a guess. It is the strongest
+        tint that keeps every element clear of WCAG AA on the fill: the title
+        at 9.99:1, the summary at 7.13:1 and the index numeral at 4.98:1. Hover
+        deepens to 26%, where the numeral still holds 4.53:1. Cream was tried
+        first and sits 1.17:1 off the paper, which is why it disappeared.
+
+        Square is the point. The cosmetic rail below uses notched corners and a
+        drop shadow, the pillar cards above use a 24px radius, and the condition
+        cards on /medical-dermatology use one too. A hard-edged tinted block is
+        the one card shape this site was not already using, so these still read
+        as their own thing rather than as a fourth variation on the same card.
+
+        Tracks are `minmax(19rem, 1fr)`, not a fixed width. Below about 1600px
+        the ten cannot fit, so the tracks sit at their 19rem minimum and the
+        shelf scrolls; above it they grow into the spare width instead of
+        bunching against the left edge with dead space to the right. One
+        declaration covers both, because `fr` only has free space to hand out
+        once the minimum is satisfied.
       */}
       <div className="mt-9 lg:mt-11">
         <Stagger
           as="ul"
           step={0.06}
           delay={0.1}
-          className={`scrollbar-hide grid snap-x snap-mandatory auto-cols-[16.5rem] grid-flow-col grid-rows-2 gap-x-8 gap-y-9 overflow-x-auto scroll-p-6 pb-2 sm:auto-cols-[19rem] sm:gap-x-10 sm:gap-y-11 sm:scroll-p-10 lg:scroll-p-14 ${GUTTER}`}
+          className={`scrollbar-hide grid snap-x snap-mandatory auto-cols-[minmax(16.5rem,1fr)] grid-flow-col grid-rows-2 gap-3 overflow-x-auto scroll-p-6 sm:auto-cols-[minmax(19rem,1fr)] sm:scroll-p-10 lg:scroll-p-14 ${GUTTER}`}
           aria-label={HOME.treatments.medicalLabel}
         >
           {CONDITIONS.map((condition, index) => (
             <StaggerItem as="li" key={condition.slug} y={22} className="snap-start">
               <Link
                 href={`/medical-dermatology#${condition.slug}`}
-                className="group flex h-full gap-4 border-t border-ms-bronze/25 pt-6 transition-colors duration-500 hover:border-ms-terracotta/60 sm:gap-5 sm:pt-7"
+                className="group flex h-full gap-4 bg-ms-terracotta/18 p-5 transition-colors duration-500 hover:bg-ms-terracotta/26 sm:gap-5 sm:p-6"
               >
                 <span
                   aria-hidden="true"
-                  className="mt-[0.4rem] shrink-0 font-sans text-[11px] font-medium tracking-[0.2em] text-ms-clay"
+                  className="mt-[0.4rem] shrink-0 font-sans text-[11px] font-medium tracking-[0.2em] text-ms-terracotta-deep"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                <span className="min-w-0 flex-1">
+                <span className="flex min-w-0 flex-1 flex-col">
                   <span className="flex items-start justify-between gap-3">
                     {/*
                       Two lines held open whether the name needs them or not.
@@ -124,8 +142,22 @@ function MedicalShelf() {
                     />
                   </span>
 
-                  <span className="mt-3 block font-sans text-[14.5px] font-light leading-[1.7] text-ms-espresso/75 sm:text-[15px]">
+                  <span className="mt-3 block font-sans text-[14.5px] font-light leading-[1.7] text-ms-espresso/80 sm:text-[15px]">
                     {condition.summary}
+                  </span>
+
+                  {/*
+                    The tile gives no other sign that it goes anywhere. It
+                    holds its row whether shown or not — `opacity-0` rather
+                    than `hidden` — so revealing it on hover moves nothing.
+                    `mt-auto` pins it to the bottom, and because grid rows are
+                    equal height the arrows line up across the shelf.
+                  */}
+                  <span
+                    aria-hidden="true"
+                    className="mt-auto flex justify-end pt-4 font-sans text-[15px] leading-none text-ms-terracotta-deep opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+                  >
+                    &rarr;
                   </span>
                 </span>
               </Link>

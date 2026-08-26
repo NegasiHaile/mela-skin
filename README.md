@@ -223,6 +223,37 @@ Two conventions hold the tone together:
 The nav lives inside the hero card rather than in a sticky bar, so it scrolls
 away. The booking card and footer repeat every route out of the page.
 
+## The hero slider
+
+`components/HeroFrames.tsx`. A track: one element carrying every frame side by
+side, moved left one container width per slide, autoplaying on a 5.2s hold with
+a 1.1s slide. It pauses while the pointer or focus is inside the portrait.
+
+**Why it was rewritten.** The previous version set each frame's offset and
+added the `transition-*` classes in the same render. A CSS transition only
+starts if the transition property is already on the element in the
+before-change style; add it in the same commit as the value change and the
+browser has nothing to interpolate from. Every frame snapped into place instead
+of sliding. The track's transition is never conditional, so that frame does not
+exist.
+
+Two things about it are load-bearing:
+
+- **The clone.** The list ends with a second copy of the first frame. Reaching
+  it and then snapping back (transition off for one frame, on again the next)
+  is what keeps the movement always leftward. Without it the wrap from last to
+  first rewinds the whole track rightward, which reads as a glitch. Re-enabling
+  the transition takes two nested `requestAnimationFrame`s: one is not enough,
+  because the jump has to be painted before the transition comes back or it
+  animates the thing it was meant to hide.
+- **Percentages resolve against the transformed element's own width**, so the
+  track is `absolute inset-0`, exactly one container wide, and the frames are
+  laid along it with `left`. Give the track the combined width instead and
+  every translate is out by a factor of the frame count.
+
+The rewrite also removed the two refs that were being written during render,
+which were the site's only outstanding lint errors.
+
 ## Weight and scroll
 
 The site was slow to load and juddery to scroll. Four things were responsible,
@@ -386,15 +417,23 @@ should be able to tell which list they are in without reading the label.
 | | Medical | Cosmetic |
 | --- | --- | --- |
 | Shape | Two rows, five columns, column-major | One row |
-| Entry | No box at all — a hanging `01`–`10`, a name and a line of type under a hairline | A paper card: snipped corners, hard shadow, tinted ground |
+| Entry | A square tile on the brand terracotta at 18%, with a hanging `01`–`10` | A paper card: snipped corners, hard shadow, tinted ground |
 | Carries | Icon, name, one line | Photograph or brand panel, name, one line, the price it starts at |
 | Reads as | An index — you scan for a word you already have | A catalogue — you browse without knowing what you want |
 
-Exactly one of the two is in card form, and that is the whole reason they read
-apart. The medical entries use the same ruled-entry language as the visit steps
-and the review slots; boxing them made the section look like two rows of the
-same thing. The title reserves two lines (`min-h-[2.4em]`) whether the name
-needs them or not, so every summary in a row starts at the same height.
+Square corners are what keeps the two apart. The cosmetic rail uses notched
+corners and a drop shadow, the pillar cards above use a 24px radius, and so do
+the condition cards on `/medical-dermatology` — a hard-edged tinted block is the
+one card shape the site was not already using.
+
+The 18% tint is measured, not picked. It is the strongest fill that keeps every
+element clear of WCAG AA on it: the title at 9.99:1, the summary at 7.13:1, the
+index numeral at 4.98:1. Hover deepens to 26%, where the numeral still holds
+4.53:1. `ms-cream` was tried first and sits 1.17:1 off the paper ground, which
+is why it vanished into it.
+
+The title reserves two lines (`min-h-[2.4em]`) whether the name needs them or
+not, so every summary in a row starts at the same height.
 
 Two rows for the medical list is not decoration. Ten conditions in a single
 rail put seven off-screen on a phone; stacked two deep the same rail shows four

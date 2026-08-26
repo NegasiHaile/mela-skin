@@ -9,7 +9,7 @@
 
 import { CONDITIONS } from "./conditions";
 import { COSMETIC } from "./cosmetic";
-import { MENU } from "./menu";
+import { MENU, MENU_ITEM_COUNT, kes, sectionFrom, sectionItemCount } from "./menu";
 
 export type NavLink = { label: string; href: string };
 
@@ -26,9 +26,29 @@ export type NavChild = NavLink & {
   imageAlt: string;
 };
 
+/** A row inside a header list panel: a name, a count and a starting price. */
+export type NavRow = NavLink & {
+  /** How much is behind the link — "18 treatments". */
+  meta: string;
+  /** Where that section's prices start, already formatted. */
+  from: string;
+};
+
+/**
+ * The list panel. Five sections and their figures, then a row for the page as
+ * a whole — the same thing the trigger itself does, but reachable without
+ * having to guess that the trigger is also a link.
+ */
+export type NavList = {
+  rows: NavRow[];
+  all: NavLink;
+};
+
 export type NavItem = NavLink & {
-  /** Present on the one item that opens a panel rather than navigating. */
+  /** A card panel: a picture, a name and a line each. */
   children?: NavChild[];
+  /** A list panel: one ruled row per section, with its count and from-price. */
+  list?: NavList;
 };
 
 /**
@@ -38,8 +58,16 @@ export type NavItem = NavLink & {
  * Medical and cosmetic used to be two top-level items, which asked a visitor
  * to know which half of dermatology their problem belongs to before they could
  * click anything. They are one "Treatments" panel now, with a line each
- * explaining the difference. Its `href` still points somewhere real, so the
- * trigger works as a link for anyone who taps or clicks it rather than hovers.
+ * explaining the difference.
+ *
+ * Two items open panels, and they are deliberately different shapes.
+ * Treatments is a pair of picture cards, because the choice there is which
+ * half of dermatology you need. Menu & prices is a list of the five menu
+ * sections with a count and a starting figure against each, because the
+ * question there is what a thing costs, and a picture cannot answer it.
+ *
+ * Both keep an `href` that points somewhere real, so each trigger still works
+ * as a plain link for anyone who taps or clicks it rather than hovers.
  */
 export const nav: NavItem[] = [
   {
@@ -64,14 +92,41 @@ export const nav: NavItem[] = [
       },
     ],
   },
-  { label: "Menu & prices", href: "/treatment-menu" },
+  {
+    label: "Menu & prices",
+    href: "/treatment-menu",
+    /*
+      Generated from ./menu.ts, so a section added or renamed there turns up
+      here, and the counts and from-prices in the panel can never drift from
+      the figures on the page they link into.
+    */
+    list: {
+      rows: MENU.map((section) => {
+        const count = sectionItemCount(section);
+        return {
+          label: section.title,
+          href: `/treatment-menu#${section.id}`,
+          meta: `${count} treatment${count === 1 ? "" : "s"}`,
+          from: `from ${kes(sectionFrom(section))}`,
+        };
+      }),
+      all: {
+        label: `All ${MENU_ITEM_COUNT} prices`,
+        href: "/treatment-menu",
+      },
+    },
+  },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
 /**
- * The same list with every dropdown child promoted to the top level. For
+ * The same list with every card-panel child promoted to the top level. For
  * consumers that render a plain row of links and have nowhere to put a panel.
+ *
+ * The list panel's rows are not promoted: they are anchors into the page its
+ * trigger already points at, so flattening them would repeat one destination
+ * six times.
  */
 export const NAV_FLAT: NavLink[] = nav.flatMap((item) =>
   item.children

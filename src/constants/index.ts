@@ -15,7 +15,7 @@ export { brand, heroSlides } from "./brand";
 export { todo } from "./placeholders";
 
 export { nav, NAV_FLAT, FOOTER_COLUMNS, FOOTER_COLUMNS_COMPACT } from "./navigation";
-export type { NavChild, NavItem, NavLink } from "./navigation";
+export type { NavChild, NavItem, NavLink, NavList, NavRow } from "./navigation";
 
 export {
   MENU,
@@ -25,6 +25,8 @@ export {
   fromPrice,
   fromPriceForGroup,
   fromPriceForItem,
+  sectionFrom,
+  sectionItemCount,
 } from "./menu";
 export type { MenuGroup, MenuItem, MenuSection, PriceTier } from "./menu";
 

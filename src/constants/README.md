@@ -23,7 +23,7 @@ import { brand, CONDITIONS, MENU, kes } from "@/constants";
 | `conditions.ts` | Medical dermatology — the ten conditions, their descriptions and their icons |
 | `cosmetic.ts` | Cosmetic dermatology — the ten treatment families, plus the service marked coming soon |
 | `clinic.ts` | The clinicians, the four visit steps, the premises, the review slots, the contact block |
-| `navigation.ts` | The header bar, the footer columns, the legal links |
+| `navigation.ts` | The header bar and its two dropdowns, the footer columns |
 | `copy.ts` | Headings, ledes, the pricing FAQ, and the search-engine descriptions and keywords, grouped by page |
 
 ## The rules that keep it honest
