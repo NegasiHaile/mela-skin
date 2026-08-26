@@ -82,7 +82,7 @@ export function Hero() {
                   <MountItem className="relative mt-12 sm:mt-14">
                     <div className="flex flex-wrap items-center gap-3.5">
                       <PillSolid
-                        href="#book"
+                        href="/contact"
                         tone="dark"
                         className="min-h-13 px-9 text-[13.5px] sm:min-h-14 sm:px-10 sm:text-[14px]"
                       >

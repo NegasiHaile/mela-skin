@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Booking } from "@/components/Booking";
+import { BookingCta } from "@/components/BookingCta";
 import { Faq } from "@/components/Faq";
 import { GoldDefs } from "@/components/brand/Marks";
 import { MenuBoard, MenuNav } from "@/components/MenuBoard";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 /*
   The whole priced menu on one route, from Resources/REVISED MENU OF GLO365 -
-  2025.pdf by way of lib/menu.ts. Five sections, sixty-odd treatments, nothing
+  2025.pdf by way of constants/menu.ts. Five sections, sixty-odd treatments,
   behind an enquiry form.
 */
 
@@ -53,7 +53,7 @@ export default function TreatmentMenu() {
             <PillSolid href={`#${MENU[0].id}`} tone="dark" className="min-h-13 px-8">
               Start at facials
             </PillSolid>
-            <PillGhost href="#book" tone="dark" className="min-h-13 px-8">
+            <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">
               Book a consultation
             </PillGhost>
           </div>
@@ -76,7 +76,7 @@ export default function TreatmentMenu() {
           items={MENU_PAGE.faq}
         />
 
-        <Booking />
+        <BookingCta />
       </main>
       <SiteFooter />
     </>

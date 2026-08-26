@@ -9,25 +9,37 @@ import "./globals.css";
 /*
   Larken is the clinic's primary typeface (brand deck p.9). Self-hosted from
   the licensed files in Resources/Marketing/Brand Identity/Fonts/Larken.rar.
+
+  Served as WOFF2, converted from the supplied TTFs: 377KB of TTF becomes
+  138KB, which is the single cheapest weight saving on the site and changes
+  nothing on screen. The .ttf files are kept as the masters; nothing loads
+  them. Regenerate with scripts/fonts-to-woff2.py if the family is updated.
+
   Four cuts only — the family is not variable despite the archive's naming, so
-  every extra weight is another ~95KB over the wire.
+  every extra weight is another ~34KB over the wire.
 */
 const larken = localFont({
   src: [
-    { path: "../fonts/Larken-Light.ttf", weight: "300", style: "normal" },
-    { path: "../fonts/Larken-Regular.ttf", weight: "400", style: "normal" },
-    { path: "../fonts/Larken-Italic.ttf", weight: "400", style: "italic" },
-    { path: "../fonts/Larken-Bold.ttf", weight: "700", style: "normal" },
+    { path: "../fonts/Larken-Light.woff2", weight: "300", style: "normal" },
+    { path: "../fonts/Larken-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Larken-Italic.woff2", weight: "400", style: "italic" },
+    { path: "../fonts/Larken-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-larken",
   display: "swap",
   fallback: ["Didot", "Bodoni MT", "Georgia", "serif"],
 });
 
-/* Secondary typography, option 3 of the three the brand deck offers (p.9). */
+/*
+  Secondary typography, option 3 of the three the brand deck offers (p.9).
+
+  Three weights, not four. Nothing on the site sets `font-bold` on sans type —
+  the only bold on the page is the Larken wordmark — so 700 was a font file
+  fetched and never used.
+*/
 const grotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500"],
   variable: "--font-grotesk",
   display: "swap",
 });
@@ -74,7 +86,7 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: `${brand.name} — ${brand.descriptor}. ${brand.tagline}`,
+        alt: `${brand.name}, ${brand.descriptor}. ${brand.tagline}`,
       },
     ],
   },

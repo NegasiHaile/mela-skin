@@ -1,4 +1,4 @@
-import { CONDITIONS, COSMETIC, MENU_FROM, MENU_ITEM_COUNT, brand } from "@/constants";
+import { CONDITIONS, CONTACT, COSMETIC, MENU_FROM, MENU_ITEM_COUNT, brand } from "@/constants";
 
 /** Local clinic schema for Google / rich results. */
 export function clinicJsonLd() {
@@ -37,6 +37,9 @@ export function clinicJsonLd() {
           "@type": "City",
           name: "Nairobi",
         },
+        // Points at the same search the contact page embeds, so the map a
+        // search engine offers and the map on the site agree.
+        hasMap: CONTACT.map.directionsUrl,
         medicalSpecialty: ["Dermatology", "Cosmetic Dermatology"],
         /*
           The ten conditions from Resources/more-info.md. `knowsAbout` rather

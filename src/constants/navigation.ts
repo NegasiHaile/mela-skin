@@ -13,18 +13,71 @@ import { MENU } from "./menu";
 
 export type NavLink = { label: string; href: string };
 
+/** A card inside a header dropdown: a picture, a name and a line about it. */
+export type NavChild = NavLink & {
+  /** One or two lines. Read at ~14px, so keep it short enough to scan. */
+  description: string;
+  /**
+   * A real file in /public/images. Both are dense 3:2 collages, so they are
+   * centre-cropped in the panel: the medical one lands on the clinician and
+   * patient, the cosmetic one on the model.
+   */
+  image: string;
+  imageAlt: string;
+};
+
+export type NavItem = NavLink & {
+  /** Present on the one item that opens a panel rather than navigating. */
+  children?: NavChild[];
+};
+
 /**
  * The header bar. Absolute paths rather than fragments, because the same bar
- * has to work from /treatment-menu as it does from the home page. `/#clinic`
- * points at a section that only exists on the home page, which is why it keeps
- * the leading slash.
+ * has to work from /treatment-menu as it does from the home page.
+ *
+ * Medical and cosmetic used to be two top-level items, which asked a visitor
+ * to know which half of dermatology their problem belongs to before they could
+ * click anything. They are one "Treatments" panel now, with a line each
+ * explaining the difference. Its `href` still points somewhere real, so the
+ * trigger works as a link for anyone who taps or clicks it rather than hovers.
  */
-export const nav: NavLink[] = [
-  { label: "Medical", href: "/medical-dermatology" },
-  { label: "Cosmetic", href: "/cosmetic-dermatology" },
+export const nav: NavItem[] = [
+  {
+    label: "Treatments",
+    href: "/medical-dermatology",
+    children: [
+      {
+        label: "Medical dermatology",
+        href: "/medical-dermatology",
+        description:
+          "Ten conditions diagnosed before they are treated, from acne and eczema through psoriasis, melasma and mole checks.",
+        image: "/images/medcal-dermatology-treatment.webp",
+        imageAlt: "A dermatologist examining a patient's skin at Mela Skin",
+      },
+      {
+        label: "Cosmetic dermatology",
+        href: "/cosmetic-dermatology",
+        description:
+          "Injectables, fillers, boosters, PRP, hair, facials, peels, laser and body work, every one with a published price.",
+        image: "/images/cosmotic-dermatology-treatment.webp",
+        imageAlt: "Cosmetic dermatology treatments at Mela Skin",
+      },
+    ],
+  },
   { label: "Menu & prices", href: "/treatment-menu" },
-  { label: "The clinic", href: "/#clinic" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
+
+/**
+ * The same list with every dropdown child promoted to the top level. For
+ * consumers that render a plain row of links and have nowhere to put a panel.
+ */
+export const NAV_FLAT: NavLink[] = nav.flatMap((item) =>
+  item.children
+    ? item.children.map(({ label, href }) => ({ label, href }))
+    : [{ label: item.label, href: item.href }],
+);
 
 const conditionLinks = (count: number): NavLink[] =>
   CONDITIONS.slice(0, count).map((condition) => ({
@@ -64,36 +117,33 @@ export const FOOTER_COLUMNS: { heading: string; links: NavLink[] }[] = [
   {
     heading: "Clinic",
     links: [
+      { label: "About the clinic", href: "/about" },
+      { label: "How we work", href: "/about#principles" },
+      { label: "Skin assessment", href: "/about#assessment" },
       { label: "Your visit", href: "/#visit" },
-      { label: "The clinician", href: "/#clinic" },
       { label: "Reviews", href: "/#reviews" },
-      { label: "Book a consultation", href: "#book" },
+      { label: "Contact & directions", href: "/contact" },
     ],
   },
 ];
 
 /**
- * Not written yet. They render as dead `#` links on purpose rather than as
- * invented policy text — point them at real pages when those exist.
+ * The editorial direction's narrower footer. Same data, shorter columns.
+ *
+ * There is no legal column. Privacy, terms and complaints were placeholders
+ * pointing at `#`, and a dead link in a footer is worse than an absent one —
+ * add them back here when the pages exist.
  */
-export const LEGAL: NavLink[] = [
-  { label: "Privacy notice", href: "#" },
-  { label: "Patient terms", href: "#" },
-  { label: "Complaints", href: "#" },
-];
-
-/** The editorial direction's narrower footer. Same data, shorter columns. */
 export const FOOTER_COLUMNS_COMPACT: { heading: string; links: NavLink[] }[] = [
   { heading: "Medical", links: conditionLinks(4) },
   { heading: "Cosmetic", links: familyLinks(4) },
   {
     heading: "Clinic",
     links: [
+      { label: "About the clinic", href: "/about" },
       { label: "Your visit", href: "#visit" },
-      { label: "The clinic", href: "#clinic" },
       { label: "Reviews", href: "#reviews" },
-      { label: "Book", href: "#book" },
+      { label: "Contact", href: "/contact" },
     ],
   },
-  { heading: "Legal", links: LEGAL },
 ];

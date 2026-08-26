@@ -1,4 +1,4 @@
-import { brand, nav, todo } from "@/constants";
+import { NAV_FLAT, brand, todo } from "@/constants";
 import { Mount, MountItem, MountStagger, ScrollAway } from "@/motion";
 import { BrandPattern } from "./brand/BrandPattern";
 import { PatternField } from "./brand/PatternField";
@@ -48,7 +48,7 @@ export function Hero() {
             aria-label="Primary"
             className="hidden items-center gap-8 lg:flex"
           >
-            {nav.map((item) => (
+            {NAV_FLAT.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
@@ -80,7 +80,7 @@ export function Hero() {
                 aria-label="Primary"
                 className="absolute right-0 top-[calc(100%+0.85rem)] flex w-56 flex-col rounded-[10px] border border-ms-bronze/25 bg-ms-ivory p-1 shadow-[0_18px_44px_-20px_rgba(49,24,10,0.55)]"
               >
-                {nav.map((item) => (
+                {NAV_FLAT.map((item) => (
                   <a
                     key={item.href}
                     href={item.href}
@@ -123,7 +123,7 @@ export function Hero() {
                 <p className="mt-7 max-w-[46ch] font-sans text-[16px] font-light leading-[1.8] text-ms-cream/80">
                   Medical and cosmetic dermatology built for melanin-rich skin.
                   Pigmentation, scarring, acne and hair loss read correctly the
-                  first time &mdash; then treated with a plan you can keep to.
+                  first time, then treated with a plan you can keep to.
                 </p>
               </MountItem>
 

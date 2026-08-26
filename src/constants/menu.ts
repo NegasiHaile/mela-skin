@@ -65,7 +65,7 @@ export const MENU: MenuSection[] = [
     id: "facials",
     title: "Facials",
     blurb:
-      "Three families, sorted by what you want out of the hour — barrier repair, tone, or lift. The price climbs with what the treatment actually does to the skin.",
+      "Three families, sorted by what you want out of the hour: barrier repair, tone, or lift. The price climbs with what the treatment actually does to the skin.",
     groups: [
       {
         name: "Renewal",
@@ -455,7 +455,7 @@ export const MENU: MenuSection[] = [
     id: "injectables",
     title: "Injectables",
     blurb:
-      "Priced by area or by volume rather than by the hour, so what you pay tracks what actually goes in. Every product on this list is named — ask which one you are getting.",
+      "Priced by area or by volume rather than by the hour, so what you pay tracks what actually goes in. Every product on this list is named, so ask which one you are getting.",
     groups: [
       {
         name: "Botulinum toxin & filler",

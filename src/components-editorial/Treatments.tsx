@@ -4,8 +4,8 @@ import { PatternField } from "./brand/PatternField";
 import { Card, Inner, SectionLabel, Shell } from "./ui";
 
 /*
-  The real offering, from lib/services.ts — ten medical conditions and nine
-  cosmetic families, exactly as the immersive direction at `/` carries them.
+  The real offering, from constants/conditions.ts and constants/cosmetic.ts,
+  exactly as the immersive direction at `/` carries it.
   This used to hold a drafted eight-item list written before the clinic had
   supplied one; that list is gone.
 

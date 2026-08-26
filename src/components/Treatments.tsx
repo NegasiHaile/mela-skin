@@ -7,17 +7,21 @@ import { DrawRule, Lift, Reveal, Stagger, StaggerItem } from "@/motion";
 import { Lede, PillGhost, PillSolid, SectionHead, Wrap } from "./ui";
 
 /*
-  Both halves of the offering, in the two forms that suit them.
+  Both halves of the offering. Both scroll horizontally; neither looks like the
+  other, and that is the point — a visitor should be able to tell which list
+  they are in without reading the label.
 
-  Medical is an index — ten named conditions, one line each, straight through
-  to the entry that explains it. Nobody browsing "is my psoriasis actually
-  psoriasis" wants a carousel; they want to find the word and click it.
+    MEDICAL   two rows, five columns, column-major. Outlined cards on the
+              paper ground, numbered, no photography, no price. Reads as an
+              index: a thing you scan for a word you already have in mind.
 
-  Cosmetic is a rail of cards, because it is chosen rather than diagnosed and
-  because every one of these carries a published price. All ten families are on
-  the rail — a horizontal snap-scroll is built for exactly this, and leaving
-  half of them off the home page to "keep it clean" only hides the cheapest
-  ways into the clinic.
+    COSMETIC  one row of paper cards with snipped corners, a photograph or a
+              brand-ground panel, and the price it starts at. Reads as a
+              catalogue: a thing you browse without knowing what you want.
+
+  Two rows for medical is not decoration. Ten conditions in a single rail would
+  put seven of them off-screen on a phone; stacked two deep, the same rail shows
+  four at a time and takes half the horizontal distance to get through.
 
   Copy: constants/copy.ts → HOME.treatments. Lists: constants/conditions.ts
   and constants/cosmetic.ts. Figures: constants/menu.ts, looked up rather than
@@ -26,18 +30,27 @@ import { Lede, PillGhost, PillSolid, SectionHead, Wrap } from "./ui";
 
 const RAIL = COSMETIC;
 
-function MedicalIndex() {
+/** Shared by both rails so their labels and first cards line up. */
+const GUTTER = "px-6 sm:px-10 lg:px-14";
+
+function RailHead({
+  label,
+  href,
+  cta,
+}: {
+  label: string;
+  href: string;
+  cta: string;
+}) {
   return (
-    <div>
+    <div className={GUTTER}>
       <Reveal y={18} className="flex flex-wrap items-baseline justify-between gap-4">
-        <h3 className="eyebrow text-ms-terracotta-deep">
-          {HOME.treatments.medicalLabel}
-        </h3>
+        <h3 className="eyebrow text-ms-terracotta-deep">{label}</h3>
         <Link
-          href="/medical-dermatology"
+          href={href}
           className="group inline-flex items-center gap-2 font-sans text-[12.5px] tracking-[0.02em] text-ms-bronze transition-colors hover:text-ms-cocoa"
         >
-          {HOME.treatments.medicalLink}
+          {cta}
           <span
             aria-hidden="true"
             className="transition-transform duration-300 group-hover:translate-x-1"
@@ -46,43 +59,80 @@ function MedicalIndex() {
           </span>
         </Link>
       </Reveal>
+    </div>
+  );
+}
 
-      <Stagger
-        as="ul"
-        step={0.06}
-        delay={0.1}
-        className="mt-9 grid gap-x-14 lg:mt-11 lg:grid-cols-2"
-      >
-        {CONDITIONS.map((condition) => (
-          <StaggerItem as="li" key={condition.slug} y={20}>
-            <Link
-              href={`/medical-dermatology#${condition.slug}`}
-              className="group flex items-start gap-5 border-t border-ms-bronze/20 py-6 transition-colors hover:border-ms-terracotta/45 sm:gap-6 sm:py-7"
-            >
-              <Icon
-                name={condition.icon}
-                className="mt-1 shrink-0 text-ms-terracotta-deep transition-colors group-hover:text-ms-clay"
-              />
-              <span className="min-w-0 flex-1">
-                <span className="flex items-center gap-3">
-                  <span className="font-display text-[1.4rem] leading-[1.2] tracking-[-0.01em] text-ms-cocoa sm:text-[1.55rem]">
-                    {condition.title}
+function MedicalShelf() {
+  return (
+    <div className="relative">
+      <RailHead
+        label={HOME.treatments.medicalLabel}
+        href="/medical-dermatology"
+        cta={HOME.treatments.medicalLink}
+      />
+
+      {/*
+        `grid-flow-col` with `grid-rows-2` fills down before it fills across, so
+        the ten arrive in pairs — Acne/Eczema, then Melanoma/Melasma, and so on
+        — and each column is one snap position. `auto-cols` sets the column
+        width rather than the entries doing it, which is what keeps the two
+        rows of rules aligned across the whole shelf.
+
+        No boxes. Every entry is a hanging index number, a name and a line of
+        type sitting on the paper ground under its own hairline — the same
+        ruled-entry language the visit steps and the review slots use. The
+        cosmetic rail below is the one that gets cards, and keeping exactly one
+        of the two in card form is what makes them tell apart at a glance.
+      */}
+      <div className="mt-9 lg:mt-11">
+        <Stagger
+          as="ul"
+          step={0.06}
+          delay={0.1}
+          className={`scrollbar-hide grid snap-x snap-mandatory auto-cols-[16.5rem] grid-flow-col grid-rows-2 gap-x-8 gap-y-9 overflow-x-auto scroll-p-6 pb-2 sm:auto-cols-[19rem] sm:gap-x-10 sm:gap-y-11 sm:scroll-p-10 lg:scroll-p-14 ${GUTTER}`}
+          aria-label={HOME.treatments.medicalLabel}
+        >
+          {CONDITIONS.map((condition, index) => (
+            <StaggerItem as="li" key={condition.slug} y={22} className="snap-start">
+              <Link
+                href={`/medical-dermatology#${condition.slug}`}
+                className="group flex h-full gap-4 border-t border-ms-bronze/25 pt-6 transition-colors duration-500 hover:border-ms-terracotta/60 sm:gap-5 sm:pt-7"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-[0.4rem] shrink-0 font-sans text-[11px] font-medium tracking-[0.2em] text-ms-clay"
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-start justify-between gap-3">
+                    {/*
+                      Two lines held open whether the name needs them or not.
+                      "Melanoma & mole checks" wraps and "Acne" does not, and
+                      without the reserve their summaries start at different
+                      heights across the same row — which is exactly the ragged
+                      edge a ruled index exists to avoid.
+                    */}
+                    <span className="min-h-[2.4em] font-display text-[1.35rem] leading-[1.2] tracking-[-0.01em] text-ms-cocoa transition-colors group-hover:text-ms-terracotta-deep sm:text-[1.5rem]">
+                      {condition.title}
+                    </span>
+                    <Icon
+                      name={condition.icon}
+                      className="mt-0.5 shrink-0 text-ms-bronze transition-colors group-hover:text-ms-clay"
+                    />
                   </span>
-                  <span
-                    aria-hidden="true"
-                    className="text-ms-bronze opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
-                  >
-                    &rarr;
+
+                  <span className="mt-3 block font-sans text-[14.5px] font-light leading-[1.7] text-ms-espresso/75 sm:text-[15px]">
+                    {condition.summary}
                   </span>
                 </span>
-                <span className="mt-2.5 block font-sans text-[15.5px] font-light leading-[1.7] text-ms-espresso/75 sm:text-[16px]">
-                  {condition.summary}
-                </span>
-              </span>
-            </Link>
-          </StaggerItem>
-        ))}
-      </Stagger>
+              </Link>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
     </div>
   );
 }
@@ -95,32 +145,36 @@ const GROUNDS = [
   "from-ms-cream via-ms-ivory/90 to-ms-sand/80",
 ] as const;
 
+/*
+  Both rails run the full width of the viewport rather than the width of the
+  1320px content column the rest of the section sits in. They keep the column's
+  own gutter as their padding, so on anything narrower than 1320px nothing
+  moves at all — the labels and the first cards land exactly where they always
+  did. Past that width the rails widen, which is the point: capped at the
+  column they would waste half a large monitor.
+
+  GUTTER is shared between every label row and every scroller deliberately. If
+  they drift apart the first card stops lining up under its heading, and that
+  is the one alignment in this section anybody would notice.
+
+  `scroll-p-*` matches the padding so a snapped card comes to rest against the
+  gutter rather than against the edge of the screen.
+*/
+
 function CosmeticRail() {
   return (
-    <div>
-      <Reveal y={18} className="flex flex-wrap items-baseline justify-between gap-4">
-        <h3 className="eyebrow text-ms-terracotta-deep">
-          {HOME.treatments.cosmeticLabel}
-        </h3>
-        <Link
-          href="/cosmetic-dermatology"
-          className="group inline-flex items-center gap-2 font-sans text-[12.5px] tracking-[0.02em] text-ms-bronze transition-colors hover:text-ms-cocoa"
-        >
-          {HOME.treatments.cosmeticLink}
-          <span
-            aria-hidden="true"
-            className="transition-transform duration-300 group-hover:translate-x-1"
-          >
-            &rarr;
-          </span>
-        </Link>
-      </Reveal>
+    <div className="relative">
+      <RailHead
+        label={HOME.treatments.cosmeticLabel}
+        href="/cosmetic-dermatology"
+        cta={HOME.treatments.cosmeticLink}
+      />
 
       <div className="mt-10 -mb-6 lg:mt-12">
         <Stagger
           step={0.1}
           delay={0.12}
-          className="scrollbar-hide -mr-6 flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto pb-10 pt-4 pr-6 sm:-mr-10 sm:gap-5 sm:pr-10 lg:-mr-14 lg:pr-14"
+          className={`scrollbar-hide flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto scroll-p-6 pb-10 pt-4 sm:gap-5 sm:scroll-p-10 lg:scroll-p-14 ${GUTTER}`}
           role="list"
           aria-label={HOME.treatments.cosmeticLabel}
         >
@@ -213,24 +267,34 @@ export function Treatments() {
         drift={56}
       />
 
+      {/*
+        The head and the closing band stay in the 1320px column; the two rails
+        and the rule between them run edge to edge. That is why this is a run
+        of siblings rather than one `Wrap` around everything — a rail cannot
+        reach the edges of the screen from inside a centred column.
+      */}
       <Wrap className="relative">
         <div className="max-w-[760px]">
           <SectionHead title={HOME.treatments.title} />
           <Lede className="mt-7">{HOME.treatments.lede}</Lede>
         </div>
+      </Wrap>
 
-        <div className="mt-20 lg:mt-24">
-          <MedicalIndex />
+      <div className="mt-20 lg:mt-24">
+        <MedicalShelf />
+      </div>
 
-          <DrawRule className="my-20 h-px w-full bg-ms-bronze/20 lg:my-28" />
+      <div className={`relative my-20 lg:my-28 ${GUTTER}`}>
+        <DrawRule className="h-px w-full bg-ms-bronze/20" />
+      </div>
 
-          <CosmeticRail />
-        </div>
+      <CosmeticRail />
 
+      <Wrap className="relative">
         <Reveal
           y={22}
           delay={0.1}
-          className="mt-20 flex flex-col gap-8 rounded-[24px] border border-ms-bronze/25 bg-ms-shell/70 p-8 backdrop-blur-sm sm:p-10 lg:mt-24 lg:flex-row lg:items-center lg:justify-between lg:gap-14 lg:p-12"
+          className="mt-20 flex flex-col gap-8 rounded-[24px] border border-ms-bronze/25 bg-ms-shell/80 p-8 sm:p-10 lg:mt-24 lg:flex-row lg:items-center lg:justify-between lg:gap-14 lg:p-12"
         >
           <div className="max-w-[46ch]">
             <p className="eyebrow text-ms-terracotta-deep">
@@ -248,7 +312,7 @@ export function Treatments() {
             <PillSolid href="/treatment-menu" className="min-h-13 px-8">
               Menu &amp; prices
             </PillSolid>
-            <PillGhost href="#book" className="min-h-13 px-8">
+            <PillGhost href="/contact" className="min-h-13 px-8">
               Ask a question
             </PillGhost>
           </div>

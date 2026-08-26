@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import type { ReactNode } from "react";
 import { DrawRule, EASE } from "@/motion";
 import { Sparkle } from "./brand/Marks";
@@ -36,7 +36,7 @@ export function Card({
   /** Opt out of the arrival — for the hero, which is already on screen. */
   still?: boolean;
 }) {
-  const Tag = motion[as];
+  const Tag = m[as];
 
   return (
     <Tag

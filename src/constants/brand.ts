@@ -39,15 +39,15 @@ export const brand = {
 /** Portrait frames for the hero push-slider. Array order is autoplay order. */
 export const heroSlides = [
   {
-    src: "/images/hero.png",
-    alt: "Woman with radiant melanin-rich skin — the Mela Skin patient aesthetic",
+    src: "/images/hero.webp",
+    alt: "Woman with radiant melanin-rich skin, the Mela Skin patient aesthetic",
   },
   {
-    src: "/images/pigmentation-melasma.png",
+    src: "/images/pigmentation-melasma.webp",
     alt: "Melanin-rich skin with a calm, luminous finish",
   },
   {
-    src: "/images/acne-acne_scarring.png",
+    src: "/images/acne-acne_scarring.webp",
     alt: "Clear, treated skin after dermatology care",
   },
 ] as const;

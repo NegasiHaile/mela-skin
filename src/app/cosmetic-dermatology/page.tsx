@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Booking } from "@/components/Booking";
+import { BookingCta } from "@/components/BookingCta";
 import { CosmeticFamilies } from "@/components/CosmeticFamilies";
 import { GoldDefs } from "@/components/brand/Marks";
 import { PageHero } from "@/components/PageHero";
@@ -47,7 +47,7 @@ export default function CosmeticDermatology() {
             <PillSolid href="/treatment-menu" tone="dark" className="min-h-13 px-8">
               The full menu
             </PillSolid>
-            <PillGhost href="#book" tone="dark" className="min-h-13 px-8">
+            <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">
               Book a consultation
             </PillGhost>
           </div>
@@ -84,7 +84,7 @@ export default function CosmeticDermatology() {
               <Wipe className="lg:col-span-5 lg:col-start-8">
                 <div className="relative h-[320px] w-full overflow-hidden rounded-[24px] ring-1 ring-ms-bronze/25 sm:h-[400px]">
                   <Image
-                    src="/images/dermatology-skin-care-treatment-collage.png"
+                    src="/images/dermatology-skin-care-treatment-collage.webp"
                     alt="Cosmetic dermatology treatments at Mela Skin"
                     fill
                     sizes="(max-width: 1024px) 100vw, 480px"
@@ -96,7 +96,7 @@ export default function CosmeticDermatology() {
           </Wrap>
         </section>
 
-        <Booking />
+        <BookingCta />
       </main>
       <SiteFooter />
     </>

@@ -12,7 +12,7 @@ import { Stagger, StaggerItem } from "@/motion";
   anything.
 */
 
-export type FaqItem = { q: string; a: React.ReactNode };
+export type FaqItem = { q: string; a: string };
 
 export function Faq({
   title,

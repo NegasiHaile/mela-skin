@@ -38,15 +38,15 @@ export const CLINICIANS: Clinician[] = [
     name: todo.clinicianName,
     role: todo.clinicianRole,
     registration: todo.clinicianReg,
-    bio: "[Two or three sentences: where they trained, the subspecialty interest that led to this clinic, and why Nairobi needed one built around melanin-rich skin. This is the most-read paragraph on a clinic page — write it in their own voice rather than in the third person.]",
+    bio: "[Two or three sentences: where they trained, the subspecialty interest that led to this clinic, and why Nairobi needed one built around melanin-rich skin. This is the most-read paragraph on a clinic page, so write it in their own voice rather than in the third person.]",
     credentials: [
-      "[Qualifications — e.g. MBChB, MMed Dermatology]",
+      "[Qualifications, e.g. MBChB, MMed Dermatology]",
       todo.clinicianReg,
       "[Hospital or teaching affiliation, if held]",
       "[Society membership, research or publications]",
     ],
     portrait: {
-      src: "/images/dermatologist.png",
+      src: "/images/dermatologist.webp",
       alt: "The lead clinician at Mela Skin",
     },
   },
@@ -56,7 +56,7 @@ export const CLINICIANS: Clinician[] = [
 export const VISIT_STEPS = [
   {
     title: "Appointment",
-    body: "Book online or by phone. You will be asked what brought you in and how long it has been going on — so the clinician has read your history before you sit down.",
+    body: "Book online or by phone. You will be asked what brought you in and how long it has been going on, so the clinician has read your history before you sit down.",
   },
   {
     title: "Consultation",
@@ -64,7 +64,7 @@ export const VISIT_STEPS = [
   },
   {
     title: "Your plan",
-    body: "A written plan you leave with, priced up front — including what it will cost, how long it will take, and what will happen if it does not work.",
+    body: "A written plan you leave with, priced up front: what it will cost, how long it will take, and what happens if it does not work.",
   },
   {
     title: "Follow-up",
@@ -77,7 +77,7 @@ export const PREMISES = {
   /** Heading. Currently the street line, which is how the brand refers to it. */
   title: brand.address.line2,
   intro:
-    "[Describe the space in two or three sentences — the treatment rooms, the lighting, parking and access, and anything a patient would want to know before a first visit.]",
+    "[Describe the space in two or three sentences: the treatment rooms, the lighting, parking and access, and anything a patient would want to know before a first visit.]",
   /** Appended to `intro`. Keep the sentence, replace the placeholder. */
   opening: `Doors open ${todo.openingDate}.`,
   facts: [
@@ -113,17 +113,17 @@ export const PREMISES = {
 export const REVIEW_SLOTS = [
   {
     quote:
-      "[Patient review — three or four lines sits best here. Quotes about being correctly diagnosed after a long search tend to carry the most weight on a clinic page.]",
+      "[Patient review. Three or four lines sits best here. Quotes about being correctly diagnosed after a long search tend to carry the most weight on a clinic page.]",
     attribution: "[Initials] · [Treatment] · [Year]",
   },
   {
     quote:
-      "[Patient review — a quote naming one specific outcome reads far stronger than a general compliment.]",
+      "[Patient review. A quote naming one specific outcome reads far stronger than a general compliment.]",
     attribution: "[Initials] · [Treatment] · [Year]",
   },
   {
     quote:
-      "[Patient review — written consent required before publishing. Keep attribution to initials.]",
+      "[Patient review. Written consent required before publishing. Keep attribution to initials.]",
     attribution: "[Initials] · [Treatment] · [Year]",
   },
 ];

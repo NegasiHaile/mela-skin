@@ -6,7 +6,7 @@
   deleted whole. The shared motion primitives live in @/motion, which is
   direction-neutral.
 */
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useRef } from "react";
 import { useDriftY } from "@/motion";
 import { BrandPattern } from "./BrandPattern";
@@ -110,7 +110,7 @@ export function PatternField({
         edge. The overhang has to beat `drift` in px; 10% of any real section
         clears 40px comfortably.
       */}
-      <motion.div
+      <m.div
         className="absolute inset-x-0 -inset-y-[10%]"
         style={{ opacity, ...(y ? { y } : {}) }}
       >
@@ -120,7 +120,7 @@ export function PatternField({
           scale={scale}
           className="h-full w-full"
         />
-      </motion.div>
+      </m.div>
     </div>
   );
 }

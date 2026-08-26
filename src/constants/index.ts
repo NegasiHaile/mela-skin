@@ -9,11 +9,13 @@
  * See ./README.md for which file holds what.
  */
 
+export { ABOUT } from "./about";
+export { CONTACT } from "./contact";
 export { brand, heroSlides } from "./brand";
 export { todo } from "./placeholders";
 
-export { nav, FOOTER_COLUMNS, FOOTER_COLUMNS_COMPACT, LEGAL } from "./navigation";
-export type { NavLink } from "./navigation";
+export { nav, NAV_FLAT, FOOTER_COLUMNS, FOOTER_COLUMNS_COMPACT } from "./navigation";
+export type { NavChild, NavItem, NavLink } from "./navigation";
 
 export {
   MENU,
@@ -44,7 +46,6 @@ export type { Clinician } from "./clinic";
 
 export {
   HOME,
-  BOOKING,
   MEDICAL_PAGE,
   COSMETIC_PAGE,
   MENU_PAGE,

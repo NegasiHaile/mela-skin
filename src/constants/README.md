@@ -16,6 +16,8 @@ import { brand, CONDITIONS, MENU, kes } from "@/constants";
 | File | What to edit here |
 | --- | --- |
 | `brand.ts` | Clinic name, address, phone, email, tagline, hero photographs |
+| `about.ts` | The about page: the story, the six operating commitments, the seven consultation readings |
+| `contact.ts` | The contact page, the map embed and directions, the closing CTA band |
 | `placeholders.ts` | Every fact not confirmed yet — opening date, hours, consultation fee and length, clinician name and registration, KRA PIN |
 | `menu.ts` | **Every price on the site.** The full treatment menu: sections, groups, items, session and course tiers |
 | `conditions.ts` | Medical dermatology — the ten conditions, their descriptions and their icons |

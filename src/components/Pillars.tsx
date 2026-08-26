@@ -46,7 +46,7 @@ export function Pillars() {
               <Lift amount={8} className="h-full">
                 <Link
                   href={pillar.href}
-                  className="group flex h-full flex-col rounded-[24px] border border-ms-bronze/20 bg-ms-shell/85 p-7 backdrop-blur-sm transition-colors duration-500 hover:border-ms-terracotta/45 sm:p-9"
+                  className="group flex h-full flex-col rounded-[24px] border border-ms-bronze/20 bg-ms-shell/90 p-7 transition-colors duration-500 hover:border-ms-terracotta/45 sm:p-9"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <p className="eyebrow text-ms-terracotta-deep">

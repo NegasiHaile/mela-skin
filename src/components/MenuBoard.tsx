@@ -6,7 +6,7 @@ import { Wrap } from "./ui";
 /*
   The priced menu.
 
-  Everything here is read from lib/menu.ts, which is a transcription of the
+  Everything here is read from constants/menu.ts, a transcription of the
   clinic's printed 2025 sheet. This file decides only how it is worn.
 
   Three decisions carry the layout:
@@ -140,7 +140,7 @@ export function MenuBoard() {
                         as="li"
                         key={item.name}
                         y={22}
-                        className="flex flex-col rounded-[20px] border border-ms-bronze/20 bg-ms-ivory/70 p-6 backdrop-blur-sm sm:p-7"
+                        className="flex flex-col rounded-[20px] border border-ms-bronze/20 bg-ms-ivory/80 p-6 sm:p-7"
                       >
                         <h4 className="font-display text-[1.35rem] leading-[1.2] tracking-[-0.01em] text-ms-cocoa sm:text-[1.45rem]">
                           {item.name}

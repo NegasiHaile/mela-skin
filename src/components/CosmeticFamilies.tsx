@@ -17,7 +17,7 @@ import { Wrap } from "./ui";
   named items it covers, the price it starts at. Ten cards of the same shape
   are scannable in a way that ten bespoke ones are not.
 
-  Every price is looked up from lib/menu.ts. Nothing is typed twice.
+  Every price is looked up from constants/menu.ts. Nothing is typed twice.
 */
 
 export function CosmeticFamilies() {
@@ -142,7 +142,7 @@ export function CosmeticFamilies() {
               </div>
 
               <a
-                href="#book"
+                href="/contact"
                 className="inline-flex min-h-12 shrink-0 items-center gap-2 self-start rounded-full bg-ms-field px-8 lg:self-center font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ms-ivory transition-colors hover:bg-ms-panel"
               >
                 Ask to be told first

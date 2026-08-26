@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Booking } from "@/components/Booking";
+import { BookingCta } from "@/components/BookingCta";
 import { Conditions, ConditionIndex } from "@/components/Conditions";
 import { GoldDefs } from "@/components/brand/Marks";
 import { PageHero } from "@/components/PageHero";
@@ -43,7 +43,7 @@ export default function MedicalDermatology() {
           }
         >
           <div className="flex flex-wrap gap-3.5">
-            <PillSolid href="#book" tone="dark" className="min-h-13 px-8">
+            <PillSolid href="/contact" tone="dark" className="min-h-13 px-8">
               Book a consultation
             </PillSolid>
             <PillGhost href="/treatment-menu" tone="dark" className="min-h-13 px-8">
@@ -98,7 +98,7 @@ export default function MedicalDermatology() {
           </Wrap>
         </section>
 
-        <Booking />
+        <BookingCta />
       </main>
       <SiteFooter />
     </>

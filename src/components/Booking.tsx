@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { brand, todo } from "@/constants";
+import { CONTACT, CONTACT_DETAILS, brand } from "@/constants";
 import { PatternField } from "./brand/PatternField";
-import { Lines, Reveal, Stagger, StaggerItem } from "@/motion";
+import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { Wrap } from "./ui";
 
 const FIELD =
@@ -40,9 +40,9 @@ function ContactForm() {
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ms-gold/50 to-transparent"
       />
 
-      <p className="eyebrow text-ms-gold">Write to us</p>
+      <p className="eyebrow text-ms-gold">{CONTACT.form.eyebrow}</p>
       <p className="mt-2 font-sans text-[14px] font-light text-ms-sand">
-        We reply within hours.
+        {CONTACT.form.note}
       </p>
 
       <div className="mt-7 grid gap-5 sm:grid-cols-2">
@@ -95,7 +95,7 @@ function ContactForm() {
           name="message"
           required
           rows={4}
-          placeholder="Tell us briefly what brings you in"
+          placeholder={CONTACT.form.messagePrompt}
           className={`${FIELD} resize-none`}
         />
       </label>
@@ -114,14 +114,21 @@ function ContactForm() {
           type="submit"
           className="inline-flex min-h-12 items-center justify-center rounded-full bg-ms-ivory px-8 font-sans text-[12.5px] font-medium uppercase tracking-[0.14em] text-ms-field transition-colors hover:bg-ms-sand"
         >
-          {sent ? "Opening mail…" : "Send message"}
+          {sent ? CONTACT.form.submittingLabel : CONTACT.form.submitLabel}
         </button>
       </div>
     </form>
   );
 }
 
-/** Bookends the hero: the same flooded field, closing the page. */
+/*
+  The form, and only on /contact.
+
+  It used to close every route, which is what made a contact page look like it
+  had nothing of its own to say. The heading moved up into that page's
+  PageHero, so what is left here is the two things a contact section actually
+  is: where to find the clinic, and a box to write in.
+*/
 export function Booking() {
   return (
     <section id="book" className="relative overflow-hidden bg-ms-field">
@@ -150,60 +157,26 @@ export function Booking() {
       <Wrap className="relative py-20 lg:py-28">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
           <div>
-            <Reveal y={18}>
-              <p className="eyebrow text-ms-gold">Contact</p>
-            </Reveal>
-
-            <h2 className="display-caps mt-5 max-w-[14ch] text-[clamp(2.1rem,4vw,3.2rem)] text-ms-ivory">
-              <Lines text="Book a consultation" />
-            </h2>
-
-            <Reveal delay={0.2}>
-              <p className="mt-5 max-w-[34ch] font-sans text-[15px] font-light leading-[1.7] text-ms-cream/80">
-                {todo.consultLength} min with {todo.clinicianName}. Online
-                booking opens {todo.bookingOpens}.
-              </p>
-            </Reveal>
-
             <Stagger
               as="dl"
               step={0.1}
-              delay={0.3}
-              className="mt-10 space-y-5 border-t border-ms-sand/25 pt-6"
+              delay={0.1}
+              className="space-y-5"
             >
-              <StaggerItem y={18}>
-                <dt className="eyebrow font-normal text-ms-gold">Clinic</dt>
-                <dd className="mt-2 font-sans text-[14.5px] font-light leading-[1.65] text-ms-cream">
-                  {brand.address.line1}
-                  <br />
-                  {brand.address.line2}, {brand.address.city}
-                </dd>
-              </StaggerItem>
-              <StaggerItem y={18}>
-                <dt className="eyebrow font-normal text-ms-gold">Reach us</dt>
-                <dd className="mt-2 space-y-1 font-sans text-[14.5px] font-light text-ms-cream">
-                  <a
-                    href={brand.phoneHref}
-                    className="block transition-colors hover:text-ms-gold"
-                  >
-                    {brand.phone}
-                  </a>
-                  <a
-                    href={`mailto:${brand.email}`}
-                    className="block transition-colors hover:text-ms-gold"
-                  >
-                    {brand.email}
-                  </a>
-                </dd>
-              </StaggerItem>
-              <StaggerItem y={18}>
-                <dt className="eyebrow font-normal text-ms-gold">Hours</dt>
-                <dd className="mt-2 font-sans text-[14.5px] font-light leading-[1.65] text-ms-cream">
-                  {todo.hoursWeekday}
-                  <br />
-                  {todo.hoursSaturday}
-                </dd>
-              </StaggerItem>
+              {CONTACT_DETAILS.map((detail) => (
+                <StaggerItem key={detail.label} y={18}>
+                  <dt className="eyebrow font-normal text-ms-gold">
+                    {detail.label}
+                  </dt>
+                  <dd className="mt-2 space-y-1 font-sans text-[14.5px] font-light leading-[1.65] text-ms-cream">
+                    {detail.lines.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </dd>
+                </StaggerItem>
+              ))}
             </Stagger>
           </div>
 

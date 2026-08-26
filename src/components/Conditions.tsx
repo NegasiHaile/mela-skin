@@ -69,7 +69,7 @@ export function Conditions() {
               key={condition.slug}
               y={28}
               id={condition.slug}
-              className="scroll-mt-8 rounded-[24px] border border-ms-bronze/20 bg-ms-shell/85 p-7 backdrop-blur-sm sm:p-9 lg:p-10"
+              className="scroll-mt-8 rounded-[24px] border border-ms-bronze/20 bg-ms-shell/90 p-7 sm:p-9 lg:p-10"
             >
               <div className="flex items-start justify-between gap-6">
                 <div className="flex items-start gap-4">

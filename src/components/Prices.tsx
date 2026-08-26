@@ -9,7 +9,7 @@ import { PillGhost, PillSolid, Wrap } from "./ui";
   A clinic site that hides its pricing behind an enquiry form is making the
   visitor do the work, so this section exists to put six real numbers in front
   of them before they have committed to anything. Every figure is looked up
-  from lib/menu.ts rather than typed here, so the home page cannot drift out of
+  from constants/menu.ts rather than typed here, so the home page cannot drift
   step with the menu page.
 
   Set on espresso rather than on the field colour: the page already floods
@@ -76,7 +76,7 @@ export function Prices() {
               <PillSolid href="/treatment-menu" tone="dark" className="min-h-13 px-8">
                 The full menu
               </PillSolid>
-              <PillGhost href="#book" tone="dark" className="min-h-13 px-8">
+              <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">
                 Book a consultation
               </PillGhost>
             </Reveal>

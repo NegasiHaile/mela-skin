@@ -18,8 +18,8 @@ import { PhotoSlot, SectionHead, Wrap } from "./ui";
 export function Clinician() {
   return (
     <section
-      id="clinic"
-      className="relative overflow-hidden bg-ms-field py-24 lg:py-32"
+      id="clinician"
+      className="relative scroll-mt-4 overflow-hidden bg-ms-field py-24 lg:py-32"
     >
       {/*
         Pattern held to the right, behind the copy, so it never sits under the
@@ -126,7 +126,7 @@ export function Premises() {
   const [lead, ...rest] = PREMISES.photoSlots;
 
   return (
-    <section className="relative overflow-hidden bg-ms-paper py-24 lg:py-36">
+    <section id="premises" className="relative scroll-mt-4 overflow-hidden bg-ms-paper py-24 lg:py-36">
       <PatternField
         id="premises"
         tone="paper"

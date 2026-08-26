@@ -1,4 +1,4 @@
-import { brand, todo } from "@/constants";
+import { CLINIC_FACTS, brand } from "@/constants";
 import { Reveal, Stagger, StaggerItem, Wipe } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Monogram, Sparkle } from "./brand/Marks";
@@ -11,13 +11,6 @@ import { Card, PhotoSlot, Shell } from "./ui";
   the registered descriptor carry it, and every line below is a real fact or a
   bracketed placeholder.
 */
-const FACTS = [
-  { label: "Registered practice", value: todo.regulator },
-  { label: "Doors open", value: todo.openingDate },
-  { label: "Address", value: `${brand.address.line1}, ${brand.address.line2}` },
-  { label: "Clinic hours", value: todo.hoursWeekday },
-];
-
 export function FeatureRow() {
   return (
     <Shell>
@@ -64,7 +57,7 @@ export function FeatureRow() {
               delay={0.22}
               className="mt-2 grid w-full max-w-[500px] grid-cols-2 gap-x-8 gap-y-5 border-t border-ms-bronze/20 pt-7 text-left"
             >
-              {FACTS.map((fact) => (
+              {CLINIC_FACTS.map((fact) => (
                 <StaggerItem key={fact.label} y={16}>
                   <dt className="eyebrow font-normal text-ms-terracotta-deep">
                     {fact.label}

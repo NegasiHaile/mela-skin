@@ -9,7 +9,7 @@ import { heroSlides } from "@/constants";
 
   Transition is a push: the incoming frame enters from the right and drives the
   outgoing frame off to the left, while the exiting frame fades as it leaves.
-  Slide list lives in `heroSlides` (@/lib/brand).
+  Slide list lives in `heroSlides` (@/constants).
 */
 const HOLD_MS = 7000;
 const PUSH_MS = 1400;

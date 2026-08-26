@@ -118,6 +118,39 @@
   }
 }
 
+/* ==========================================================================
+   Offscreen sections
+
+   A page here is eight to twelve full-bleed bands, and the menu page runs to
+   13,000px. Without this the browser lays out and paints all of it on every
+   scroll, including the ten pattern grounds nowhere near the viewport.
+
+   `content-visibility: auto` lets it skip the ones that are not close to being
+   seen. `contain-intrinsic-size: auto` means each section is guessed at 720px
+   until it has been rendered once, then remembered at its real height, so the
+   scrollbar does not jump around as you go.
+
+   The FIRST section on a page is deliberately excluded. It carries the site
+   header, whose mobile menu panel is absolutely positioned out of the section,
+   and the containment this implies would clip it. The menu page's priced
+   sections are nested a level deeper (inside the wrapper that scopes the
+   sticky nav) so they are not matched either, which is what keeps that nav
+   sticking.
+   ========================================================================== */
+
+main > section:not(:first-of-type) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Nothing to do with motion, but skipped content can confuse a screen
+     reader's virtual cursor on some engines. Opting out here is cheap. */
+  main > section:not(:first-of-type) {
+    content-visibility: visible;
+  }
+}
+
 /* Hide scrollbar on horizontal treatment rails while keeping scroll accessible. */
 @utility scrollbar-hide {
   -ms-overflow-style: none;
@@ -126,6 +159,43 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* ==========================================================================
+   Mobile menu
+
+   The panel is a <details> disclosure, so it has no JavaScript to animate it
+   with. These two are the whole entrance: the panel drops from under the bar,
+   and the rows rise into it in sequence off inline `animation-delay`s.
+
+   `backwards` on the rows matters — without it each row is fully visible for
+   its own delay before the animation starts, and the stagger reads as a flash
+   rather than as a sequence.
+
+   Both are covered by the reduced-motion block above, which cuts every
+   animation to 0.01ms. The menu still opens; it just arrives already there.
+   ========================================================================== */
+
+@keyframes ms-menu-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes ms-menu-row {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@utility menu-drop {
+  animation: ms-menu-drop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility menu-row {
+  animation: ms-menu-row 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 /* Stationery note — snipped top-right & bottom-left corners, no radius. */

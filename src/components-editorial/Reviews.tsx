@@ -1,30 +1,10 @@
+import { REVIEW_SLOTS } from "@/constants";
 import { Lift, Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Sparkle } from "./brand/Marks";
 import { Card, Inner, SectionLabel, Shell } from "./ui";
 
-/*
-  Deliberately empty quotes. The clinic has not opened, so there are no
-  patients to quote — writing plausible-sounding reviews here would be
-  fabricating them. Each card states what belongs in it instead. Kenyan
-  practice, like most, requires written consent before publishing a patient's
-  words; keep attribution to initials.
-*/
-const SLOTS = [
-  {
-    hint: "[Patient review — three or four lines sits best here. Quotes about being correctly diagnosed after a long search tend to carry the most weight on a clinic page.]",
-    meta: "[Initials] · [Treatment] · [Year]",
-  },
-  {
-    hint: "[Patient review — a quote naming one specific outcome reads far stronger than a general compliment.]",
-    meta: "[Initials] · [Treatment] · [Year]",
-  },
-  {
-    hint: "[Patient review — written consent required before publishing. Keep attribution to initials.]",
-    meta: "[Initials] · [Treatment] · [Year]",
-  },
-];
-
+/* Content: constants/clinic.ts → REVIEW_SLOTS, deliberately empty. */
 export function Reviews() {
   return (
     <Shell>
@@ -48,18 +28,18 @@ export function Reviews() {
           </div>
 
           <Stagger as="ul" step={0.12} className="mt-14 grid gap-4 lg:grid-cols-3">
-            {SLOTS.map((slot) => (
-              <StaggerItem as="li" key={slot.hint} y={28} className="flex">
+            {REVIEW_SLOTS.map((slot) => (
+              <StaggerItem as="li" key={slot.quote} y={28} className="flex">
                 <Lift
                   amount={6}
                   className="flex w-full flex-col gap-6 rounded-[18px] border border-ms-bronze/15 bg-ms-shell px-8 py-9"
                 >
                 <Sparkle width={13} height={26} fill="url(#ms-gold)" />
                 <p className="font-display text-[18px] font-normal italic leading-[1.6] text-ms-espresso/80">
-                  {slot.hint}
+                  {slot.quote}
                 </p>
                 <p className="eyebrow mt-auto font-normal text-ms-terracotta-deep">
-                  {slot.meta}
+                  {slot.attribution}
                 </p>
                 </Lift>
               </StaggerItem>
