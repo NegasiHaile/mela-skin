@@ -1,27 +1,28 @@
-import { brand, todo } from "@/lib/brand";
+import { CONDITIONS, COSMETIC, brand, todo } from "@/constants";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Wordmark } from "./brand/Marks";
 import { Card, Shell } from "./ui";
 
+/*
+  Generated from lib/services.ts, like the immersive direction's footer, so the
+  two cannot advertise different services. The old hard-coded list here named
+  four treatments the clinic does not offer.
+*/
 const COLUMNS = [
   {
     heading: "Medical",
-    links: [
-      { label: "Pigmentation & melasma", href: "#treatments" },
-      { label: "Acne & acne scarring", href: "#treatments" },
-      { label: "Keloids & scarring", href: "#treatments" },
-      { label: "Hair & scalp", href: "#treatments" },
-    ],
+    links: CONDITIONS.slice(0, 4).map((condition) => ({
+      label: condition.title,
+      href: `/medical-dermatology#${condition.slug}`,
+    })),
   },
   {
     heading: "Cosmetic",
-    links: [
-      { label: "Injectables", href: "#treatments" },
-      { label: "Chemical peels", href: "#treatments" },
-      { label: "Laser & energy", href: "#treatments" },
-      { label: "Skin boosters", href: "#treatments" },
-    ],
+    links: COSMETIC.slice(0, 4).map((family) => ({
+      label: family.title,
+      href: `/cosmetic-dermatology#${family.slug}`,
+    })),
   },
   {
     heading: "Clinic",

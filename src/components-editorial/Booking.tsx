@@ -1,4 +1,4 @@
-import { brand, todo } from "@/lib/brand";
+import { brand, todo } from "@/constants";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { ButtonGhost, ButtonPrimary, Card, Inner, Shell } from "./ui";

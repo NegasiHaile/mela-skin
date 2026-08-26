@@ -70,9 +70,14 @@ export const todo = {
   pin: "[KRA PIN]",
 } as const;
 
+/**
+ * Primary navigation. Absolute paths rather than fragments, because the site
+ * is no longer one page — the same bar has to work from `/treatment-menu` as
+ * it does from the home page.
+ */
 export const nav = [
-  { label: "Treatments", href: "#treatments" },
-  { label: "Your Visit", href: "#visit" },
-  { label: "The Clinic", href: "#clinic" },
-  { label: "Contact", href: "#book" },
+  { label: "Medical", href: "/medical-dermatology" },
+  { label: "Cosmetic", href: "/cosmetic-dermatology" },
+  { label: "Menu & prices", href: "/treatment-menu" },
+  { label: "The clinic", href: "/#clinic" },
 ] as const;

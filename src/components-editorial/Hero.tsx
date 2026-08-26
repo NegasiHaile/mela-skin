@@ -1,4 +1,4 @@
-import { brand, nav, todo } from "@/lib/brand";
+import { brand, nav, todo } from "@/constants";
 import { Mount, MountItem, MountStagger, ScrollAway } from "@/motion";
 import { BrandPattern } from "./brand/BrandPattern";
 import { PatternField } from "./brand/PatternField";

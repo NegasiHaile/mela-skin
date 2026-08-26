@@ -1,4 +1,4 @@
-import { brand, todo } from "@/lib/brand";
+import { brand, todo } from "@/constants";
 import { Reveal, Stagger, StaggerItem, Wipe } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Monogram, Sparkle } from "./brand/Marks";

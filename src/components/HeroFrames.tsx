@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { heroSlides } from "@/lib/brand";
+import { heroSlides } from "@/constants";
 
 /*
   Hero portrait stack with autoplay, pause-on-hover, and vertical indicators.

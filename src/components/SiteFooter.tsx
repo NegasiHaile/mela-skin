@@ -1,46 +1,9 @@
-import { brand, todo } from "@/lib/brand";
+import Link from "next/link";
+import { FOOTER_COLUMNS, LEGAL, brand, todo } from "@/constants";
 import { PatternField } from "./brand/PatternField";
 import { Wordmark } from "./brand/Marks";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { Wrap } from "./ui";
-
-const COLUMNS = [
-  {
-    heading: "Medical",
-    links: [
-      { label: "Pigmentation & melasma", href: "#treatments" },
-      { label: "Acne & acne scarring", href: "#treatments" },
-      { label: "Keloids & scarring", href: "#treatments" },
-      { label: "Hair & scalp", href: "#treatments" },
-    ],
-  },
-  {
-    heading: "Cosmetic",
-    links: [
-      { label: "Injectables", href: "#treatments" },
-      { label: "Chemical peels", href: "#treatments" },
-      { label: "Laser & energy", href: "#treatments" },
-      { label: "Skin boosters", href: "#treatments" },
-    ],
-  },
-  {
-    heading: "Clinic",
-    links: [
-      { label: "Your visit", href: "#visit" },
-      { label: "The clinic", href: "#clinic" },
-      { label: "Reviews", href: "#reviews" },
-      { label: "Book", href: "#book" },
-    ],
-  },
-  {
-    heading: "Legal",
-    links: [
-      { label: "Privacy notice", href: "#" },
-      { label: "Patient terms", href: "#" },
-      { label: "Complaints", href: "#" },
-    ],
-  },
-];
 
 /*
   The pattern reads strongest here, at the foot of the page, the way it does on
@@ -84,7 +47,7 @@ export function SiteFooter() {
             </div>
           </Reveal>
 
-          {COLUMNS.map((column, index) => (
+          {FOOTER_COLUMNS.map((column, index) => (
             <Stagger
               key={column.heading}
               step={0.05}
@@ -99,13 +62,13 @@ export function SiteFooter() {
                 </h2>
               </StaggerItem>
               {column.links.map((link) => (
-                <StaggerItem key={link.label} y={14}>
-                  <a
+                <StaggerItem key={`${column.heading}-${link.label}`} y={14}>
+                  <Link
                     href={link.href}
                     className="font-sans text-[15px] font-light text-ms-sand/75 transition-colors hover:text-ms-cream"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </StaggerItem>
               ))}
             </Stagger>
@@ -115,15 +78,29 @@ export function SiteFooter() {
         <Reveal
           y={16}
           delay={0.2}
-          className="mt-14 flex flex-col gap-3 border-t border-ms-sand/15 pt-7 lg:flex-row lg:items-center lg:justify-between"
+          className="mt-14 flex flex-col gap-5 border-t border-ms-sand/15 pt-7"
         >
-          <p className="font-sans text-[13px] font-light text-ms-sand/75">
-            &copy; {new Date().getFullYear()} {brand.entity}. {todo.pin}.
-            Regulated by {todo.regulator}.
-          </p>
-          <p className="font-sans text-[13px] font-light text-ms-sand/75">
-            Nothing on this site is a substitute for individual medical advice.
-          </p>
+          <nav aria-label="Legal" className="flex flex-wrap gap-x-7 gap-y-2">
+            {LEGAL.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="font-sans text-[13px] font-light text-ms-sand/75 transition-colors hover:text-ms-cream"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <p className="font-sans text-[13px] font-light text-ms-sand/75">
+              &copy; {new Date().getFullYear()} {brand.entity}. {todo.pin}.
+              Regulated by {todo.regulator}.
+            </p>
+            <p className="font-sans text-[13px] font-light text-ms-sand/75">
+              Nothing on this site is a substitute for individual medical advice.
+            </p>
+          </div>
         </Reveal>
       </Wrap>
     </footer>

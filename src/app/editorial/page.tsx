@@ -10,7 +10,16 @@ import { SiteFooter } from "@/components-editorial/SiteFooter";
 import { Treatments } from "@/components-editorial/Treatments";
 import { Visit } from "@/components-editorial/Visit";
 
-export const metadata = { title: "Editorial direction" };
+/*
+  Not a public page. It is the second design direction, kept only so the two
+  can be compared side by side — so it stays out of the sitemap and out of the
+  index, where it would otherwise compete with the home page for the same
+  words.
+*/
+export const metadata = {
+  title: "Editorial direction",
+  robots: { index: false, follow: false },
+};
 
 /** Direction A — the floating-card layout. Kept for comparison against `/`. */
 export default function EditorialDirection() {

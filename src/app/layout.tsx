@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Space_Grotesk } from "next/font/google";
 import { MotionProvider } from "@/components/MotionProvider";
-import { brand } from "@/lib/brand";
+import { META, brand } from "@/constants";
 import { clinicJsonLd } from "@/lib/jsonld";
 import "./globals.css";
 
@@ -33,8 +33,7 @@ const grotesk = Space_Grotesk({
 });
 
 const titleDefault = `${brand.name} — ${brand.descriptor} in Westlands, Nairobi`;
-const description =
-  "Medical and cosmetic dermatology built for melanin-rich skin. Pigmentation, acne scarring, keloids and hair loss, diagnosed and treated in Westlands, Nairobi.";
+const description = META.siteDescription;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://melaskin.com"),
@@ -47,17 +46,7 @@ export const metadata: Metadata = {
   authors: [{ name: brand.entity, url: "https://melaskin.com" }],
   creator: brand.entity,
   publisher: brand.entity,
-  keywords: [
-    "Mela Skin",
-    "dermatology Nairobi",
-    "cosmetic clinic Westlands",
-    "melanin-rich skin",
-    "pigmentation treatment",
-    "melasma Kenya",
-    "acne scarring",
-    "keloids",
-    "dermatologist Westlands",
-  ],
+  keywords: META.keywords,
   category: "health",
   alternates: {
     canonical: "/",
@@ -75,8 +64,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   openGraph: {
     title: `${brand.name} — ${brand.descriptor}`,
-    description:
-      "Medical and cosmetic dermatology built for melanin-rich skin, in Westlands, Nairobi.",
+    description: META.shortDescription,
     url: "https://melaskin.com",
     siteName: brand.name,
     locale: "en_KE",
@@ -93,8 +81,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: `${brand.name} — ${brand.descriptor}`,
-    description:
-      "Medical and cosmetic dermatology built for melanin-rich skin, in Westlands, Nairobi.",
+    description: META.shortDescription,
     images: ["/og-image.jpg"],
   },
   robots: {

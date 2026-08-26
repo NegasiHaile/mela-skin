@@ -1,4 +1,4 @@
-import { todo } from "@/lib/brand";
+import { todo } from "@/constants";
 import { Lift, Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Card, Inner, SectionLabel, Shell } from "./ui";

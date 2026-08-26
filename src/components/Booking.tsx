@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { brand, todo } from "@/lib/brand";
+import { brand, todo } from "@/constants";
 import { PatternField } from "./brand/PatternField";
 import { Lines, Reveal, Stagger, StaggerItem } from "@/motion";
 import { Wrap } from "./ui";

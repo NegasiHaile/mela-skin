@@ -1,9 +1,23 @@
-# Mela Skin — landing page
+# Mela Skin — website
 
 Next.js 16 (App Router, Turbopack) + Tailwind CSS v4 + TypeScript + Framer
 Motion. Static: every route prerenders and nothing is fetched at runtime. The
 markup is still overwhelmingly server-rendered — the client boundaries are the
 motion wrappers, the hero slider and the contact form.
+
+## Routes
+
+| Route | What it carries |
+| --- | --- |
+| `/` | Hero, the argument for the clinic, both service lists in summary, six anchor prices, the visit, the clinician, the premises, reviews, booking |
+| `/medical-dermatology` | The ten conditions, one anchored entry each, plus what to bring to a first appointment |
+| `/cosmetic-dermatology` | The ten cosmetic treatment families, each with its published starting price, plus the service that is not open yet |
+| `/treatment-menu` | The whole priced menu — 58 treatments across five sections — and the pricing FAQ |
+| `/editorial` | The alternate design direction. `noindex`, and absent from the sitemap. |
+
+The home page states each thing once and hands off: the pillar cards orient,
+the treatment section lists, the price band proves, and the three subpages
+carry the depth. Nothing important sits behind an accordion anywhere.
 
 ```bash
 npm install
@@ -32,6 +46,8 @@ Everything visual is lifted from the files in `../Resources`, not invented:
 | Pattern-as-section-ground | `Social Media/MELA SKIN - SM_Linkedin Banner.jpg` |
 | Address, phone, email | `Brand Identity/Letterhead/…Letterhead_DRAFT.docx` |
 | Patient-journey steps | `Operations/…/Mela Skin - Focus Area.docx` |
+| The service offering — ten conditions, the cosmetic families, laser hair removal as "coming soon" | `Resources/more-info.md` |
+| Every price on the site | `Resources/REVISED MENU OF GLO365 - 2025.pdf` |
 
 Two notes on fidelity:
 
@@ -80,17 +96,24 @@ so nothing ships looking finished when it is not. They are collected in
 `src/lib/brand.ts` under `todo` — replace the values there and they update
 across the page.
 
-Beyond that, two things need a human before this goes live:
+Beyond that, three things need a human before this goes live:
 
-1. **The treatment list is drafted, not supplied.** The Resources folder has no
-   service list, so the eight treatments are standard dermatology and aesthetic
-   services written to fit the positioning. Several are regulated activities in
-   Kenya and are bracketed inline for that reason: laser platforms, licensed
-   dispensing, hydroquinone, and the scar-revision procedures. Confirm each.
+1. **Sign off the prices.** Every figure on the site is transcribed from
+   `Resources/REVISED MENU OF GLO365 - 2025.pdf` and lives only in
+   `src/lib/menu.ts`. That PDF is titled for GLO365, and a few item names read
+   as another operator's house branding, so somebody has to confirm the menu
+   and the figures are Mela Skin's own before launch. Amending or withdrawing
+   them is a one-file edit; nothing else in the codebase hard-codes a price.
+   The four places the transcription departs from the printed sheet — one
+   ambiguous tier, two typos, one regrouped item — are listed at the top of
+   that file rather than applied silently.
 2. **Two photographs are real, the rest are slots.** `hero.png` (cut-out) and
    `dermatologist.png` (clinician) are in place. The reception, detail,
    exterior and treatment shots still render as visibly unfinished
-   `PhotoSlot`s.
+   `PhotoSlot`s. Five of the ten cosmetic families have real photography; the
+   other five carry a brand-ground panel with the treatment mark set large,
+   which is a finish rather than a gap — no stock photograph goes in to fill a
+   hole.
 3. **The reviews are deliberately empty.** The clinic has not opened, so there
    are no patients to quote. Each card states what belongs in it. Get written
    consent before publishing any real ones, and keep attribution to initials.
@@ -102,19 +125,29 @@ delete the other.
 
 | Route | Direction | Shape |
 | --- | --- | --- |
-| `/` | **Immersive** | Full-bleed sections flooded with `ms-field`, wide-tracked Larken caps, pill controls, cut-out portrait on the field, near-empty nav |
+| `/` | **Immersive** | Full-bleed sections flooded with `ms-field`, wide-tracked Larken caps, pill controls, cut-out portrait on the field |
 | `/editorial` | **Editorial** | Rounded cards floating on `ms-paper`, mixed roman/italic headings, square buttons, nav inside the hero card |
 
 `/` uses `src/components`, `/editorial` uses `src/components-editorial`. They
-share `lib/brand.ts`, the fonts and `motion.tsx`, so facts, placeholders and
-the motion vocabulary stay in one place. When you settle on one, delete the other component folder
+share `lib/brand.ts`, `lib/services.ts`, `lib/menu.ts`, the fonts and
+`motion.tsx`, so facts, prices, placeholders and the motion vocabulary stay in
+one place. Only the immersive direction has the three subpages; `/editorial`
+links into them rather than duplicating them, and is `noindex` so it never
+competes with `/` in search. When you settle on one, delete the other component folder
 and its route.
 
 ### The immersive direction (`/`)
 
-The hero fills the first screen (`min-h-svh`) and holds four things only: the
-wordmark, one pill, the descriptor, and the tagline. Everything else was cut —
-a hero that explains itself is the thing this direction is trying not to be.
+The hero fills the first screen (`min-h-svh`) and holds the wordmark, the nav,
+the descriptor, the tagline and two pills. It gained a nav when the site gained
+routes. It has not gained an explanation, which is the thing this direction is
+trying not to be.
+
+`SiteHeader` is that bar, and it is the same component on all four routes —
+`tone="dark"` on the field colour, `tone="light"` on paper. It does not stick.
+The long pages pin their own section nav instead, which is what you actually
+want on screen while scanning sixty priced items. Below `lg` the links collapse
+into a `<details>` disclosure: no JS, so it works before the bundle lands.
 
 `public/images/hero.png` is a cut-out on transparency sitting directly on the
 field, bleeding off the bottom and right. One `<Image>` node serves both
@@ -209,19 +242,48 @@ driven by state and CSS transitions rather than by Motion.
 
 ```
 src/
-  app/           layout (fonts, motion policy, metadata), page, globals.css
+  app/
+    layout.tsx             fonts, motion policy, metadata, clinic JSON-LD
+    page.tsx               /
+    medical-dermatology/   the ten conditions
+    cosmetic-dermatology/  the ten treatment families
+    treatment-menu/        the priced menu + pricing FAQ
+    editorial/             the alternate direction (noindex)
+    globals.css
   motion.tsx     the motion primitives — shared by BOTH directions
   components/
     brand/       BrandPattern (the motif), PatternField (how it is worn),
                  Marks (wordmark, monogram, sparkle)
+    SiteHeader   one nav bar, light or dark, on every route
+    PageHero     the field-colour opening band on the three subpages
     *.tsx        one file per page section
-    ui.tsx       Wrap, SectionHead, pills, PhotoSlot
+    ui.tsx       Wrap, SectionHead, pills, Lede, PriceFrom, Callout, PhotoSlot
     HeroFrames   the hero push-slider
-    icons.tsx    treatment icons
+    icons.tsx    20 condition/treatment marks + a name-to-component registry
   fonts/         Larken — 4 cuts (the family is not variable despite the
                  archive naming, so each extra weight costs ~95KB)
-  lib/brand.ts   verified facts + the `todo` placeholder map
+  lib/
+    brand.ts     verified facts, the `todo` placeholder map, primary nav
+    services.ts  the ten conditions and ten cosmetic families, with the copy
+    menu.ts      the priced menu, transcribed — the ONLY source of prices
+    jsonld.ts    MedicalClinic graph, built from services.ts + menu.ts
 ```
+
+### One source per fact
+
+`menu.ts` holds every figure. `services.ts` holds every service name and every
+word of description. Everything else reads from them — the home price band, the
+cosmetic cards, the footer columns, the page metadata, the JSON-LD, the counts
+on the pillar cards. Add a condition to `services.ts` and it appears in the
+home index, the medical page, the footer and the search keywords without
+anybody remembering to go and add it.
+
+The same rule decides what is absent. The internal pricing memo in the
+Resources folder (`Cosmetic Pricing Recommendations for Associate Feedback.pdf`)
+is represented nowhere in this codebase and should stay that way: it is a
+pricing-strategy document for York Dermatology in Canada, with competitor
+names, margin positions and figures in Canadian dollars. None of it is Mela
+Skin's, and none of it belongs on a public page.
 
 `BrandPattern` and `PatternField` are duplicated per direction folder, so
 either folder can be deleted whole when a direction is chosen. `motion.tsx` is
