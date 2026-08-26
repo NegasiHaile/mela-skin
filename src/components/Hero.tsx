@@ -1,8 +1,8 @@
-import { brand } from "@/lib/brand";
+import { brand } from "@/constants";
 import { PatternField } from "./brand/PatternField";
-import { Wordmark } from "./brand/Marks";
 import { HeroFrames } from "./HeroFrames";
-import { Mount, MountItem, MountStagger, ScrollAway } from "@/motion";
+import { SiteHeader } from "./SiteHeader";
+import { MountItem, MountStagger, ScrollAway } from "@/motion";
 import { PillGhost, PillSolid, Wrap } from "./ui";
 
 /*
@@ -45,32 +45,7 @@ export function Hero() {
       </div>
 
       <div className="pointer-events-none relative z-10 flex min-h-svh flex-col">
-        <Wrap className="pointer-events-auto flex shrink-0 items-center justify-between gap-3 py-4 sm:gap-4 sm:py-6 lg:py-7">
-          <Mount delay={0.05} y={-14} className="shrink-0">
-            <a href="#top" aria-label={`${brand.name} home`} className="block">
-              <span className="sm:hidden">
-                <Wordmark size="sm" tone="text-ms-ivory" priority />
-              </span>
-              <span className="hidden sm:inline-flex lg:hidden">
-                <Wordmark size="md" tone="text-ms-ivory" priority />
-              </span>
-              <span className="hidden lg:inline-flex">
-                <Wordmark size="lg" tone="text-ms-ivory" priority />
-              </span>
-            </a>
-          </Mount>
-
-          <Mount delay={0.15} y={-14} className="shrink-0">
-            <PillGhost
-              href="#book"
-              tone="dark"
-              className="min-h-10 px-5 text-[12px] sm:min-h-13 sm:px-7 sm:text-[13.5px] lg:min-h-14 lg:px-9 lg:text-[14px]"
-            >
-              <span className="sm:hidden">Book</span>
-              <span className="hidden sm:inline">Book now</span>
-            </PillGhost>
-          </Mount>
-        </Wrap>
+        <SiteHeader tone="dark" />
 
         {/* Copy — absolute below nav on mobile; centred in remaining space at lg */}
         <div className="relative flex-1 lg:flex lg:items-center">
@@ -107,18 +82,18 @@ export function Hero() {
                   <MountItem className="relative mt-12 sm:mt-14">
                     <div className="flex flex-wrap items-center gap-3.5">
                       <PillSolid
-                        href="#book"
+                        href="/contact"
                         tone="dark"
                         className="min-h-13 px-9 text-[13.5px] sm:min-h-14 sm:px-10 sm:text-[14px]"
                       >
                         Book a consultation
                       </PillSolid>
                       <PillGhost
-                        href="#treatments"
+                        href="/treatment-menu"
                         tone="dark"
                         className="min-h-13 px-9 text-[13.5px] sm:min-h-14 sm:px-10 sm:text-[14px]"
                       >
-                        The treatments
+                        See the prices
                       </PillGhost>
                     </div>
                   </MountItem>

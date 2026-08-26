@@ -1,4 +1,4 @@
-import { todo } from "@/lib/brand";
+import { HOME } from "@/constants";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Card, Inner, SectionLabel, Shell } from "./ui";
@@ -21,23 +21,15 @@ export function Focus() {
             </div>
 
             <Stagger step={0.14} className="flex flex-col gap-6 lg:col-span-6 lg:col-start-7 lg:pt-3">
-              <StaggerItem as="p" className="font-sans text-[16px] font-light leading-[1.88] text-ms-espresso/80">
-                Dermatology teaching images are overwhelmingly of white skin. On
-                deeper complexions, inflammation reads violet or grey rather
-                than red. It leaves pigment behind for months after the
-                condition itself has cleared. Wounds that would flatten
-                elsewhere raise into keloid. None of this is unusual &mdash; it
-                is only under-taught, which is why so many patients arrive
-                having already been told their condition was something else.
-              </StaggerItem>
-              <StaggerItem as="p" className="font-sans text-[16px] font-light leading-[1.88] text-ms-espresso/80">
-                Mela Skin was built to close that gap. {todo.clinicianName}
-                &rsquo;s practice is organised around the conditions that
-                present most often, and most stubbornly, in melanin-rich skin
-                &mdash; with the medical and cosmetic sides of that care under
-                one roof, so a diagnosis and the treatment it calls for do not
-                need two clinics.
-              </StaggerItem>
+              {HOME.focus.paragraphs.map((paragraph) => (
+                <StaggerItem
+                  as="p"
+                  key={paragraph.slice(0, 24)}
+                  className="font-sans text-[16px] font-light leading-[1.88] text-ms-espresso/80"
+                >
+                  {paragraph}
+                </StaggerItem>
+              ))}
             </Stagger>
           </div>
         </Inner>

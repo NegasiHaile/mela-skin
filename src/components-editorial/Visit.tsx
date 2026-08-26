@@ -1,36 +1,9 @@
-import { todo } from "@/lib/brand";
+import { VISIT_STEPS } from "@/constants";
 import { Lift, Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Card, Inner, SectionLabel, Shell } from "./ui";
 
-/*
-  The four beats here follow the patient journey the clinic set out for itself
-  in Operations/.../Mela Skin - Focus Area.docx: appointment, consultation,
-  reminders, follow-ups. The words are drafted; the structure is theirs.
-*/
-const STEPS = [
-  {
-    n: "01",
-    title: "Appointment",
-    body: `Book online or by phone. You will be asked what brought you in and how long it has been going on — so the clinician has read your history before you sit down.`,
-  },
-  {
-    n: "02",
-    title: "Consultation",
-    body: `${todo.consultLength} minutes. Examination under proper lighting, a diagnosis explained in plain language, and clinical photographs kept on your record as a baseline.`,
-  },
-  {
-    n: "03",
-    title: "Your plan",
-    body: `A written plan you leave with, priced up front — including what it will cost, how long it will take, and what will happen if it does not work.`,
-  },
-  {
-    n: "04",
-    title: "Follow-up",
-    body: `A review at ${todo.reviewGap} weeks, with a reminder before it. Most pigmentation and scar work fails because it is abandoned early, not because it was the wrong plan.`,
-  },
-];
-
+/* Content: constants/clinic.ts → VISIT_STEPS. */
 export function Visit() {
   return (
     <Shell>
@@ -48,11 +21,11 @@ export function Visit() {
           </div>
 
           <Stagger as="ol" step={0.11} className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((step) => (
-              <StaggerItem as="li" key={step.n} y={28} className="flex">
+            {VISIT_STEPS.map((step, index) => (
+              <StaggerItem as="li" key={step.title} y={28} className="flex">
                 <Lift amount={6} className="flex w-full flex-col gap-3.5 rounded-[18px] border border-ms-bronze/15 bg-ms-shell px-7 py-9">
                 <span className="font-display text-[2.2rem] font-light leading-none text-ms-clay/55">
-                  {step.n}
+                  {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="font-display text-[22px] font-normal text-ms-cocoa">
                   {step.title}

@@ -1,16 +1,7 @@
-import { brand, todo } from "@/lib/brand";
+import { CONTACT_DETAILS, brand, todo } from "@/constants";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { ButtonGhost, ButtonPrimary, Card, Inner, Shell } from "./ui";
-
-const DETAILS = [
-  {
-    label: "Clinic",
-    lines: [brand.address.line1, `${brand.address.line2}, ${brand.address.city}`],
-  },
-  { label: "Reach us", lines: [brand.phone, brand.email] },
-  { label: "Hours", lines: [todo.hoursWeekday, todo.hoursSaturday] },
-];
 
 export function Booking() {
   return (
@@ -65,7 +56,7 @@ export function Booking() {
             </Reveal>
 
             <Stagger as="dl" step={0.11} className="mt-16 grid w-full gap-4 md:grid-cols-3">
-              {DETAILS.map((detail) => (
+              {CONTACT_DETAILS.map((detail) => (
                 <StaggerItem
                   key={detail.label}
                   y={22}

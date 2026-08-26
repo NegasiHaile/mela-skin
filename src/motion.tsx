@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  motion,
+  m,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -42,8 +42,6 @@ export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 */
 const VIEWPORT = { once: true, margin: "0px 0px -12% 0px" } as const;
 
-const SPRING = { stiffness: 110, damping: 26, mass: 0.35 } as const;
-
 /* -- Reveal --------------------------------------------------------------- */
 
 /*
@@ -75,7 +73,7 @@ export function Reveal({
   y?: number;
 } & PassThrough) {
   return (
-    <motion.div
+    <m.div
       data-motion=""
       className={className}
       initial={{ opacity: 0, y }}
@@ -85,7 +83,7 @@ export function Reveal({
       {...rest}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -112,7 +110,7 @@ export function Stagger({
   delay?: number;
   as?: "div" | "ul" | "ol" | "dl" | "nav";
 } & PassThrough) {
-  const Tag = motion[as];
+  const Tag = m[as];
 
   return (
     <Tag
@@ -144,7 +142,7 @@ export function StaggerItem({
   as?: "div" | "li" | "article" | "p";
   y?: number;
 } & PassThrough) {
-  const Tag = motion[as];
+  const Tag = m[as];
 
   return (
     <Tag
@@ -192,7 +190,7 @@ export function Lines({
   const words = text.split(" ");
 
   return (
-    <motion.span
+    <m.span
       className={className}
       initial="hidden"
       whileInView="visible"
@@ -209,7 +207,7 @@ export function Lines({
             aria-hidden="true"
             className="-mb-[0.14em] inline-block overflow-hidden pb-[0.14em] align-bottom"
           >
-            <motion.span
+            <m.span
               data-motion=""
               className="inline-block"
               variants={{
@@ -218,12 +216,12 @@ export function Lines({
               }}
             >
               {word}
-            </motion.span>
+            </m.span>
           </span>
           {index < words.length - 1 ? " " : null}
         </Fragment>
       ))}
-    </motion.span>
+    </m.span>
   );
 }
 
@@ -249,7 +247,7 @@ export function Wipe({
     from === "bottom" ? "inset(100% 0% 0% 0%)" : "inset(0% 100% 0% 0%)";
 
   return (
-    <motion.div
+    <m.div
       data-motion=""
       className={className}
       initial="hidden"
@@ -263,7 +261,7 @@ export function Wipe({
         },
       }}
     >
-      <motion.div
+      <m.div
         data-motion=""
         className="h-full w-full"
         variants={{
@@ -272,25 +270,32 @@ export function Wipe({
         }}
       >
         {children}
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
 /* -- Scroll-linked -------------------------------------------------------- */
 
 /**
- * Maps a section's own pass across the viewport onto a smoothed 0 -> 1 value.
- * Springs rather than tracking scroll exactly, so the value keeps moving for a
- * beat after the wheel stops — the difference between parallax that feels
- * mechanical and parallax that feels weighted.
+ * Maps a section's own pass across the viewport onto a 0 -> 1 value.
+ *
+ * This used to run the value through a spring so it kept moving for a beat
+ * after the wheel stopped. That was one spring per section, and a page carries
+ * ten to twelve of them: every spring wakes on every frame of every scroll,
+ * whether or not its section is anywhere near the viewport, and together they
+ * were dropping better than one frame in ten.
+ *
+ * The raw progress value drives the same transforms. On a background motif
+ * travelling forty pixels the smoothing was never visible; the frame budget it
+ * cost was.
  */
 function useSectionProgress(ref: React.RefObject<HTMLElement | null>) {
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  return useSpring(scrollYProgress, SPRING);
+  return scrollYProgress;
 }
 
 /**
@@ -318,12 +323,12 @@ export function Drift({
 
   return (
     <div ref={ref} className={className}>
-      <motion.div
+      <m.div
         className="h-full w-full"
         style={reduce ? undefined : { y, scale: scale ? s : undefined }}
       >
         {children}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -352,9 +357,9 @@ export function ScrollAway({
 
   return (
     <div ref={ref} className={className}>
-      <motion.div style={reduce ? undefined : { y, opacity }}>
+      <m.div style={reduce ? undefined : { y, opacity }}>
         {children}
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -375,7 +380,7 @@ export function useDriftY(
 /** A rule that draws itself from the left as its block enters. */
 export function DrawRule({ className }: { className?: string }) {
   return (
-    <motion.div
+    <m.div
       aria-hidden="true"
       data-motion=""
       className={`origin-left ${className ?? ""}`}
@@ -401,7 +406,7 @@ export function ScrollProgress() {
   });
 
   return (
-    <motion.div
+    <m.div
       aria-hidden="true"
       data-motion="progress"
       style={{ scaleX }}
@@ -427,7 +432,7 @@ export function Lift({
   amount?: number;
   as?: "div" | "article" | "li";
 }) {
-  const Tag = motion[as];
+  const Tag = m[as];
 
   return (
     <Tag
@@ -458,7 +463,7 @@ export function Mount({
   y?: number;
 }) {
   return (
-    <motion.div
+    <m.div
       data-motion=""
       className={className}
       initial={{ opacity: 0, y }}
@@ -466,7 +471,7 @@ export function Mount({
       transition={{ duration: 1, ease: EASE, delay }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -485,7 +490,7 @@ export function MountStagger({
   delay?: number;
 }) {
   return (
-    <motion.div
+    <m.div
       className={className}
       initial="hidden"
       animate="visible"
@@ -495,7 +500,7 @@ export function MountStagger({
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -510,7 +515,7 @@ export function MountItem({
   y?: number;
 }) {
   return (
-    <motion.div
+    <m.div
       data-motion=""
       className={className}
       variants={{
@@ -519,6 +524,6 @@ export function MountItem({
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

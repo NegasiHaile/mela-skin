@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { heroSlides } from "@/lib/brand";
+import { heroSlides } from "@/constants";
 
 /*
   Hero portrait stack with autoplay, pause-on-hover, and vertical indicators.
 
   Transition is a push: the incoming frame enters from the right and drives the
   outgoing frame off to the left, while the exiting frame fades as it leaves.
-  Slide list lives in `heroSlides` (@/lib/brand).
+  Slide list lives in `heroSlides` (@/constants).
 */
 const HOLD_MS = 7000;
 const PUSH_MS = 1400;

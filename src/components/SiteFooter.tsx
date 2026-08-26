@@ -1,46 +1,9 @@
-import { brand, todo } from "@/lib/brand";
+import Link from "next/link";
+import { FOOTER_COLUMNS, brand, todo } from "@/constants";
 import { PatternField } from "./brand/PatternField";
 import { Wordmark } from "./brand/Marks";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { Wrap } from "./ui";
-
-const COLUMNS = [
-  {
-    heading: "Medical",
-    links: [
-      { label: "Pigmentation & melasma", href: "#treatments" },
-      { label: "Acne & acne scarring", href: "#treatments" },
-      { label: "Keloids & scarring", href: "#treatments" },
-      { label: "Hair & scalp", href: "#treatments" },
-    ],
-  },
-  {
-    heading: "Cosmetic",
-    links: [
-      { label: "Injectables", href: "#treatments" },
-      { label: "Chemical peels", href: "#treatments" },
-      { label: "Laser & energy", href: "#treatments" },
-      { label: "Skin boosters", href: "#treatments" },
-    ],
-  },
-  {
-    heading: "Clinic",
-    links: [
-      { label: "Your visit", href: "#visit" },
-      { label: "The clinic", href: "#clinic" },
-      { label: "Reviews", href: "#reviews" },
-      { label: "Book", href: "#book" },
-    ],
-  },
-  {
-    heading: "Legal",
-    links: [
-      { label: "Privacy notice", href: "#" },
-      { label: "Patient terms", href: "#" },
-      { label: "Complaints", href: "#" },
-    ],
-  },
-];
 
 /*
   The pattern reads strongest here, at the foot of the page, the way it does on
@@ -51,7 +14,7 @@ const COLUMNS = [
 */
 export function SiteFooter() {
   return (
-    <footer className="relative overflow-hidden bg-ms-espresso py-16 lg:py-20">
+    <footer className="relative overflow-hidden bg-ms-espresso py-12 lg:py-14">
       <PatternField
         id="footer"
         tone="espresso"
@@ -62,13 +25,19 @@ export function SiteFooter() {
       />
 
       <Wrap className="relative">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <Reveal className="flex flex-col gap-5 lg:col-span-4">
+        {/*
+          Two columns from `sm` up. Stacked, the four link lists run to the
+          better part of a phone screen on their own; paired, a tablet gets
+          the whole footer in one view. Phones keep the single column —
+          "Skin boosters & biostimulators" in a 165px cell is three lines.
+        */}
+        <div className="grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-12">
+          <Reveal className="flex flex-col gap-4 sm:col-span-2 lg:col-span-4">
             <Wordmark size="md" tone="text-ms-cream" />
-            <p className="max-w-[280px] font-sans text-[15px] font-light leading-[1.7] text-ms-sand/75">
+            <p className="max-w-[280px] font-sans text-[14.5px] font-light leading-[1.6] text-ms-sand/75">
               {brand.address.line1}, {brand.address.line2}, {brand.address.city}.
             </p>
-            <div className="flex flex-col gap-1.5 font-sans text-[15px] font-light text-ms-sand/75">
+            <div className="flex flex-col gap-1 font-sans text-[14.5px] font-light text-ms-sand/75">
               <a
                 href={brand.phoneHref}
                 className="transition-colors hover:text-ms-cream"
@@ -84,14 +53,14 @@ export function SiteFooter() {
             </div>
           </Reveal>
 
-          {COLUMNS.map((column, index) => (
+          {FOOTER_COLUMNS.map((column, index) => (
             <Stagger
               key={column.heading}
               step={0.05}
               delay={0.1 + index * 0.08}
               as="nav"
               aria-label={column.heading}
-              className="flex flex-col gap-3.5 lg:col-span-2"
+              className="flex flex-col gap-2.5 lg:col-span-2"
             >
               <StaggerItem y={14}>
                 <h2 className="eyebrow font-normal text-ms-gold">
@@ -99,13 +68,13 @@ export function SiteFooter() {
                 </h2>
               </StaggerItem>
               {column.links.map((link) => (
-                <StaggerItem key={link.label} y={14}>
-                  <a
+                <StaggerItem key={`${column.heading}-${link.label}`} y={14}>
+                  <Link
                     href={link.href}
-                    className="font-sans text-[15px] font-light text-ms-sand/75 transition-colors hover:text-ms-cream"
+                    className="font-sans text-[14.5px] font-light leading-[1.5] text-ms-sand/75 transition-colors hover:text-ms-cream"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </StaggerItem>
               ))}
             </Stagger>
@@ -115,7 +84,7 @@ export function SiteFooter() {
         <Reveal
           y={16}
           delay={0.2}
-          className="mt-14 flex flex-col gap-3 border-t border-ms-sand/15 pt-7 lg:flex-row lg:items-center lg:justify-between"
+          className="mt-10 flex flex-col gap-2 border-t border-ms-sand/15 pt-5 lg:flex-row lg:items-center lg:justify-between lg:gap-8"
         >
           <p className="font-sans text-[13px] font-light text-ms-sand/75">
             &copy; {new Date().getFullYear()} {brand.entity}. {todo.pin}.

@@ -3,7 +3,7 @@
  * processed to a tight transparent PNG (outer cream removed, ring edge-to-edge).
  */
 import Image from "next/image";
-import { brand } from "@/lib/brand";
+import { brand } from "@/constants";
 
 const SPARKLE_PATH =
   "M6 0C6.35 7.2 8.8 11.5 12 12C8.8 12.5 6.35 16.8 6 24C5.65 16.8 3.2 12.5 0 12C3.2 11.5 5.65 7.2 6 0Z";

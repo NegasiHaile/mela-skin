@@ -1,15 +1,11 @@
-import { brand, todo } from "@/lib/brand";
+import { CLINICIANS, PREMISES, brand, todo } from "@/constants";
 import { Reveal, Stagger, StaggerItem, Wipe } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Sparkle } from "./brand/Marks";
 import { Card, Inner, PhotoSlot, SectionLabel, Shell } from "./ui";
 
-const CREDENTIALS = [
-  "[Qualifications — e.g. MBChB, MMed Dermatology]",
-  todo.clinicianReg,
-  "[Hospital or teaching affiliation, if held]",
-  "[Society membership, research or publications]",
-];
+/* One clinician shown; the array lives in constants/clinic.ts. */
+const clinician = CLINICIANS[0];
 
 export function Clinician() {
   return (
@@ -38,22 +34,18 @@ export function Clinician() {
 
               <Reveal delay={0.12}>
                 <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] text-ms-cocoa">
-                  {todo.clinicianName}
+                  {clinician.name}
                 </h2>
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="eyebrow mt-4 font-normal text-ms-terracotta-deep">
-                  {todo.clinicianRole} &nbsp;&middot;&nbsp; {todo.clinicianReg}
+                  {clinician.role} &nbsp;&middot;&nbsp; {clinician.registration}
                 </p>
               </Reveal>
 
               <Reveal delay={0.28}>
                 <p className="mt-7 font-sans text-[16px] font-light leading-[1.88] text-ms-espresso/80">
-                [Two or three sentences: where they trained, the subspecialty
-                interest that led to this clinic, and why Nairobi needed one
-                built around melanin-rich skin. This is the most-read paragraph
-                on a clinic page &mdash; write it in their own voice rather than
-                  in the third person.]
+                  {clinician.bio}
                 </p>
               </Reveal>
 
@@ -63,7 +55,7 @@ export function Clinician() {
                 delay={0.36}
                 className="mt-9 flex flex-col"
               >
-                {CREDENTIALS.map((line) => (
+                {clinician.credentials.map((line) => (
                   <StaggerItem
                     as="li"
                     key={line}
@@ -108,15 +100,12 @@ export function Premises() {
               <SectionLabel index="05">The clinic</SectionLabel>
               <Reveal delay={0.12}>
                 <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] text-ms-cocoa">
-                  {brand.address.line2}.
+                  {PREMISES.title}.
                 </h2>
               </Reveal>
               <Reveal delay={0.2}>
                 <p className="mt-7 max-w-[52ch] font-sans text-[16px] font-light leading-[1.88] text-ms-espresso/80">
-                [Describe the space in two or three sentences &mdash; the
-                treatment rooms, the lighting, parking and access, and anything
-                a patient would want to know before a first visit.] Doors open{" "}
-                  {todo.openingDate}.
+                  {PREMISES.intro} {PREMISES.opening}
                 </p>
               </Reveal>
 

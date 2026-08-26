@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Sparkle } from "./brand/Marks";
 import { DrawRule, Lines } from "@/motion";
@@ -101,9 +102,9 @@ export function PillSolid({
       ? "bg-ms-ivory text-ms-field hover:bg-ms-sand"
       : "bg-ms-field text-ms-ivory hover:bg-ms-panel";
   return (
-    <a href={href} className={`${PILL} ${skin} ${className ?? ""}`}>
+    <Link href={href} className={`${PILL} ${skin} ${className ?? ""}`}>
       {children}
-    </a>
+    </Link>
   );
 }
 
@@ -123,9 +124,67 @@ export function PillGhost({
       ? "border border-ms-ivory/55 text-ms-ivory hover:border-ms-ivory hover:bg-ms-ivory/10"
       : "border border-ms-bronze/45 text-ms-cocoa hover:border-ms-cocoa";
   return (
-    <a href={href} className={`${PILL} ${skin} ${className ?? ""}`}>
+    <Link href={href} className={`${PILL} ${skin} ${className ?? ""}`}>
       {children}
-    </a>
+    </Link>
+  );
+}
+
+/**
+ * The paragraph that sits under a section head. One size larger than body copy
+ * and held to about 60 characters a line, because it is the only thing between
+ * a heading and a wall of cards and it has to be read rather than skimmed.
+ */
+export function Lede({
+  children,
+  tone = "light",
+  className,
+}: {
+  children: ReactNode;
+  tone?: "light" | "dark";
+  className?: string;
+}) {
+  const skin = tone === "dark" ? "text-ms-cream/85" : "text-ms-espresso/80";
+  return (
+    <p
+      className={`max-w-[62ch] font-sans text-[18px] font-light leading-[1.75] sm:text-[19px] lg:text-[20px] lg:leading-[1.8] ${skin} ${className ?? ""}`}
+    >
+      {children}
+    </p>
+  );
+}
+
+/**
+ * A highlighted aside. Used for the things a visitor genuinely needs to see
+ * and would otherwise scroll past — the caution on skin tags, the note on what
+ * a consultation covers, the one service that is not bookable yet.
+ */
+export function Callout({
+  eyebrow,
+  children,
+  tone = "light",
+  className,
+}: {
+  eyebrow?: string;
+  children: ReactNode;
+  tone?: "light" | "dark";
+  className?: string;
+}) {
+  const skin =
+    tone === "dark"
+      ? "border-ms-gold/35 bg-ms-espresso/40 text-ms-cream/85"
+      : "border-ms-terracotta/30 bg-ms-cream/70 text-ms-espresso/85";
+  const label = tone === "dark" ? "text-ms-gold" : "text-ms-terracotta-deep";
+
+  return (
+    <div
+      className={`rounded-r-[10px] border-l-2 py-5 pl-5 pr-5 sm:pl-6 sm:pr-6 ${skin} ${className ?? ""}`}
+    >
+      {eyebrow ? <p className={`eyebrow mb-2.5 ${label}`}>{eyebrow}</p> : null}
+      <div className="font-sans text-[16px] font-light leading-[1.8] sm:text-[16.5px]">
+        {children}
+      </div>
+    </div>
   );
 }
 

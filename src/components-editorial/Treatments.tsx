@@ -1,84 +1,36 @@
-import type { ComponentType } from "react";
-import {
-  IconAcne,
-  IconBooster,
-  IconHair,
-  IconInjectable,
-  IconLaser,
-  IconPeel,
-  IconPigment,
-  IconScar,
-} from "./icons";
+import { CONDITIONS, COSMETIC } from "@/constants";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
 import { Card, Inner, SectionLabel, Shell } from "./ui";
 
-type Treatment = {
-  title: string;
-  body: string;
-  Icon: ComponentType<{ className?: string }>;
-};
-
 /*
-  DRAFTED, NOT SUPPLIED. These are standard dermatology and aesthetic services
-  written to fit the clinic's positioning; the Resources folder does not
-  contain a service list. Several are regulated activities in Kenya — the
-  bracketed spans mark the ones that need explicit sign-off (equipment,
-  licensed dispensing, prescription-only agents) before this page is published.
+  The real offering, from constants/conditions.ts and constants/cosmetic.ts,
+  exactly as the immersive direction at `/` carries it.
+  This used to hold a drafted eight-item list written before the clinic had
+  supplied one; that list is gone.
+
+  No icons here, unlike the immersive direction. This folder keeps its own
+  eight-mark icon set so that either direction can be deleted whole, and the
+  real list needs twenty. Rather than duplicating them into a route that exists
+  only for comparison, the entries are set as type. Titles and one-line
+  summaries come from the shared data, so the two directions cannot drift.
 */
-const MEDICAL: Treatment[] = [
-  {
-    title: "Pigmentation & Melasma",
-    body: "Structured programmes for post-inflammatory hyperpigmentation, melasma and uneven tone — without the unregulated skin-lightening agents that make both far worse.",
-    Icon: IconPigment,
-  },
-  {
-    title: "Acne & Acne Scarring",
-    body: "Prescription-led clearance first, then a resurfacing plan chosen for how deeper skin heals — because the wrong device leaves a longer mark than the acne did.",
-    Icon: IconAcne,
-  },
-  {
-    title: "Keloids & Scarring",
-    body: "[Intralesional steroid, silicone therapy, cryotherapy and surgical revision] for raised, hypertrophic and keloid scars, including ear-lobe keloids.",
-    Icon: IconScar,
-  },
-  {
-    title: "Hair & Scalp",
-    body: "Traction alopecia, central centrifugal cicatricial alopecia and seborrhoeic dermatitis, [assessed with trichoscopy] before scarring becomes permanent.",
-    Icon: IconHair,
-  },
-];
 
-const COSMETIC: Treatment[] = [
-  {
-    title: "Injectables",
-    body: "[Botulinum toxin and dermal filler] placed conservatively, with an eye to how facial ageing actually presents in African and South Asian faces.",
-    Icon: IconInjectable,
-  },
-  {
-    title: "Chemical Peels",
-    body: "Depth and agent selected for your Fitzpatrick type, because a peel calibrated for lighter skin is the fastest route to the pigmentation you came in to treat.",
-    Icon: IconPeel,
-  },
-  {
-    title: "Laser & Energy",
-    body: "[Confirm your platforms] — wavelengths and settings validated for Fitzpatrick IV to VI, with test patching before any full treatment.",
-    Icon: IconLaser,
-  },
-  {
-    title: "Skin Boosters & Microneedling",
-    body: "Hydration, texture and early scar work, [dispensed and performed in clinic] and scheduled as a course rather than sold as a one-off.",
-    Icon: IconBooster,
-  },
-];
+type Entry = { title: string; summary: string; href: string };
 
-function TreatmentGroup({
-  label,
-  items,
-}: {
-  label: string;
-  items: Treatment[];
-}) {
+const MEDICAL: Entry[] = CONDITIONS.map((condition) => ({
+  title: condition.title,
+  summary: condition.summary,
+  href: `/medical-dermatology#${condition.slug}`,
+}));
+
+const COSMETIC_ENTRIES: Entry[] = COSMETIC.map((family) => ({
+  title: family.title,
+  summary: family.summary,
+  href: `/cosmetic-dermatology#${family.slug}`,
+}));
+
+function TreatmentGroup({ label, items }: { label: string; items: Entry[] }) {
   return (
     <div>
       <Reveal y={16}>
@@ -86,23 +38,30 @@ function TreatmentGroup({
           {label}
         </h3>
       </Reveal>
-      <Stagger as="ul" step={0.09} delay={0.1} className="mt-1 flex flex-col">
-        {items.map(({ title, body, Icon }) => (
+      <Stagger as="ul" step={0.07} delay={0.1} className="mt-1 flex flex-col">
+        {items.map((item) => (
           <StaggerItem
             as="li"
-            key={title}
-            y={20}
-            className="flex flex-col gap-3 border-b border-ms-bronze/15 py-7 last:border-b-0"
+            key={item.title}
+            y={18}
+            className="border-b border-ms-bronze/15 last:border-b-0"
           >
-            <div className="flex items-center gap-3.5">
-              <Icon className="shrink-0 text-ms-terracotta" />
-              <h4 className="font-display text-[21px] font-normal leading-tight text-ms-cocoa">
-                {title}
-              </h4>
-            </div>
-            <p className="font-sans text-[14.5px] font-light leading-[1.8] text-ms-espresso/75">
-              {body}
-            </p>
+            <a href={item.href} className="group flex flex-col gap-2.5 py-6">
+              <span className="flex items-center gap-3">
+                <span className="font-display text-[21px] font-normal leading-tight text-ms-cocoa">
+                  {item.title}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="text-ms-bronze opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+                >
+                  &rarr;
+                </span>
+              </span>
+              <span className="font-sans text-[14.5px] font-light leading-[1.8] text-ms-espresso/75">
+                {item.summary}
+              </span>
+            </a>
           </StaggerItem>
         ))}
       </Stagger>
@@ -136,7 +95,7 @@ export function Treatments() {
 
           <div className="mt-14 grid gap-x-16 gap-y-12 lg:grid-cols-2">
             <TreatmentGroup label="Medical Dermatology" items={MEDICAL} />
-            <TreatmentGroup label="Cosmetic Dermatology" items={COSMETIC} />
+            <TreatmentGroup label="Cosmetic Dermatology" items={COSMETIC_ENTRIES} />
           </div>
         </Inner>
       </Card>

@@ -1,4 +1,4 @@
-import { brand } from "@/lib/brand";
+import { CONDITIONS, CONTACT, COSMETIC, MENU_FROM, MENU_ITEM_COUNT, brand } from "@/constants";
 
 /** Local clinic schema for Google / rich results. */
 export function clinicJsonLd() {
@@ -37,7 +37,34 @@ export function clinicJsonLd() {
           "@type": "City",
           name: "Nairobi",
         },
+        // Points at the same search the contact page embeds, so the map a
+        // search engine offers and the map on the site agree.
+        hasMap: CONTACT.map.directionsUrl,
         medicalSpecialty: ["Dermatology", "Cosmetic Dermatology"],
+        /*
+          The ten conditions from Resources/more-info.md. `knowsAbout` rather
+          than `availableService` because a condition is not a procedure — the
+          procedures are listed separately below.
+        */
+        knowsAbout: CONDITIONS.map((condition) => condition.title),
+        availableService: COSMETIC.map((family) => ({
+          "@type": "MedicalProcedure",
+          name: family.title,
+          description: family.summary,
+          url: `https://melaskin.com/cosmetic-dermatology#${family.slug}`,
+        })),
+        /*
+          Every cosmetic treatment carries a published figure, so the catalogue
+          is described honestly as an aggregate rather than left as a vague
+          priceRange band.
+        */
+        makesOffer: {
+          "@type": "AggregateOffer",
+          priceCurrency: "KES",
+          lowPrice: MENU_FROM,
+          offerCount: MENU_ITEM_COUNT,
+          url: "https://melaskin.com/treatment-menu",
+        },
         priceRange: "$$",
         sameAs: [],
       },
