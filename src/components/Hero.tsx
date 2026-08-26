@@ -54,20 +54,38 @@ export function Hero() {
               <MountStagger
                 step={0.12}
                 delay={0.25}
-                className="pointer-events-auto relative max-w-[760px] lg:py-16"
+                className="pointer-events-auto relative isolate max-w-[760px] lg:py-16"
               >
+                {/*
+                  ONE scrim for the whole left column, not one per block. It
+                  sits behind the tagline, the descriptor and the address
+                  together, so the copy reads as a single mass over the portrait
+                  rising behind it rather than as three separately propped-up
+                  lines.
+
+                  Vertical, and fully transparent by 82% of the way down: the
+                  portrait needs cover where the type is densest at the top and
+                  none at all by the time the buttons arrive, since those carry
+                  their own fills. Stopping the gradient short of the bottom is
+                  what keeps the join invisible.
+
+                  `-z-10` inside `isolate` keeps it behind the type but still
+                  above the portrait, because the whole copy column is `z-10`
+                  against the portrait's `z-0`. Hidden from `lg`, where the copy
+                  and the portrait no longer overlap.
+                */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-x-6 -top-10 bottom-0 -z-10 bg-gradient-to-b from-ms-field from-0% via-ms-field/55 via-45% to-transparent to-82% lg:hidden"
+                />
+
                 <MountItem y={30}>
                   <h1 className="font-display text-[clamp(3.35rem,13vw,7.5rem)] font-normal italic leading-[0.94] tracking-[-0.02em] text-ms-ivory lg:mt-4">
                     {brand.tagline}
                   </h1>
                 </MountItem>
 
-                <div className="relative mt-9 max-w-[56ch] sm:mt-11">
-                  <div
-                    aria-hidden="true"
-                    className="absolute -inset-x-6 -top-4 bottom-[-1.5rem] rounded-sm bg-[linear-gradient(to_right,var(--color-ms-field)_0%,var(--color-ms-field)_30%,transparent_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_50%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_50%,transparent_100%)] lg:hidden"
-                  />
-
+                <div className="mt-9 max-w-[56ch] sm:mt-11">
                   <MountItem>
                     <div className="relative font-sans font-light leading-[1.65] text-ms-cream">
                       <p className="text-[clamp(1.25rem,2.4vw,1.55rem)] tracking-[-0.01em]">
