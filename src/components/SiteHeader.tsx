@@ -74,15 +74,18 @@ function DesktopDropdown({
           belongs to are the same target: there is no dead strip on the left
           where a click does nothing.
 
-          No border, no corner radius. A single hairline divides the two rows
-          and runs the full width, image included.
+          No border, and still one hairline dividing the two rows, running the
+          full width with the image included. The card itself is rounded to
+          20px — the same radius the panel cards on the pages use — and
+          `overflow-hidden` is what makes the pictures follow those corners
+          instead of squaring them off again.
 
           Both files are dense 3:2 collages of labelled treatments and none of
           those labels can be read at this size. Centre-cropping is what makes
           them work anyway, landing the medical one on the clinician and
           patient and the cosmetic one on the model.
         */}
-        <div className="overflow-hidden bg-ms-espresso shadow-[0_36px_70px_-28px_rgba(20,9,3,0.8)]">
+        <div className="overflow-hidden rounded-[20px] bg-ms-espresso shadow-[0_36px_70px_-28px_rgba(20,9,3,0.8)]">
           {item.children.map((child, index) => (
             <Link
               key={child.href}
