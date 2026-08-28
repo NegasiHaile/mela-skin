@@ -6,14 +6,7 @@ import { Wrap } from "./ui";
 export function Focus() {
   return (
     <section className="relative overflow-hidden bg-ms-shell py-24 lg:py-36">
-      <PatternField
-        id="focus"
-        tone="shell"
-        fade="left"
-        scale={520}
-        opacity={0.85}
-        drift={48}
-      />
+      <PatternField tone="shell" />
 
       <Wrap className="relative">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-20">

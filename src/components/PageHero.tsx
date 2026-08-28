@@ -37,14 +37,7 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden bg-ms-field">
-      <PatternField
-        id={id}
-        tone="field"
-        fade="bottom"
-        scale={420}
-        opacity={0.55}
-        drift={24}
-      />
+      <PatternField tone="field" />
 
       <div className="relative z-10">
         <SiteHeader tone="dark" />

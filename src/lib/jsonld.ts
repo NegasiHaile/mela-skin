@@ -1,4 +1,4 @@
-import { CONDITIONS, CONTACT, COSMETIC, MENU_FROM, MENU_ITEM_COUNT, brand } from "@/constants";
+import { CONDITIONS, CONTACT, COSMETIC, brand } from "@/constants";
 
 /** Local clinic schema for Google / rich results. */
 export function clinicJsonLd() {
@@ -21,7 +21,7 @@ export function clinicJsonLd() {
         description:
           "Medical and cosmetic dermatology clinic built for melanin-rich skin in Westlands, Nairobi.",
         url: "https://melaskin.com",
-        logo: "https://melaskin.com/brand/logo.png",
+        logo: "https://melaskin.com/brand/brandmark-gold.png",
         image: "https://melaskin.com/og-image.jpg",
         telephone: brand.phone,
         email: brand.email,
@@ -42,8 +42,8 @@ export function clinicJsonLd() {
         hasMap: CONTACT.map.directionsUrl,
         medicalSpecialty: ["Dermatology", "Cosmetic Dermatology"],
         /*
-          The ten conditions from Resources/more-info.md. `knowsAbout` rather
-          than `availableService` because a condition is not a procedure — the
+          The conditions from constants/conditions.ts. `knowsAbout` rather than
+          `availableService` because a condition is not a procedure — the
           procedures are listed separately below.
         */
         knowsAbout: CONDITIONS.map((condition) => condition.title),
@@ -54,18 +54,16 @@ export function clinicJsonLd() {
           url: `https://melaskin.com/cosmetic-dermatology#${family.slug}`,
         })),
         /*
-          Every cosmetic treatment carries a published figure, so the catalogue
-          is described honestly as an aggregate rather than left as a vague
-          priceRange band.
+          NO PRICING CLAIMS, deliberately.
+
+          There was an AggregateOffer here with a lowPrice and an offerCount,
+          and a priceRange band beside it. Both are gone with the rest of the
+          pricing (see the header of constants/menu.ts): asserting a price
+          floor or a "$$" band in structured data while declining to publish
+          prices on the page is the same disclosure by a side door, and it is
+          the version that ends up in a search result rather than on a page a
+          patient can read in context.
         */
-        makesOffer: {
-          "@type": "AggregateOffer",
-          priceCurrency: "KES",
-          lowPrice: MENU_FROM,
-          offerCount: MENU_ITEM_COUNT,
-          url: "https://melaskin.com/treatment-menu",
-        },
-        priceRange: "$$",
         sameAs: [],
       },
       {

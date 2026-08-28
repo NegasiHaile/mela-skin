@@ -24,14 +24,7 @@ export function ClinicMap() {
       id="map"
       className="relative scroll-mt-4 overflow-hidden bg-ms-paper py-24 lg:py-32"
     >
-      <PatternField
-        id="map"
-        tone="paper"
-        fade="left"
-        scale={520}
-        opacity={0.9}
-        drift={44}
-      />
+      <PatternField tone="paper" />
 
       <Wrap className="relative">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">

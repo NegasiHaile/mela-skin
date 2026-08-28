@@ -28,14 +28,7 @@ export function Faq({
       id="faq"
       className="relative overflow-hidden bg-ms-cream py-24 lg:py-32"
     >
-      <PatternField
-        id="faq"
-        tone="cream"
-        fade="left"
-        scale={540}
-        opacity={0.85}
-        drift={44}
-      />
+      <PatternField tone="cream" />
 
       <Wrap className="relative">
         <div className="max-w-[680px]">

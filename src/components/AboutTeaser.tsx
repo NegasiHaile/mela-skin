@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ABOUT, CLINICIANS } from "@/constants";
 import { PatternField } from "./brand/PatternField";
 import { Drift, Reveal, Wipe } from "@/motion";
-import { PillGhost, PillSolid, Wrap } from "./ui";
+import { PhotoSlot, PillGhost, PillSolid, Wrap } from "./ui";
 
 /*
   The clinician on the home page, in short.
@@ -23,29 +23,39 @@ export function AboutTeaser() {
       id="clinic"
       className="relative overflow-hidden bg-ms-field py-24 lg:py-32"
     >
-      <PatternField
-        id="about-teaser"
-        tone="field"
-        fade="right"
-        scale={400}
-        opacity={0.55}
-        drift={44}
-      />
+      <PatternField tone="field" />
 
       <Wrap className="relative">
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
           <Wipe className="lg:col-span-5">
             <div className="relative h-[380px] w-full overflow-hidden ring-1 ring-ms-gold/25 lg:h-[500px]">
-              <Drift distance={28} className="absolute inset-x-0 -inset-y-[9%]">
-                <Image
-                  src={clinician.portrait.src}
-                  alt={clinician.portrait.alt}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover object-center"
+              {/* Null until the clinic has been photographed — see
+                  constants/placeholders.ts → photos.clinician. */}
+              {clinician.portrait.src ? (
+                <Drift distance={28} className="absolute inset-x-0 -inset-y-[9%]">
+                  <Image
+                    src={clinician.portrait.src}
+                    alt={clinician.portrait.alt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover object-center"
+                  />
+                </Drift>
+              ) : (
+                <PhotoSlot
+                  tone="dark"
+                  label={clinician.portrait.label}
+                  className="h-full w-full"
                 />
-              </Drift>
+              )}
             </div>
+
+            {/* Same rule as /about: a stand-in says so on the page. */}
+            {clinician.portrait.caption ? (
+              <p className="mt-3.5 font-sans text-[13px] font-light tracking-[0.02em] text-ms-sand/70">
+                {clinician.portrait.caption}
+              </p>
+            ) : null}
           </Wipe>
 
           <div className="lg:col-span-6 lg:col-start-7">
@@ -72,7 +82,7 @@ export function AboutTeaser() {
             </Reveal>
 
             <Reveal delay={0.36} className="mt-10 flex flex-wrap gap-3.5">
-              <PillSolid href="/about" tone="dark" className="min-h-13 px-8">
+              <PillSolid href="/about#clinician" tone="dark" className="min-h-13 px-8">
                 {ABOUT.teaser.cta}
               </PillSolid>
               <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">

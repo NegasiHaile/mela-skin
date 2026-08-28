@@ -18,9 +18,15 @@
  * is asserted here.
  *
  * Every principle below traces to something the site already establishes and
- * the clinic has already committed to (one roof, published prices, written
- * plans). Where the equivalent claim needs the owner's confirmation, it is a
- * visible [bracketed] placeholder instead of an invented sentence.
+ * the clinic has already committed to (one roof, written plans, a cost agreed
+ * before anything is booked). Where the equivalent claim needs the owner's
+ * confirmation, it is a visible [bracketed] placeholder instead of an invented
+ * sentence.
+ *
+ * Principle 3 used to be "Prices published in advance". The 26 Aug 2026 meeting
+ * removed pricing from the site, so the commitment moved rather than
+ * disappeared: it is now about when you learn the cost, not where. See the
+ * header of ./menu.ts.
  *
  * The assessment parameters are general dermatology, not anybody's proprietary
  * protocol: Fitzpatrick typing, pigment depth, barrier and sebum, vascularity,
@@ -28,7 +34,6 @@
  * do on Fitzpatrick IV to VI, which is the whole argument of this clinic.
  */
 
-import { MENU_ITEM_COUNT } from "./menu";
 import { todo } from "./placeholders";
 
 export const ABOUT = {
@@ -43,7 +48,7 @@ export const ABOUT = {
     paragraphs: [
       "Dermatology is taught from photographs, and most of those photographs are of white skin. On deeper complexions the same condition changes colour, leaves pigment behind for months after it has cleared, and heals differently. It gets named wrong, then treated wrong, sometimes for years.",
       "[Two or three sentences on how the clinic came about: who started it, what they were doing before, and the point at which a practice built around melanin-rich skin started to look necessary rather than optional. Write it in the founder's voice.]",
-      "Medical and cosmetic care sit under one roof here, so a diagnosis and the treatment it calls for do not send you to two clinics. Every cosmetic price is published, so nobody has to ring to find out what something costs. Every plan is written down, with its cost, before you agree to it.",
+      "Medical and cosmetic care sit under one roof here, so a diagnosis and the treatment it calls for do not send you to two clinics. Aesthetic treatment is sized to the skin in front of us rather than sold off a list, and the consultation where that gets worked out is free. Every plan is written down, with its cost, before you agree to it.",
     ],
     /** Set large beside the paragraphs. Must be a sentence, not a slogan. */
     pull: "Dermatology training follows its photographs, and its photographs are of white skin.",
@@ -64,8 +69,8 @@ export const ABOUT = {
         body: "Fitzpatrick type, your history with lasers and how you scar are all recorded before a device is switched on. On Fitzpatrick IV to VI the setting decides the outcome more reliably than the machine does.",
       },
       {
-        title: "Prices published in advance",
-        body: `All ${MENU_ITEM_COUNT} cosmetic treatments carry a figure on this site, with the course rate beside it. You can work out what something costs before you speak to anyone, and compare it with anywhere else that publishes theirs.`,
+        title: "A cost before you agree, not after",
+        body: "The cosmetic consultation is free, and it is where the figure comes from: what is recommended, how many sessions, and what the whole thing comes to, written down before anything is booked. Nothing gets added to it later.",
       },
       {
         title: "A plan you leave with",
@@ -143,11 +148,25 @@ export const ABOUT = {
     note: "[Confirm whether imaging-based skin analysis will be offered at launch and on what device. If it will be, name it here along with the readings it produces, and say whether it is included in the consultation fee or charged separately.]",
   },
 
+  /* -- The providers ------------------------------------------------------ */
+
+  /**
+   * The section head above the provider blocks. It exists because there are two
+   * of them now, and because Abseret named this as the second thing the page is
+   * for (00:17:24): "either about our clinic, our mission and vision, and then
+   * each provider that we have a little bit of a bio about them."
+   */
+  providers: {
+    eyebrow: "Our providers",
+    title: "Who you will see",
+    lede: "Two clinicians, one record. Each block below is one of them: what they trained in, what they see most, and the areas they have a particular interest in, which is usually the more useful half.",
+  },
+
   /* -- The band on the home page ------------------------------------------ */
 
   teaser: {
     eyebrow: "Who you will see",
-    body: "One clinician, one record, and a plan you leave with in writing. The medical and cosmetic sides of your care sit in the same building rather than in two.",
-    cta: "About the clinic",
+    body: "Two clinicians, one record, and a plan you leave with in writing. The medical and cosmetic sides of your care sit in the same building rather than in two.",
+    cta: "Meet the providers",
   },
 } as const;

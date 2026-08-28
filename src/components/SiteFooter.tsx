@@ -6,22 +6,26 @@ import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { Wrap } from "./ui";
 
 /*
-  The pattern reads strongest here, at the foot of the page, the way it does on
-  the letterhead: the motif holds the bottom of the sheet and the type sits on
-  top of it. `bottom` keeps it inked below and lets it fall away under the link
-  columns, and the tile is smaller than in the sections above (300px) so the
-  footer reads as texture rather than as another full-bleed statement.
+  The pattern reads through here the way it does on the letterhead: the motif
+  holds the bottom of the sheet and the type sits on top of it. It is the same
+  tile at the same phase as every section above, so the lattice runs unbroken
+  into the footer rather than restarting at it.
+
+  THE GOLD HAIRLINE IS LOAD-BEARING NOW. The footer used to be a stop darker than
+  the booking band directly above it, and the change in value was the boundary.
+  Both are the field colour since Primary 1 was retired, so without a rule the
+  two run together into one long brown block. A hairline is the right amount of
+  separation for two bands that genuinely belong together — the same move the
+  mobile menu uses to divide places-to-go from ways-to-reach-a-person.
 */
 export function SiteFooter() {
   return (
-    <footer className="relative overflow-hidden bg-ms-espresso py-12 lg:py-14">
-      <PatternField
-        id="footer"
-        tone="espresso"
-        fade="bottom"
-        scale={300}
-        opacity={0.75}
-        drift={38}
+    <footer className="relative overflow-hidden bg-ms-field py-12 lg:py-14">
+      <PatternField tone="field" />
+
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ms-gold/45 to-transparent"
       />
 
       <Wrap className="relative">

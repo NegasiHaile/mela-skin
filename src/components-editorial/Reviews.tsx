@@ -9,20 +9,13 @@ export function Reviews() {
   return (
     <Shell>
       <Card id="reviews" className="mt-4 bg-ms-sand/35">
-        <PatternField
-          id="ed-reviews"
-          tone="sand"
-          fade="radial"
-          scale={460}
-          opacity={0.85}
-          drift={32}
-        />
+        <PatternField tone="sand" />
         <Inner>
           <div className="flex flex-col items-center text-center">
             <SectionLabel index="06">Reviews</SectionLabel>
             <Reveal delay={0.12}>
               <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] tracking-[-0.014em] text-ms-cocoa">
-                In their <em className="italic text-ms-clay">words</em>.
+                In their <em className="italic text-ms-terracotta">words</em>.
               </h2>
             </Reveal>
           </div>

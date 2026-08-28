@@ -25,14 +25,7 @@ export function Principles() {
       id="principles"
       className="relative overflow-hidden bg-ms-cream py-24 lg:py-32"
     >
-      <PatternField
-        id="principles"
-        tone="cream"
-        fade="left"
-        scale={540}
-        opacity={0.85}
-        drift={44}
-      />
+      <PatternField tone="cream" />
 
       <Wrap className="relative">
         <div className="max-w-[680px]">
@@ -54,7 +47,7 @@ export function Principles() {
             >
               <span
                 aria-hidden="true"
-                className="mt-[0.35rem] shrink-0 font-sans text-[11px] font-medium tracking-[0.2em] text-ms-clay"
+                className="mt-[0.35rem] shrink-0 font-sans text-[11px] font-medium tracking-[0.2em] text-ms-terracotta-deep"
               >
                 {String(index + 1).padStart(2, "0")}
               </span>

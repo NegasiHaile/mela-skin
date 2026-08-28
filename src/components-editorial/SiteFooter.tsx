@@ -7,20 +7,13 @@ import { Card, Shell } from "./ui";
 export function SiteFooter() {
   return (
     <Shell>
-      <Card as="footer" className="mb-4 mt-4 bg-ms-espresso">
+      <Card as="footer" className="mb-4 mt-4 bg-ms-field">
        {/*
          The pattern reads strongest at the foot of the page, the way it does
          on the letterhead: inked along the bottom edge, falling away under the
          link columns.
        */}
-       <PatternField
-         id="ed-footer"
-         tone="espresso"
-         fade="bottom"
-         scale={260}
-         opacity={0.75}
-         drift={30}
-       />
+       <PatternField tone="field" />
        <div className="relative px-7 py-11 sm:px-10 lg:px-16 lg:py-12">
         {/*
           Two columns from `sm` up. Stacked, the four link lists run to the

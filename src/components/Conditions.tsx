@@ -52,14 +52,7 @@ export function ConditionIndex() {
 export function Conditions() {
   return (
     <section className="relative overflow-hidden bg-ms-paper py-20 lg:py-28">
-      <PatternField
-        id="conditions"
-        tone="paper"
-        fade="top"
-        scale={600}
-        opacity={0.85}
-        drift={54}
-      />
+      <PatternField tone="paper" />
 
       <Wrap className="relative">
         <Stagger step={0.09} className="grid gap-5 sm:gap-6 lg:grid-cols-2">
@@ -83,7 +76,7 @@ export function Conditions() {
                 </div>
                 <span
                   aria-hidden="true"
-                  className="shrink-0 font-display text-[1.6rem] font-light leading-none text-ms-clay/60"
+                  className="shrink-0 font-display text-[1.6rem] font-light leading-none text-ms-terracotta/70"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>

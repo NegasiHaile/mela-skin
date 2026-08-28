@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CLINICIANS, PREMISES } from "@/constants";
+import { ABOUT, CLINICIANS, PREMISES } from "@/constants";
 import { PatternField } from "./brand/PatternField";
 import { Sparkle } from "./brand/Marks";
 import { Drift, Reveal, Stagger, StaggerItem, Wipe } from "@/motion";
@@ -8,10 +8,18 @@ import { PhotoSlot, SectionHead, Wrap } from "./ui";
 /*
   Who you see, and where.
 
-  Content: constants/clinic.ts → CLINICIANS and PREMISES. CLINICIANS is an
-  array, so adding a second name is an edit to that file rather than to this
-  layout — the portrait swaps sides on every other entry so a team reads as a
-  column rather than as the same block repeated.
+  This is the second of the two things /about is for. Abseret set both out at
+  00:17:24: "either about our clinic, our mission and vision, and then each
+  provider that we have a little bit of a bio about them." So the page runs the
+  clinic's story, then this, and the rest follows.
+
+  One block per provider: portrait on one side, name / role / bio / special
+  interests / credentials on the other, and the sides swap on every other entry
+  so two providers read as a column rather than as the same block printed twice.
+
+  Content: constants/clinic.ts → CLINICIANS and PREMISES, and
+  constants/about.ts → ABOUT.providers for the head. CLINICIANS is an array, so
+  a third name is an edit to that file and nothing here.
 */
 
 /* Reversed section — the clinician sits on the field colour, like the hero. */
@@ -26,17 +34,27 @@ export function Clinician() {
         portrait — the letterhead ground and a photograph are two textures and
         only one of them can be in front.
       */}
-      <PatternField
-        id="clinic"
-        tone="field"
-        fade="right"
-        scale={400}
-        opacity={0.55}
-        drift={44}
-      />
+      <PatternField tone="field" />
 
       <Wrap className="relative">
-        <div className="flex flex-col gap-20 lg:gap-28">
+        <div className="max-w-[680px]">
+          <Reveal y={18}>
+            <p className="eyebrow text-ms-gold">{ABOUT.providers.eyebrow}</p>
+          </Reveal>
+          <SectionHead
+            tone="dark"
+            title={ABOUT.providers.title}
+            rule={false}
+            className="mt-6"
+          />
+          <Reveal delay={0.18}>
+            <p className="mt-7 font-sans text-[18px] font-light leading-[1.8] text-ms-cream/85 lg:text-[19px]">
+              {ABOUT.providers.lede}
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="mt-20 flex flex-col gap-20 lg:mt-24 lg:gap-28">
           {CLINICIANS.map((clinician, index) => {
             const mirrored = index % 2 === 1;
 
@@ -59,16 +77,42 @@ export function Clinician() {
                   }
                 >
                   <div className="relative h-[440px] w-full overflow-hidden ring-1 ring-ms-gold/25 lg:h-[600px]">
-                    <Drift distance={32} className="absolute inset-x-0 -inset-y-[9%]">
-                      <Image
-                        src={clinician.portrait.src}
-                        alt={clinician.portrait.alt}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 40vw"
-                        className="object-cover object-center"
+                    {/*
+                      `src` is null until the clinic has been photographed, and
+                      then this is a labelled slot rather than a generated face.
+                      Dr. Abseret Hailu, 00:17:24: "I'm not a huge fan on the AI
+                      pics of the people, because I do want it to be real."
+                    */}
+                    {clinician.portrait.src ? (
+                      <Drift distance={32} className="absolute inset-x-0 -inset-y-[9%]">
+                        <Image
+                          src={clinician.portrait.src}
+                          alt={clinician.portrait.alt}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-cover object-center"
+                        />
+                      </Drift>
+                    ) : (
+                      <PhotoSlot
+                        tone="dark"
+                        label={clinician.portrait.label}
+                        className="h-full w-full"
                       />
-                    </Drift>
+                    )}
                   </div>
+
+                  {/*
+                    A stand-in has to be labelled on the page, not only in the
+                    source. Abseret, 00:17:24: "I'm not a huge fan on the AI pics
+                    of the people, because I do want it to be real" — so while
+                    one is here for the layout's sake, it says what it is.
+                  */}
+                  {clinician.portrait.caption ? (
+                    <p className="mt-3.5 font-sans text-[13px] font-light tracking-[0.02em] text-ms-sand/70">
+                      {clinician.portrait.caption}
+                    </p>
+                  ) : null}
                 </Wipe>
 
                 <div
@@ -78,7 +122,11 @@ export function Clinician() {
                       : "lg:col-span-6 lg:col-start-7"
                   }
                 >
-                  <SectionHead tone="dark" title={clinician.name} />
+                  <Reveal y={18}>
+                    <h3 className="display-caps text-[clamp(1.9rem,3.2vw,2.7rem)] text-ms-ivory">
+                      {clinician.name}
+                    </h3>
+                  </Reveal>
 
                   <Reveal delay={0.15}>
                     <p className="eyebrow mt-5 font-normal text-ms-gold">
@@ -89,6 +137,20 @@ export function Clinician() {
                   <Reveal delay={0.25}>
                     <p className="mt-8 font-sans text-[17px] font-light leading-[1.85] text-ms-cream/80">
                       {clinician.bio}
+                    </p>
+                  </Reveal>
+
+                  {/*
+                    Special interests, held out on their own line rather than
+                    buried in the credential list. Abseret asked for exactly this
+                    at 00:32:49 — "so that people feel like they're being seen by
+                    an expert within that" — and a patient who has been told
+                    three times that their hair loss is normal is scanning for
+                    precisely this line.
+                  */}
+                  <Reveal delay={0.32}>
+                    <p className="mt-7 border-l-2 border-ms-gold/45 pl-5 font-display text-[1.15rem] italic leading-[1.55] text-ms-sand">
+                      Special interests: {clinician.interests}
                     </p>
                   </Reveal>
 
@@ -127,14 +189,7 @@ export function Premises() {
 
   return (
     <section id="premises" className="relative scroll-mt-4 overflow-hidden bg-ms-paper py-24 lg:py-36">
-      <PatternField
-        id="premises"
-        tone="paper"
-        fade="left"
-        scale={520}
-        opacity={0.9}
-        drift={50}
-      />
+      <PatternField tone="paper" />
 
       <Wrap className="relative">
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">

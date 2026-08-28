@@ -2,6 +2,7 @@
 
 import { LazyMotion, MotionConfig, domAnimation } from "framer-motion";
 import type { ReactNode } from "react";
+import { PatternDrift } from "./brand/PatternDrift";
 
 /**
  * One motion policy for the whole tree.
@@ -20,13 +21,22 @@ import type { ReactNode } from "react";
  * `strict` turns any stray `motion.*` back into a build error rather than a
  * silent return to the full bundle.
  *
+ * `PatternDrift` rides along here because it is the same kind of thing: one
+ * policy for the whole tree, set once, that every section then reads. It writes
+ * a single custom property on :root and renders nothing. Every `PatternField` on
+ * the page counter-scrolls by that one value, which is what keeps the pattern
+ * lattice rigid across section boundaries — see brand/PatternField.tsx.
+ *
  * Children are server-rendered and passed through as props, so this boundary
  * costs the page nothing beyond the provider itself.
  */
 export function MotionProvider({ children }: { children: ReactNode }) {
   return (
     <LazyMotion features={domAnimation} strict>
-      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+      <MotionConfig reducedMotion="user">
+        <PatternDrift />
+        {children}
+      </MotionConfig>
     </LazyMotion>
   );
 }

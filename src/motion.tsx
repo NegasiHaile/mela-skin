@@ -364,16 +364,6 @@ export function ScrollAway({
   );
 }
 
-/** Scroll-linked y for a background layer. Used by PatternField. */
-export function useDriftY(
-  ref: React.RefObject<HTMLElement | null>,
-  distance: number,
-): MotionValue<number> | undefined {
-  const reduce = useReducedMotion();
-  const progress = useSectionProgress(ref);
-  const y = useTransform(progress, [0, 1], [distance, -distance]);
-  return reduce ? undefined : y;
-}
 
 /* -- Ornament ------------------------------------------------------------- */
 
@@ -410,7 +400,7 @@ export function ScrollProgress() {
       aria-hidden="true"
       data-motion="progress"
       style={{ scaleX }}
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-gradient-to-r from-ms-clay via-ms-gold to-ms-terracotta"
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-gradient-to-r from-ms-terracotta-deep via-ms-gold to-ms-caramel"
     />
   );
 }

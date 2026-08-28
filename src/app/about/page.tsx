@@ -19,13 +19,19 @@ export const metadata: Metadata = {
 };
 
 /*
-  The clinic itself, in the order somebody deciding whether to book wants it:
-  why it exists, how it runs, what a consultation actually examines, who they
-  will see, and where the building is.
+  The clinic itself.
 
-  The clinician and premises sections moved here from the home page rather than
-  being copied. Home carries a short teaser and links across, so neither page
-  says the same thing twice.
+  ORDER. Abseret named what this page is for at 00:17:24: "either about our
+  clinic, our mission and vision, and then each provider that we have a little
+  bit of a bio about them." So those two come first — the story, then the
+  providers — and how the clinic works, what a consultation examines and where
+  the building is follow. The providers used to sit fifth, behind six operating
+  commitments and seven assessment readings, which buried half the reason
+  somebody opens this page.
+
+  The provider and premises sections live here rather than on the home page.
+  Home carries a short teaser and links across, so neither page says the same
+  thing twice.
 */
 export default function About() {
   return (
@@ -46,9 +52,9 @@ export default function About() {
               <p className="eyebrow mb-3 text-ms-gold">On this page</p>
               {[
                 { label: ABOUT.story.title, href: "#story" },
+                { label: ABOUT.providers.title, href: "#clinician" },
                 { label: ABOUT.principles.title, href: "#principles" },
                 { label: ABOUT.assessment.title, href: "#assessment" },
-                { label: "Who you will see", href: "#clinician" },
                 { label: "The premises", href: "#premises" },
               ].map((item) => (
                 <a
@@ -73,15 +79,15 @@ export default function About() {
               Book a consultation
             </PillSolid>
             <PillGhost href="/treatment-menu" tone="dark" className="min-h-13 px-8">
-              Menu &amp; prices
+              Treatment menu
             </PillGhost>
           </div>
         </PageHero>
 
         <Story />
+        <Clinician />
         <Principles />
         <Assessment />
-        <Clinician />
         <Premises />
         <BookingCta />
       </main>

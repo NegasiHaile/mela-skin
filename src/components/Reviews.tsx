@@ -15,14 +15,7 @@ export function Reviews() {
       id="reviews"
       className="relative overflow-hidden bg-ms-shell py-24 lg:py-36"
     >
-      <PatternField
-        id="reviews"
-        tone="shell"
-        fade="radial"
-        scale={600}
-        opacity={0.9}
-        drift={40}
-      />
+      <PatternField tone="shell" />
 
       <Wrap className="relative">
         <SectionHead title={HOME.reviews.title} />

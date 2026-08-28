@@ -10,16 +10,21 @@ import { MENU, MENU_PAGE, META } from "@/constants";
 import { PillGhost, PillSolid } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Treatment menu & prices",
+  title: "Treatment menu",
   description: META.menuDescription,
   alternates: { canonical: "/treatment-menu" },
   keywords: META.menuKeywords,
 };
 
 /*
-  The whole priced menu on one route, from Resources/REVISED MENU OF GLO365 -
-  2025.pdf by way of constants/menu.ts. Five sections, sixty-odd treatments,
-  behind an enquiry form.
+  The whole menu on one route, from Resources/REVISED MENU OF GLO365 - 2025.pdf
+  by way of constants/menu.ts. Five sections, sixty-odd treatments, set as a
+  responsive table.
+
+  It carried prices until 27 Aug 2026. It does not now — see the header of
+  constants/menu.ts for the decision and who made it. What replaced them is how
+  each treatment is sold, which is the part of a price list that is still useful
+  when the figure is quoted at a consultation instead.
 */
 
 export default function TreatmentMenu() {
@@ -51,7 +56,7 @@ export default function TreatmentMenu() {
         >
           <div className="flex flex-wrap gap-3.5">
             <PillSolid href={`#${MENU[0].id}`} tone="dark" className="min-h-13 px-8">
-              Start at facials
+              Start at {MENU[0].title.toLowerCase()}
             </PillSolid>
             <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">
               Book a consultation

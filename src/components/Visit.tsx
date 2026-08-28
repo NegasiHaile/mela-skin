@@ -17,14 +17,7 @@ export function Visit() {
       id="visit"
       className="relative overflow-hidden bg-ms-shell py-24 lg:py-36"
     >
-      <PatternField
-        id="visit"
-        tone="shell"
-        fade="bottom"
-        scale={480}
-        opacity={0.85}
-        drift={44}
-      />
+      <PatternField tone="shell" />
 
       <Wrap className="relative">
         <SectionHead title={HOME.visit.title} className="max-w-[640px]" />
@@ -45,7 +38,7 @@ export function Visit() {
               key={step.title}
               className="border-t border-ms-bronze/25 pt-7"
             >
-              <span className="font-display text-[2.6rem] font-light leading-none text-ms-clay">
+              <span className="font-display text-[2.6rem] font-light leading-none text-ms-terracotta">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <h3 className="display-caps mt-5 text-[19px] text-ms-cocoa">

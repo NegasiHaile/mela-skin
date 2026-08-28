@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Space_Grotesk } from "next/font/google";
 import { MotionProvider } from "@/components/MotionProvider";
 import { META, brand } from "@/constants";
 import { clinicJsonLd } from "@/lib/jsonld";
@@ -31,17 +30,30 @@ const larken = localFont({
 });
 
 /*
-  Secondary typography, option 3 of the three the brand deck offers (p.9).
+  Ranade — the brand's official secondary typeface, from
+  Resources/MELA SKIN - Visual Identity Assets/5_Typography/Secondary Font/
+  Ranade_Complete. It is the face the official logo lockup sets
+  "DERMATOLOGY & COSMETIC CLINIC" in, so it is what the descriptor line and all
+  body copy should be in.
 
-  Three weights, not four. Nothing on the site sets `font-bold` on sans type —
-  the only bold on the page is the Larken wordmark — so 700 was a font file
-  fetched and never used.
+  It replaced Space Grotesk, which was a stand-in from Google Fonts chosen
+  before the brand package arrived. Self-hosting it drops a third-party origin
+  from every page load, and the package ships production .woff2 files plus an
+  ITF Free Font License that permits self-hosting.
+
+  Three upright cuts, matching the three the stand-in loaded. No italic: the
+  only italic on the site is Larken (the tagline and the family summaries), so
+  an italic Ranade would be 23KB fetched and never drawn.
 */
-const grotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-grotesk",
+const ranade = localFont({
+  src: [
+    { path: "../fonts/Ranade-Light.woff2", weight: "300", style: "normal" },
+    { path: "../fonts/Ranade-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Ranade-Medium.woff2", weight: "500", style: "normal" },
+  ],
+  variable: "--font-ranade",
   display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
 const titleDefault = `${brand.name} — ${brand.descriptor} in Westlands, Nairobi`;
@@ -116,8 +128,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3e7d6" },
-    { media: "(prefers-color-scheme: dark)", color: "#74370c" },
+    { media: "(prefers-color-scheme: light)", color: "#f4e7d6" },
+    { media: "(prefers-color-scheme: dark)", color: "#2c190b" },
   ],
   colorScheme: "light",
   width: "device-width",
@@ -130,7 +142,7 @@ export default function RootLayout({
   const jsonLd = clinicJsonLd();
 
   return (
-    <html lang="en-KE" className={`${larken.variable} ${grotesk.variable}`}>
+    <html lang="en-KE" className={`${larken.variable} ${ranade.variable}`}>
       <head>
         {/*
           Framer Motion renders its `initial` state into the server HTML, which

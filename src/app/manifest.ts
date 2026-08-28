@@ -9,8 +9,9 @@ export default function manifest(): MetadataRoute.Manifest {
       "Medical and cosmetic dermatology built for melanin-rich skin in Westlands, Nairobi.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f3e7d6",
-    theme_color: "#74370c",
+    // Official palette: Primary 7 (cream) and Primary 2 (the flooded ground).
+    background_color: "#f4e7d6",
+    theme_color: "#2c190b",
     icons: [
       {
         src: "/icons/icon-192.png",

@@ -46,8 +46,8 @@ export default function MedicalDermatology() {
             <PillSolid href="/contact" tone="dark" className="min-h-13 px-8">
               Book a consultation
             </PillSolid>
-            <PillGhost href="/treatment-menu" tone="dark" className="min-h-13 px-8">
-              Menu &amp; prices
+            <PillGhost href="/cosmetic-dermatology" tone="dark" className="min-h-13 px-8">
+              Cosmetic dermatology
             </PillGhost>
           </div>
         </PageHero>
@@ -56,14 +56,7 @@ export default function MedicalDermatology() {
         <Conditions />
 
         <section className="relative overflow-hidden bg-ms-cream py-24 lg:py-32">
-          <PatternField
-            id="prep"
-            tone="cream"
-            fade="left"
-            scale={520}
-            opacity={0.85}
-            drift={44}
-          />
+          <PatternField tone="cream" />
 
           <Wrap className="relative">
             <div className="max-w-[700px]">
@@ -83,7 +76,7 @@ export default function MedicalDermatology() {
                   y={24}
                   className="border-t border-ms-bronze/25 pt-7"
                 >
-                  <span className="font-display text-[2.4rem] font-light leading-none text-ms-clay">
+                  <span className="font-display text-[2.4rem] font-light leading-none text-ms-terracotta">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <h3 className="display-caps mt-5 text-[19px] text-ms-cocoa">

@@ -7,25 +7,18 @@ export function Booking() {
   return (
     <Shell>
       <Card id="book" className="mt-4 bg-ms-panel">
-        <PatternField
-          id="ed-book"
-          tone="panel"
-          fade="none"
-          scale={200}
-          opacity={0.6}
-          drift={44}
-        />
+        <PatternField tone="panel" />
 
         <Inner className="relative">
           <div className="flex flex-col items-center text-center">
             <Reveal y={14}>
-              <p className="eyebrow text-ms-clay">Book</p>
+              <p className="eyebrow text-ms-terracotta-deep">Book</p>
             </Reveal>
 
             <Reveal delay={0.1}>
               <h2 className="mt-7 max-w-[18ch] font-display text-[clamp(2.1rem,4vw,3.2rem)] font-normal leading-[1.08] tracking-[-0.016em] text-ms-ivory">
                 Start with one{" "}
-                <em className="italic text-ms-clay">consultation</em>.
+                <em className="italic text-ms-terracotta">consultation</em>.
               </h2>
             </Reveal>
 
@@ -62,7 +55,7 @@ export function Booking() {
                   y={22}
                   className="flex flex-col gap-2.5 rounded-[18px] border border-ms-sand/20 bg-ms-espresso/45 px-7 py-7 text-left backdrop-blur-[2px]"
                 >
-                  <dt className="eyebrow font-normal text-ms-clay">
+                  <dt className="eyebrow font-normal text-ms-terracotta-deep">
                     {detail.label}
                   </dt>
                   <dd className="font-sans text-[14.5px] font-light leading-[1.7] text-ms-cream">

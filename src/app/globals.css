@@ -1,58 +1,169 @@
 @import "tailwindcss";
 
-/*
-  Brand tokens.
-  The six `--color-ms-*` values below are the PRIMARY COLOURS as labelled in
-  "MELA SKIN - Visual Identity Branding Presentation.pdf" (p.6). Do not round
-  or substitute them. `cream` is the applied background sampled from the
-  social/letterhead artwork, which sits warmer than the ivory primary.
-*/
+/* ==========================================================================
+   Brand tokens — MELA SKIN official visual identity
+
+   SOURCE: Resources/MELA SKIN - Visual Identity Assets/3_Color Pallet/
+           MELA SKIN - Color Pallet Info.png
+
+   That sheet is the designer's palette, handed over on 26 Aug 2026 and
+   confirmed in the service-offerings meeting that evening. It supersedes every
+   earlier brand file. Its fourteen values, verbatim:
+
+     PRIMARY    #160F09  #2C190B  #602F0F  #99571D  #B78850  #CBAA7D  #F4E7D6
+     SECONDARY  #000000  #160C02  #421E04  #854716  #D1A76D  #FDFCF8  #140F09
+
+   NOT EVERY ONE IS USED. Primary 1 and the three near-blacks in the secondary
+   row are deliberately unused: #2C190B is the darkest colour the app goes to,
+   at the clinic's request. Anything darker read as black rather than as brown.
+
+   Do not round or substitute them. Two tokens below are NOT off the sheet and
+   both say so at the point of definition.
+
+   WHY THE WHOLE PALETTE MOVED. Dr. Abseret Hailu, 26 Aug, 00:18:31: "this
+   brown is a little bit too red. It has a bit of a red undertone. I would like
+   it to be a bit more neutral … more yellow undertone." Then, on which of the
+   fourteen, 00:35:00-00:36:06: "that second brown … more of a coffee color,
+   more like cooler than how warm that is." The old ground was #74370c; the
+   flooded sections carry Primary 2, #2C190B, and the note at that token says
+   the rest. Nothing here was picked by eye.
+
+   Token NAMES are unchanged from the previous palette — they are used around
+   six hundred times across the components — so the site moves in one edit and
+   no component had to be audited by hand.
+   ========================================================================== */
 @theme {
-  --color-ms-espresso: #31180a;
-  --color-ms-terracotta: #c6722c;
-  --color-ms-bronze: #8e714b;
-  --color-ms-sand: #d5c6af;
-  --color-ms-ivory: #fdfce8;
+  /* -- Primary ----------------------------------------------------------- */
 
-  --color-ms-cocoa: #4a2308;
-  --color-ms-cream: #f3e7d6;
-  --color-ms-clay: #b57035;
+  /**
+   * THE DARKEST COLOUR IN THE APP, and the body-text colour on light grounds at
+   * 65-85%.
+   *
+   * It is Primary 2, the same value as `ms-field`, and that is deliberate.
+   * Primary 1 `#160F09` used to live here and is now unused: it was reading as
+   * near-black in the footer and in the consultation band, which is not what the
+   * palette is for. The clinic asked for those to come back up to the colour the
+   * page heroes use, and for nothing in the app to go darker than that.
+   *
+   * Two names for one value, like `shell` and `ivory`. They are kept apart
+   * because they mean different things at the call site: `espresso` is ink and
+   * the deepest ground, `field` is the colour a section is flooded with. Renaming
+   * sixty `text-ms-espresso` body-copy usages to `text-ms-field` would be a large
+   * diff to make type read as scenery.
+   *
+   * Contrast, measured rather than assumed: 16.35 / 15.21 / 13.79:1 on shell,
+   * paper and cream at full strength, and 5.08:1 at the weakest opacity the site
+   * uses it at (65% on paper).
+   */
+  --color-ms-espresso: #2c190b;
 
-  /*
-    Both sampled from the brand artwork rather than invented: `paper` is the
-    deck's own page ground, `panel` the deep brown used behind reversed type.
-    The layout floats rounded cards on `paper`, so it is the one colour that
-    shows between every section.
-  */
-  --color-ms-paper: #f4efeb;
-  --color-ms-panel: #542b15;
+  /**
+   * Primary 2 — THE SIGNATURE FLOOD. The colour the immersive sections are
+   * flooded with, and the one Abseret asked for twice.
+   *
+   * Aser, 26 Aug 00:35:00: "you want it to be that darker chocolate, right, the
+   * second, the second brown." Abseret: "Yeah, I just would like it to be as
+   * cool as that brown … like that second brown." And at 00:36:06: "more of a
+   * coffee color, more like cooler than how warm that is … not so red."
+   *
+   * This is that second brown. It replaced #602F0F, which is cooler than the
+   * original #74370c but is Primary 3 rather than the one she named. Going
+   * darker also raises everything reversed out of it: cream from 9.03 to
+   * 13.79:1, ivory to 16.35, sand to 7.66, gold to 9.13.
+   */
+  --color-ms-field: #2c190b;
+
+  /**
+   * Primary 3. Now the LIGHTER tint over a dark ground rather than a ground of
+   * its own — the dropdown row hover, the media plates, the mid-stop of the
+   * dark gradients. It reads as a lift out of field and espresso, which is
+   * exactly what a hover state on a dark panel wants.
+   */
+  --color-ms-panel: #602f0f;
+
+  /**
+   * Primary 4. The accent. Unlike the old #c6722c this clears WCAG AA for
+   * small text on all three light grounds (5.48 shell / 5.09 paper / 4.62
+   * cream), which is why the hand-darkened `ms-clay` it replaced is gone.
+   */
+  --color-ms-terracotta: #99571d;
+
+  /**
+   * Primary 5. Rules, hairlines, borders, and type on the dark grounds (6.01:1
+   * on espresso, 5.32 on field). NOT for small type on light grounds — it
+   * reaches only 3.08:1 on shell. Use terracotta or terracotta-deep there.
+   */
+  --color-ms-bronze: #b78850;
+
+  /** Primary 6. Secondary type on the dark grounds: 8.66 espresso, 7.66 field. */
+  --color-ms-sand: #cbaa7d;
+
+  /**
+   * Primary 7. The warm light ground. Abseret, 00:36:06: "if you are going to
+   * use a lighter color, you can use creams."
+   */
+  --color-ms-cream: #f4e7d6;
+
+  /* -- Secondary --------------------------------------------------------- */
+
+  /**
+   * Secondary 6, twice. `shell` is the page ground and `ivory` is reversed type
+   * on the dark sections; the sheet gives one off-white for both, so both names
+   * point at it. They are kept apart because they mean different things at the
+   * call site.
+   */
   --color-ms-shell: #fdfcf8;
+  --color-ms-ivory: #fdfcf8;
 
-  /*
-    The signature field. Also from the artwork — it is the saturated middle of
-    the brand's dark-to-caramel gradient, and the one colour the immersive
-    sections are flooded with. Ivory sits on it at 8.8:1.
-  */
-  --color-ms-field: #74370c;
+  /**
+   * Secondary 3. Heading type on every light ground: 14.41 / 13.41 / 12.15:1
+   * on shell, paper and cream. It moved here from Primary 2 when Primary 2
+   * became the flooded ground.
+   */
+  --color-ms-cocoa: #421e04;
 
-  /*
-    Accent for text on the flooded sections. Taken from the monogram's gold
-    ramp. Clay and terracotta both collapse on the field (2.3:1 and 2.5:1) and
-    cannot carry small type there; this clears AA at 4.9:1 on the field and
-    9:1 on espresso. Clay stays the accent on light grounds only.
-  */
+  /**
+   * Secondary 4. The deeper accent, for the 10-11px eyebrows where the primary
+   * terracotta is cutting it fine on cream: 7.03 shell / 6.54 paper / 5.93
+   * cream, and 5.14:1 on the 18% terracotta tint the condition tiles use
+   * (4.56:1 at their 26% hover — still AA).
+   */
+  --color-ms-terracotta-deep: #854716;
+
+  /** Secondary 5. The light caramel. Accent on dark grounds, 7.56:1 on field. */
+  --color-ms-caramel: #d1a76d;
+
+  /* -- The two that are not on the sheet --------------------------------- */
+
+  /**
+   * DERIVED, not sampled: 45% cream into shell. The layout alternates three
+   * light grounds to keep its section rhythm (shell → paper → cream) and the
+   * sheet supplies two, so this is the midpoint between them rather than a
+   * new colour. Cocoa reads 15.2:1 on it.
+   */
+  --color-ms-paper: #f9f3e9;
+
+  /**
+   * SAMPLED FROM THE BRANDMARK, not from the palette sheet. Gold is not one
+   * of the fourteen, but the mark itself is a gold gradient and the sheet
+   * prints it in gold on all seven swatches. Measured off
+   * 2_Brand Mark/PNG/MELA SKIN - Primary Brandmark_1_3D Gold Emblem.png, whose
+   * ramp runs #503008 → #D0A848 → #E0B858 → #F8E088 → #F8F8D8. This value
+   * sits in that ramp's middle and is the only warm accent that clears AA on
+   * the field colour at small sizes (5.97:1, and 10.3:1 on espresso).
+   */
   --color-ms-gold: #dcbc63;
 
-  /*
-    Terracotta darkened until small text clears WCAG AA on cream. The primary
-    #c6722c only reaches 2.97:1 there, so it is limited to fills, rules and
-    large type; this shade carries the 11px eyebrows at 5.6:1. On the espresso
-    sections the primary itself clears AA and is used directly.
-  */
-  --color-ms-terracotta-deep: #8f4713;
+  /* -- Type ------------------------------------------------------------- */
 
+  /*
+    Larken is the primary typeface (5_Typography/Primary Font/Larken).
+    Ranade is the official secondary (5_Typography/Secondary Font/Ranade) —
+    the face the logo lockup sets "DERMATOLOGY & COSMETIC CLINIC" in. It
+    replaced Space Grotesk, which was standing in for it.
+  */
   --font-display: var(--font-larken), Didot, "Bodoni MT", Georgia, serif;
-  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-ranade), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {

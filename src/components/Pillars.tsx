@@ -22,14 +22,7 @@ export function Pillars() {
       id="care"
       className="relative overflow-hidden bg-ms-cream py-24 lg:py-32"
     >
-      <PatternField
-        id="pillars"
-        tone="cream"
-        fade="top"
-        scale={540}
-        opacity={0.85}
-        drift={46}
-      />
+      <PatternField tone="cream" />
 
       <Wrap className="relative">
         <div className="max-w-[720px]">

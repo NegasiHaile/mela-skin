@@ -46,7 +46,7 @@ export function TreatmentMedia({
 
   return (
     <div
-      className={`${frame} flex items-center justify-center bg-gradient-to-br from-ms-field via-ms-panel to-ms-espresso`}
+      className={`${frame} flex items-center justify-center bg-gradient-to-br from-ms-panel to-ms-field`}
     >
       <Sparkle
         width={15}

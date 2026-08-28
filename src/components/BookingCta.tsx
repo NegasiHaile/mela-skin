@@ -20,23 +20,15 @@ import { PillGhost, PillSolid, Wrap } from "./ui";
 export function BookingCta() {
   return (
     <section id="book" className="relative scroll-mt-4 overflow-hidden bg-ms-field">
-      <PatternField
-        id="booking-cta"
-        tone="field"
-        fade="none"
-        scale={300}
-        opacity={0.7}
-        drift={40}
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(75% 70% at 50% 45%, rgba(116,55,12,0.35) 0%, rgba(116,55,12,0.85) 62%, #74370c 94%)",
-        }}
-      />
-
+      <PatternField tone="field" />
+      {/*
+        A RADIAL VIGNETTE USED TO SIT HERE and it has been removed. It was the
+        field colour at rising opacity, which modelled the band when the field
+        was #74370c. The flooded colour is #2C190B now — the same colour the
+        vignette was painting — so all it still did was cover the pattern, which
+        left this band as a flat hole in a lattice that is meant to run unbroken
+        down the page. See brand/PatternField.tsx.
+      */}
       <Wrap className="relative py-20 lg:py-24">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           <div>

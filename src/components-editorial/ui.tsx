@@ -117,7 +117,7 @@ export function Display({
         <>
           {" "}
           <em
-            className={`italic ${tone === "dark" ? "text-ms-terracotta" : "text-ms-clay"}`}
+            className={`italic ${tone === "dark" ? "text-ms-caramel" : "text-ms-terracotta"}`}
           >
             {accent}
           </em>

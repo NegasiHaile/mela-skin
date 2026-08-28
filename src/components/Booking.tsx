@@ -132,28 +132,20 @@ function ContactForm() {
 export function Booking() {
   return (
     <section id="book" className="relative overflow-hidden bg-ms-field">
-      <PatternField
-        id="book"
-        tone="field"
-        fade="none"
-        scale={300}
-        opacity={0.7}
-        drift={52}
-      />
+      <PatternField tone="field" />
       {/*
         Vignette over the pattern rather than under it: the motif stays legible
         at the edges of the band and falls away behind the form, which is the
         only place on the page carrying 15px type on the field colour.
       */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(75% 70% at 50% 45%, rgba(116,55,12,0.35) 0%, rgba(116,55,12,0.9) 60%, #74370c 92%)",
-        }}
-      />
-
+      {/*
+        A RADIAL VIGNETTE USED TO SIT HERE and it has been removed. It was the
+        field colour at rising opacity, which modelled the band when the field
+        was #74370c. The flooded colour is #2C190B now — the same colour the
+        vignette was painting — so all it still did was cover the pattern, which
+        left this band as a flat hole in a lattice that is meant to run unbroken
+        down the page. See brand/PatternField.tsx.
+      */}
       <Wrap className="relative py-20 lg:py-28">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
           <div>

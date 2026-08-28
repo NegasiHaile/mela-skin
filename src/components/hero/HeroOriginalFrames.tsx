@@ -2,28 +2,32 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { heroSlides } from "@/constants";
 
 /*
-  Hero portrait slider. Autoplay, pause on hover or focus, vertical indicators.
+  The committed hero's portrait push-slider, restored verbatim for the demo.
+
+  RESTORED FROM b894798, NOT REWRITTEN. This is `components/HeroFrames.tsx` as it
+  stood on the last commit, with one change: the slides are declared here rather
+  than imported from `constants/brand.ts`, because `heroSlides` was removed from
+  the constants when the hero changed. A frozen snapshot that reaches into live
+  constants is a snapshot that quietly rots, so this one carries its own.
 
   It is a track: one element carrying every frame side by side, moved left one
   container width per slide. One transform on one element rather than three
   elements each animating themselves.
 
-  WHY IT IS A TRACK NOW. The old version set the offsets and added the
-  `transition-*` classes in the same render. A CSS transition only starts if
-  the transition property is already on the element in the before-change
-  style — add it in the same commit as the value change and the browser has
-  nothing to interpolate from, so every frame snapped into place instead of
-  sliding. The track's transition is never conditional, so there is no such
-  frame.
+  WHY IT IS A TRACK. The version before it set the offsets and added the
+  `transition-*` classes in the same render. A CSS transition only starts if the
+  transition property is already on the element in the before-change style — add
+  it in the same commit as the value change and the browser has nothing to
+  interpolate from, so every frame snapped into place instead of sliding. The
+  track's transition is never conditional, so there is no such frame.
 
   WHY THERE IS A CLONE. The list ends with a second copy of the first frame.
   Reaching it and then snapping back (transition off for one frame, then on
-  again) is what keeps the movement always leftward. Without it the wrap from
-  the last frame to the first rewinds the whole track to the right, which reads
-  as a glitch rather than as a loop.
+  again) is what keeps the movement always leftward. Without it the wrap from the
+  last frame to the first rewinds the whole track to the right, which reads as a
+  glitch rather than as a loop.
 
   Percentages resolve against the transformed element's own width, so the track
   is `absolute inset-0` — exactly one container wide — and the frames are
@@ -31,18 +35,34 @@ import { heroSlides } from "@/constants";
   every translate is out by a factor of the frame count.
 */
 
+/** As committed. The portraits are generated, which is why the hero changed. */
+const SLIDES = [
+  {
+    src: "/images/hero.webp",
+    alt: "Woman with radiant melanin-rich skin, the Mela Skin patient aesthetic",
+  },
+  {
+    src: "/images/pigmentation-melasma.webp",
+    alt: "Melanin-rich skin with a calm, luminous finish",
+  },
+  {
+    src: "/images/acne-acne_scarring.webp",
+    alt: "Clear, treated skin after dermatology care",
+  },
+] as const;
+
 const HOLD_MS = 5200;
 const SLIDE_MS = 1100;
 
 /** The real frames, plus a copy of the first to loop into. */
-const TRACK = [...heroSlides, heroSlides[0]];
+const TRACK = [...SLIDES, SLIDES[0]];
 
-export function HeroFrames() {
+export function HeroOriginalFrames() {
   const [index, setIndex] = useState(0);
   const [animate, setAnimate] = useState(true);
   const [paused, setPaused] = useState(false);
 
-  const count = heroSlides.length;
+  const count = SLIDES.length;
   const active = index % count;
 
   /* Autoplay. The functional update means the interval never needs rebuilding
@@ -63,9 +83,9 @@ export function HeroFrames() {
     return () => window.clearTimeout(id);
   }, [index, count]);
 
-  /* Restore the transition, but only after the jump has been painted. One
-     frame is not enough: the style has to be committed first, or re-enabling
-     it in the same frame animates the jump we just tried to hide. */
+  /* Restore the transition, but only after the jump has been painted. One frame
+     is not enough: the style has to be committed first, or re-enabling it in the
+     same frame animates the jump we just tried to hide. */
   useEffect(() => {
     if (animate) return;
     let inner = 0;
@@ -78,13 +98,10 @@ export function HeroFrames() {
     };
   }, [animate]);
 
-  const goTo = useCallback(
-    (target: number) => {
-      setAnimate(true);
-      setIndex(target);
-    },
-    [],
-  );
+  const goTo = useCallback((target: number) => {
+    setAnimate(true);
+    setIndex(target);
+  }, []);
 
   return (
     <div
@@ -117,7 +134,6 @@ export function HeroFrames() {
               src={slide.src}
               alt={position === active ? slide.alt : ""}
               fill
-              priority={position === 0}
               sizes="(max-width: 1024px) 100vw, 56vw"
               className="origin-bottom scale-[1.12] object-contain object-bottom sm:scale-[1.08] lg:scale-100"
             />
@@ -130,7 +146,7 @@ export function HeroFrames() {
         role="tablist"
         aria-label="Hero images"
       >
-        {heroSlides.map((slide, position) => {
+        {SLIDES.map((slide, position) => {
           const selected = position === active;
           return (
             <button

@@ -18,14 +18,7 @@ export function Story() {
       id="story"
       className="relative overflow-hidden bg-ms-shell py-24 lg:py-32"
     >
-      <PatternField
-        id="story"
-        tone="shell"
-        fade="left"
-        scale={520}
-        opacity={0.85}
-        drift={48}
-      />
+      <PatternField tone="shell" />
 
       <Wrap className="relative">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-20">

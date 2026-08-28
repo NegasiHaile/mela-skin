@@ -45,7 +45,7 @@ export default function CosmeticDermatology() {
         >
           <div className="flex flex-wrap gap-3.5">
             <PillSolid href="/treatment-menu" tone="dark" className="min-h-13 px-8">
-              The full menu
+              The treatment menu
             </PillSolid>
             <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">
               Book a consultation
@@ -56,14 +56,7 @@ export default function CosmeticDermatology() {
         <CosmeticFamilies />
 
         <section className="relative overflow-hidden bg-ms-shell py-24 lg:py-32">
-          <PatternField
-            id="cosmetic-close"
-            tone="shell"
-            fade="right"
-            scale={520}
-            opacity={0.85}
-            drift={44}
-          />
+          <PatternField tone="shell" />
 
           <Wrap className="relative">
             <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
@@ -73,7 +66,7 @@ export default function CosmeticDermatology() {
 
                 <Reveal delay={0.2} className="mt-10 flex flex-wrap gap-3.5">
                   <PillSolid href="/treatment-menu" className="min-h-13 px-8">
-                    Menu &amp; prices
+                    The treatment menu
                   </PillSolid>
                   <PillGhost href="/medical-dermatology" className="min-h-13 px-8">
                     Medical dermatology

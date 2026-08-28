@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CONDITIONS, COSMETIC, HOME, familyFrom, kes } from "@/constants";
+import { CONDITIONS, COSMETIC, HOME } from "@/constants";
 import { Icon } from "./icons";
 import { TreatmentMedia } from "./TreatmentMedia";
 import { PatternField } from "./brand/PatternField";
@@ -12,20 +12,22 @@ import { Lede, PillGhost, PillSolid, SectionHead, Wrap } from "./ui";
   they are in without reading the label.
 
     MEDICAL   two rows, five columns, column-major. Outlined cards on the
-              paper ground, numbered, no photography, no price. Reads as an
-              index: a thing you scan for a word you already have in mind.
+              paper ground, numbered, no photography. Reads as an index: a
+              thing you scan for a word you already have in mind.
 
     COSMETIC  one row of paper cards with snipped corners, a photograph or a
-              brand-ground panel, and the price it starts at. Reads as a
-              catalogue: a thing you browse without knowing what you want.
+              brand-ground panel, and how many treatments the family covers.
+              Reads as a catalogue: a thing you browse without knowing what you
+              want.
 
-  Two rows for medical is not decoration. Ten conditions in a single rail would
-  put seven of them off-screen on a phone; stacked two deep, the same rail shows
-  four at a time and takes half the horizontal distance to get through.
+  Two rows for medical is not decoration. Twelve conditions in a single rail
+  would put nine of them off-screen on a phone; stacked two deep, the same rail
+  shows four at a time and takes half the horizontal distance to get through.
 
-  Copy: constants/copy.ts → HOME.treatments. Lists: constants/conditions.ts
-  and constants/cosmetic.ts. Figures: constants/menu.ts, looked up rather than
-  typed, so this section cannot drift out of step with the menu page.
+  Copy: constants/copy.ts → HOME.treatments. Lists: constants/conditions.ts and
+  constants/cosmetic.ts. The cosmetic cards used to carry a "from" price; the
+  26 Aug meeting took pricing off the site, so they carry the size of each
+  family instead — see the header of constants/menu.ts.
 */
 
 const RAIL = COSMETIC;
@@ -138,7 +140,7 @@ function MedicalShelf() {
                     </span>
                     <Icon
                       name={condition.icon}
-                      className="mt-0.5 shrink-0 text-ms-bronze transition-colors group-hover:text-ms-clay"
+                      className="mt-0.5 shrink-0 text-ms-bronze transition-colors group-hover:text-ms-terracotta"
                     />
                   </span>
 
@@ -221,7 +223,7 @@ function CosmeticRail() {
               <Lift amount={10} className="w-full">
                 <Link
                   href={`/cosmetic-dermatology#${family.slug}`}
-                  className={`paper-notch grain group relative flex h-full w-full flex-col overflow-hidden bg-gradient-to-b ${GROUNDS[index % GROUNDS.length]} shadow-[4px_6px_0_0_rgba(198,114,44,0.18),0_20px_44px_-24px_rgba(49,24,10,0.32)] ring-1 ring-ms-bronze/25`}
+                  className={`paper-notch grain group relative flex h-full w-full flex-col overflow-hidden bg-gradient-to-b ${GROUNDS[index % GROUNDS.length]} shadow-[4px_6px_0_0_rgba(153,87,29,0.18),0_20px_44px_-24px_rgba(44,25,11,0.32)] ring-1 ring-ms-bronze/25`}
                 >
                   <span
                     aria-hidden="true"
@@ -260,10 +262,11 @@ function CosmeticRail() {
                     <div className="mt-6 flex items-end justify-between gap-3 border-t border-ms-bronze/25 pt-4">
                       <span>
                         <span className="block font-sans text-[10.5px] font-medium uppercase tracking-[0.2em] text-ms-terracotta-deep">
-                          From
+                          On the menu
                         </span>
                         <span className="mt-1 block font-display text-[1.4rem] leading-none text-ms-cocoa">
-                          {kes(familyFrom(family))}
+                          {family.menuItems.length} treatment
+                          {family.menuItems.length === 1 ? "" : "s"}
                         </span>
                       </span>
                       <span
@@ -290,14 +293,7 @@ export function Treatments() {
       id="treatments"
       className="relative overflow-hidden bg-ms-paper py-28 lg:py-40"
     >
-      <PatternField
-        id="treatments"
-        tone="paper"
-        fade="top"
-        scale={560}
-        opacity={0.9}
-        drift={56}
-      />
+      <PatternField tone="paper" />
 
       {/*
         The head and the closing band stay in the 1320px column; the two rails
@@ -342,7 +338,7 @@ export function Treatments() {
 
           <div className="flex shrink-0 flex-wrap gap-3.5">
             <PillSolid href="/treatment-menu" className="min-h-13 px-8">
-              Menu &amp; prices
+              The treatment menu
             </PillSolid>
             <PillGhost href="/contact" className="min-h-13 px-8">
               Ask a question

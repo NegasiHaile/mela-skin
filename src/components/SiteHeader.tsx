@@ -20,10 +20,11 @@ import { PillGhost, Wrap } from "./ui";
   by side in the bar, which asked a visitor to know which half of dermatology
   their problem belonged to before they could click anything.
 
-  Menu & prices is a list: the five menu sections, each with how many
-  treatments it holds and where its prices start. Deliberately not a second set
-  of cards -- the question there is what something costs, and a photograph
-  cannot answer it, so the panel is shaped like the price list it opens into.
+  Treatment menu is a list: the five menu sections, each with how many
+  treatments it holds and how they are sold. Deliberately not a second set of
+  cards -- the question there is what the clinic offers and in what shape, and a
+  photograph cannot answer it, so the panel is shaped like the menu it opens
+  into.
 
   Both run through one `Dropdown` shell, so only the contents differ and the
   open and close behaviour cannot drift apart. It opens on `group-hover` and on
@@ -92,7 +93,7 @@ function Dropdown({
       <div
         className={`invisible absolute left-0 top-full z-50 translate-y-[-6px] pt-4 opacity-0 transition duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/menu:visible group-hover/menu:translate-y-0 group-hover/menu:opacity-100 group-focus-within/menu:visible group-focus-within/menu:translate-y-0 group-focus-within/menu:opacity-100 ${width}`}
       >
-        <div className="overflow-hidden rounded-[20px] bg-ms-espresso shadow-[0_36px_70px_-28px_rgba(20,9,3,0.8)]">
+        <div className="overflow-hidden rounded-[20px] bg-ms-espresso shadow-[0_36px_70px_-28px_rgba(44,25,11,0.8)]">
           {children}
         </div>
       </div>
@@ -165,15 +166,18 @@ function TreatmentCards({ item }: { item: CardItem }) {
 
 /*
   The five menu sections. Each row carries the two things worth knowing before
-  committing to a page of sixty prices: how much is in the section, and what
-  the cheapest thing in it costs. Both figures are read out of the menu data,
-  so they cannot disagree with the page they link into.
+  opening a page of sixty treatments: how much is in the section, and whether it
+  is one-off work or a course. The count is read out of the menu data, so it
+  cannot disagree with the page it links into.
+
+  There used to be a from-price on the right of every row. It went with the rest
+  of the pricing on 27 Aug -- see the header of constants/menu.ts.
 
   The last row goes to the whole page. The trigger above already does, but a
   visitor with the panel open has no way of knowing that, and reaching back up
   to a word that looks like a label is not a thing to ask of anyone.
 */
-function PriceList({ item }: { item: ListItem }) {
+function MenuList({ item }: { item: ListItem }) {
   return (
     <ul>
       {item.list.rows.map((row, index) => (
@@ -194,7 +198,7 @@ function PriceList({ item }: { item: ListItem }) {
             </span>
 
             <span className="flex shrink-0 items-center gap-2.5 font-sans text-[13px] tracking-[0.01em] text-ms-gold">
-              {row.from}
+              {row.offered}
               <span
                 aria-hidden="true"
                 className="transition-transform duration-300 group-hover/row:translate-x-1"
@@ -229,8 +233,8 @@ function PriceList({ item }: { item: ListItem }) {
 /**
  * Either panel, flattened for the mobile menu: a name and a line under it,
  * inside a nested <details>. The card panel's line is its description; the
- * list panel's is its count and its from-price joined, because at this width
- * there is nothing to gain from holding the price out to the right.
+ * list panel's is its count and how it sells, joined, because at this width
+ * there is nothing to gain from holding the second half out to the right.
  */
 function MobileGroup({ item }: { item: NavItem }) {
   const links = item.children
@@ -244,7 +248,7 @@ function MobileGroup({ item }: { item: NavItem }) {
           ...item.list.rows.map((row) => ({
             label: row.label,
             href: row.href,
-            note: `${row.meta} · ${row.from}`,
+            note: `${row.meta} · ${row.offered}`,
           })),
           { label: item.list.all.label, href: item.list.all.href, note: "" },
         ]
@@ -293,13 +297,20 @@ export function SiteHeader({
 }) {
   const dark = tone === "dark";
 
+  /*
+    The dark tone got stronger when the home hero gained a photograph behind it.
+    On the flat field colour cream at 80% was comfortable; over a picture the
+    nav's right-hand items sat on the brightest part of the frame and were the
+    weakest thing on the screen. Full cream now.
+
+    The hero carries a top scrim as well (HeroBackground.tsx, layer 3); the two
+    together are what make the bar legible wherever the picture happens to be
+    bright. Neither on its own was enough.
+  */
   const link = dark
-    ? "text-ms-cream/80 hover:text-ms-ivory"
+    ? "text-ms-cream hover:text-ms-ivory"
     : "text-ms-espresso/70 hover:text-ms-cocoa";
-  const phone = dark
-    ? "text-ms-sand hover:text-ms-ivory"
-    : "text-ms-bronze hover:text-ms-cocoa";
-  const burger = dark ? "border-ms-sand/40" : "border-ms-bronze/40";
+  const burger = dark ? "border-ms-cream/55" : "border-ms-bronze/40";
   const bar = dark ? "bg-ms-cream" : "bg-ms-cocoa";
 
   return (
@@ -314,10 +325,10 @@ export function SiteHeader({
           */}
           <Link href="/" aria-label={`${brand.name} home`} className="block">
             <span className="xl:hidden">
-              <Wordmark size="md" tone={dark ? "text-ms-ivory" : "text-ms-cocoa"} priority />
+              <Wordmark size="md" tone={dark ? "text-ms-ivory" : "text-ms-cocoa"} />
             </span>
             <span className="hidden xl:inline-flex">
-              <Wordmark size="lg" tone={dark ? "text-ms-ivory" : "text-ms-cocoa"} priority />
+              <Wordmark size="lg" tone={dark ? "text-ms-ivory" : "text-ms-cocoa"} />
             </span>
           </Link>
         </Mount>
@@ -349,7 +360,7 @@ export function SiteHeader({
                     linkClass={link}
                     width="w-[min(24rem,calc(100vw-3rem))]"
                   >
-                    <PriceList item={item as ListItem} />
+                    <MenuList item={item as ListItem} />
                   </Dropdown>
                 );
               }
@@ -375,14 +386,15 @@ export function SiteHeader({
           the width of the burger.
         */}
         <div className="flex shrink-0 items-center gap-3">
+          {/*
+            The pill, and nothing beside it. A phone number used to sit to its
+            left from `2xl` up; it went with the Contact item, for the same
+            reason. The bar had three ways to reach the clinic within a few
+            centimetres of each other, and the one that matters on a desktop is
+            the button. Tap-to-call is still in the mobile menu, where it is the
+            shortest route to an appointment rather than a third duplicate.
+          */}
           <Mount delay={0.18} y={-14} className="hidden items-center gap-3 sm:flex">
-            <a
-              href={brand.phoneHref}
-              className={`hidden font-sans text-[13.5px] tracking-[0.03em] transition-colors 2xl:inline ${phone}`}
-            >
-              {brand.phone}
-            </a>
-
             <PillGhost
               href="/contact"
               tone={tone}
@@ -414,7 +426,7 @@ export function SiteHeader({
               phone, and the sections it drops into are `overflow-hidden`, so
               without this the booking button is simply cut off.
             */}
-            <div className="menu-drop scrollbar-hide absolute inset-x-0 top-full z-50 max-h-[calc(100svh-5rem)] overflow-y-auto overscroll-contain bg-ms-espresso shadow-[0_32px_64px_-24px_rgba(20,9,3,0.75)]">
+            <div className="menu-drop scrollbar-hide absolute inset-x-0 top-full z-50 max-h-[calc(100svh-5rem)] overflow-y-auto overscroll-contain bg-ms-espresso shadow-[0_32px_64px_-24px_rgba(44,25,11,0.75)]">
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ms-gold/60 to-transparent"

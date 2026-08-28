@@ -20,14 +20,7 @@ export function Assessment() {
       id="assessment"
       className="relative overflow-hidden bg-ms-field py-24 lg:py-32"
     >
-      <PatternField
-        id="assessment"
-        tone="field"
-        fade="right"
-        scale={460}
-        opacity={0.55}
-        drift={44}
-      />
+      <PatternField tone="field" />
 
       <Wrap className="relative">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">

@@ -1,14 +1,38 @@
 /**
  * MEDICAL DERMATOLOGY — the ten conditions the clinic treats.
  *
- * SOURCE — Resources/more-info.md, section 1. That list is the clinic's own
- * and is reproduced here exactly: nothing added, nothing dropped. Adding an
- * eleventh entry here makes it appear on the home index, the medical page, the
- * footer, the search keywords and the structured data with no other edits.
+ * SOURCE — Resources/more-info.md, section 1, plus two conditions added on
+ * 27 Aug 2026 at the clinic's request. The brief's own ten are reproduced
+ * exactly: nothing dropped, nothing reworded.
+ *
+ * THE TWO ADDITIONS. Dr. Abseret Hailu, service-offerings meeting, 26 Aug,
+ * 00:31:40: "my thing for the medical side, Dr. Maggie, is … for the general
+ * public, they may not be aware of what a dermatologist or skin doctor may
+ * cover. We haven't covered hair loss in the list that we currently have. We
+ * haven't covered any nail diseases in the list that we have, which is in the
+ * wheelhouse of derm. So maybe we can do a deep dive list for patients, cuz I
+ * assume a lot of people are not going to be health literate. The more we can
+ * spell it out for patients on what we're going to see, the more uptake we're
+ * going to have in terms of volume."
+ *
+ * `hair-loss` and `nail-disease` are those two, filed alphabetically with the
+ * rest. Adding an entry here makes it appear on the home index, the medical
+ * page, the footer, the search keywords and the structured data with no other
+ * edits.
+ *
+ * THE LIST IS STILL OPEN. Dr. Margaret Gachanja, 00:32:49: "I've not seen the
+ * list, but I'd be willing to add to whatever is missing so far." Her additions
+ * are an outstanding action item — append them here.
  *
  * The prose is written for the site. Each entry is general dermatology: what
  * the condition is, how it tends to present on melanin-rich skin, and what a
- * first appointment is for. There are deliberately no outcome promises, no
+ * first appointment is for.
+ *
+ * These are deliberately longer than the cosmetic summaries in ./cosmetic.ts,
+ * which the same meeting cut back. Abseret asked for "less is more" on the
+ * cosmetic descriptions and for the medical list to be spelled out, in the same
+ * breath and for the same reason: what a patient needs before booking is more
+ * information about a condition and less about a procedure. There are deliberately no outcome promises, no
  * equipment the clinic has not confirmed owning, and no claims about specific
  * procedures beyond what the priced menu already covers.
  *
@@ -59,6 +83,17 @@ export const CONDITIONS: Condition[] = [
     icon: "eczema",
   },
   {
+    slug: "hair-loss",
+    title: "Hair loss",
+    summary: "Shedding, thinning, or a bald patch. A skin condition, and one with a cause worth naming.",
+    what: "Hair grows out of skin, which is why a dermatologist is the right person to look at it. The causes barely overlap: androgenetic thinning behaves nothing like a patch of alopecia areata, and neither behaves like hair pulled out at the hairline by tension. Some of it grows back on its own. Some of it will not once the follicle has scarred over, and that is the distinction the first appointment exists to make.",
+    deeper:
+      "Two patterns bring people in here more than anywhere else. Traction alopecia comes from years of braids, weaves and tight styling, and it takes the hairline and the temples first. Reversible early, permanent once the follicle has gone. Central centrifugal cicatricial alopecia starts at the crown and spreads outwards, is far more common in women of African descent than in anyone else, and scars as it goes. Both are quiet at the start, which is why they are so often shown to us late.",
+    approach:
+      "Work out which kind it is before anything is prescribed, because a scarring alopecia and a shedding one need opposite plans and the window for the scarring kind closes. Expect questions about styling, tension, chemical relaxing and heat, along with iron, thyroid and anything that has changed in the last year. Bring photographs of the hairline from a year or two ago if you have them.",
+    icon: "hairLoss",
+  },
+  {
     slug: "melanoma",
     title: "Melanoma & mole checks",
     summary: "A new mole, a changing one, or one that does not match your others.",
@@ -79,6 +114,17 @@ export const CONDITIONS: Condition[] = [
     approach:
       "A plan you can keep to, and sun protection you will actually wear. We will not put you on an unregulated lightening cream. The hydroquinone and steroid mixtures sold over the counter thin the skin, and the rebound is worse than the melasma was.",
     icon: "pigment",
+  },
+  {
+    slug: "nail-disease",
+    title: "Nail disease",
+    summary: "Thickened, lifting, ridged or discoloured nails. Rarely just cosmetic.",
+    what: "Nails record what has happened to the skin they grow out of, and to the body around it. A thick crumbling nail is usually fungal but not always; pitting and ridging often turn out to be psoriasis; a nail lifting off its bed can follow an injury, an infection, or a thyroid problem. Ingrown nails, chronic paronychia and the damage left by acrylics and gels all belong here too.",
+    deeper:
+      "A brown or black line running the length of a nail is common and usually harmless on deeper skin: melanonychia, often several nails at once. The one that matters looks different: a single band that is widening, darkening or unevenly edged, especially with pigment spreading onto the skin at the base. Subungual melanoma is repeatedly mistaken for a bruise or a fungal nail, and it is found later on brown and black skin than on any other. Have it looked at rather than watched.",
+    approach:
+      "Fungal is confirmed rather than assumed, because months of antifungal treatment for something that was never fungal is a common way to lose a year. Nails grow slowly, so plan on a long review interval and photographs on your record to measure against.",
+    icon: "nail",
   },
   {
     slug: "psoriasis",
@@ -105,13 +151,13 @@ export const CONDITIONS: Condition[] = [
   {
     slug: "skin-tags",
     title: "Skin tags",
-    summary: "Harmless, and straightforward to remove. Priced on the menu.",
+    summary: "Harmless, and straightforward to remove in clinic.",
     what: "Small soft flaps of skin that appear where skin rubs skin: neck, underarms, eyelids, groin, under the bust. They are not dangerous and they are not catching. People have them removed because they snag on collars and jewellery, or simply because they would rather not have them.",
     noteLabel: "One caution",
     deeper:
       "A growth that bleeds, darkens, grows quickly or has an irregular edge is not a skin tag. Have it looked at before you have it removed.",
     approach:
-      "Removal is a short in-clinic procedure and it is one of the few things on this list with a fixed price. It sits under add-ons on the treatment menu.",
+      "Removal is a short in-clinic procedure and one of the few things on this list that needs no course. It sits under add-ons on the treatment menu.",
     icon: "tag",
   },
   {

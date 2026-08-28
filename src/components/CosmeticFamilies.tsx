@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { COSMETIC, COSMETIC_PAGE, HOME, familyFrom, kes } from "@/constants";
+import { COSMETIC, COSMETIC_PAGE, HOME } from "@/constants";
 import { Icon } from "./icons";
 import { TreatmentMedia } from "./TreatmentMedia";
 import { PatternField } from "./brand/PatternField";
 import { Sparkle } from "./brand/Marks";
-import { Stagger, StaggerItem } from "@/motion";
-import { Wrap } from "./ui";
+import { Reveal, Stagger, StaggerItem } from "@/motion";
+import { Callout, Wrap } from "./ui";
 
 /*
   Ten treatment families on a two-column grid, then the service that is not
@@ -13,26 +13,33 @@ import { Wrap } from "./ui";
   coming-soon note dropped into a grid cell reads as an afterthought, and the
   clinic has been asked about this one enough that it should not.
 
-  Card anatomy is fixed — picture, name, one-line summary, the paragraph, the
-  named items it covers, the price it starts at. Ten cards of the same shape
-  are scannable in a way that ten bespoke ones are not.
+  Card anatomy is fixed — picture, name, one-line summary, the paragraph, and
+  the treatments on the menu it covers. Ten cards of the same shape are
+  scannable in a way that ten bespoke ones are not.
 
-  Every price is looked up from constants/menu.ts. Nothing is typed twice.
+  The card foot used to carry a "from" price. It goes into the menu instead: the
+  26 Aug 2026 meeting took pricing off the site, and handed the detail to the
+  brochures at the clinic — which is what the callout above the grid says, once,
+  rather than on all ten cards.
 */
 
 export function CosmeticFamilies() {
   return (
     <section className="relative overflow-hidden bg-ms-paper py-20 lg:py-28">
-      <PatternField
-        id="cosmetic"
-        tone="paper"
-        fade="top"
-        scale={600}
-        opacity={0.85}
-        drift={54}
-      />
+      <PatternField tone="paper" />
 
       <Wrap className="relative">
+        {/*
+          Aser Hailu, 00:33:50: "we can also have clinic brochures for the
+          cosmetics / aesthetics stuff, so we don't need to publicise it on the
+          website." Said once here rather than ten times below.
+        */}
+        <Reveal y={16} className="mb-12 lg:mb-14">
+          <Callout eyebrow="Before the grid" className="max-w-[70ch]">
+            {COSMETIC_PAGE.detailNote}
+          </Callout>
+        </Reveal>
+
         <Stagger step={0.09} className="grid gap-5 sm:gap-6 lg:grid-cols-2">
           {COSMETIC.map((family) => (
             <StaggerItem
@@ -83,14 +90,10 @@ export function CosmeticFamilies() {
                   </ul>
                 </div>
 
-                <div className="mt-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-                  <p className="flex items-baseline gap-2.5">
-                    <span className="font-sans text-[10.5px] font-medium uppercase tracking-[0.2em] text-ms-terracotta-deep">
-                      From
-                    </span>
-                    <span className="font-display text-[1.9rem] leading-none text-ms-cocoa sm:text-[2.1rem]">
-                      {kes(familyFrom(family))}
-                    </span>
+                <div className="mt-8 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+                  <p className="font-sans text-[14px] font-light tracking-[0.01em] text-ms-espresso/65">
+                    {family.menuItems.length} treatment
+                    {family.menuItems.length === 1 ? "" : "s"} on the menu
                   </p>
 
                   {/*
@@ -103,7 +106,7 @@ export function CosmeticFamilies() {
                     className="group/link inline-flex min-h-11 items-center gap-2 font-sans text-[11.5px] font-medium uppercase tracking-[0.16em] text-ms-terracotta-deep transition-colors hover:text-ms-field"
                   >
                     <span className="border-b border-ms-terracotta/50 pb-1 transition-colors group-hover/link:border-ms-field">
-                      Every price
+                      See it on the menu
                     </span>
                     <span
                       aria-hidden="true"
