@@ -262,3 +262,391 @@ second button, the booking band that closes every route, the footer's "Contact &
 directions", and the mobile menu's booking button. **Tap-to-call stays in the
 mobile menu**, where it is the shortest route to an appointment rather than a
 third duplicate of the button beside it. Say the word if that should go too.
+
+---
+
+## Fifth pass: the treatment menu is not a table any more
+
+**What was wrong.** Two columns per section — the treatment, then its formats as
+chips. Counted across the thirteen groups, the chips column was almost entirely
+redundant:
+
+| | groups |
+| --- | --- |
+| One identical pattern top to bottom | 3 |
+| One pattern covering more than half | 6 |
+| Genuinely mixed | 4 |
+
+So it printed "Single session · Course of 5 · Course of 10" fifty times and buried
+the twenty-two rows that say something different. Fifty-eight near-identical rows
+also gave a reader nothing to steer by: every row looked like every other row and
+only the name told them apart.
+
+**The change.** The redundancy moved out of the rows and into the headings.
+
+- The **group** states its pattern once: "Singly, or as a course of 5, 10 or 20".
+- Only the treatments that **depart** from it are marked: "single session only",
+  "1, 2 or 3 areas", "courses of 3 or 5". Twenty-two of fifty-eight.
+- Everything else carries just its name, so a bare name reads as "as stated
+  above" rather than "unknown".
+
+`groupPlan` in `constants/menu.ts` does the arithmetic. **Strictly** more than
+half the group has to share a pattern before it is stated — at exactly half there
+is no majority to state and two competing patterns to hide, so those groups mark
+every treatment. Four come out that way, and they are the ones where the unit IS
+the distinguishing fact: toxin by treated area, filler by cc, the IV pair.
+
+**Three levels, each looking like itself**, because "which of these do I want" is
+a different question from "what is this called":
+
+| level | treatment |
+| --- | --- |
+| Section | A full band with its own ground, mark and count. The sticky nav pins the five. |
+| Group | A panel lifting off that ground. This is where a visitor actually chooses — Renewal against Brightening against Age defying — so it carries the most weight. |
+| Treatment | A ruled row, name in the display face, nothing else unless it differs. Two columns from `sm`, three from `xl`. |
+
+**Two details worth keeping.** The group statement drops from tracked caps to a
+tighter setting on a phone, because caps plus letter-spacing plus a wrap is the
+worst of the three. And every row keeps its rule rather than dropping it on the
+last one: which items land on the final visual row depends on the column count,
+so any `last:` rule is right at one breakpoint and wrong at the others.
+
+The page's "How to read it" panel was rewritten to match — it explained chips
+that no longer exist.
+
+---
+
+## Sixth pass: the menu becomes five rails of cards
+
+Asked for directly: horizontally scrollable cards per category, each category
+looking different, and the colour used well between them.
+
+**Why the ruled list was still not it.** The fifth pass fixed the redundancy but
+not the shape. Fifty-eight rows are fifty-eight rows: nothing to steer by,
+nothing to stop at, and a group heading is the only thing distinguishing one part
+of the page from another. A card can be told apart at a glance. A row cannot.
+
+**One rail per section, one card per treatment.** Per section rather than per
+group, so every rail genuinely scrolls: the group rails would have run three and
+four cards long and not moved at all on a desktop. Rails run 8 to 18 cards, which
+overflow by 730px to 4750px depending on width.
+
+The card carries three things and stops:
+
+| | |
+| --- | --- |
+| the family | Renewal, Brightening, Age defying. Cards from one group run consecutively, so the eyebrow reads as a running header down the rail. |
+| the name | The only line set in the display face. |
+| how it is sold | A label and a value: `Sessions / 1, 5, 10 or 20`. |
+
+The families are also listed as chips in the section head, because a rail hides
+its own end and without that a reader has no way to know whether the thing they
+came for is further along it.
+
+**Colour between the categories.** The brand is one hue family, so five different
+hues was never on the table; they would all have been brown. The five looks are
+built from value and shape instead, and the sequence is deliberate rather than
+five arbitrary tints:
+
+| section | band | card |
+| --- | --- | --- |
+| Facials | shell | cream fill, 26px corners, a drop shadow. The lightest, and the opening. |
+| Skin rejuvenation | paper | reversed: `#602F0F` panel, cream type, gold ring. The device treatments read as the technical ones. |
+| Body & hair | shell | caramel, 3px corners, no shadow. A warm block, and squared tiles are already this site's vocabulary for a plain index. |
+| Injectables | **field, a dark band** | crisp near-white cards. The strongest contrast on the page, for the section that earns it. |
+| Add-ons | paper | dashed outline, narrower card. Extras carrying the weight of extras. |
+
+Injectables is the one section where the unit IS the distinguishing fact, so it is
+the one section where the unit is set in the display face: `Treated areas 1, 2 or
+3` against `Volume 1, 2 or 3cc`. That difference was invisible in both the table
+and the list, and it is the first thing you see on that band now.
+
+Ink is chosen per fill rather than inherited. The lowest pairing in the file is
+sand on the reversed panel at 5.02:1; the display-face names run 6.67:1 on
+caramel to 14.41:1 on the cards over the dark band.
+
+**Session counts became numerals.** `Sessions / 1, 5, 10 or 20` rather than
+"Single, 5, 10 or 20". Radiesse forced it: it sells singly or as a course of two,
+and the worded form gives "Single, 2", which reads as a typo. Numerals also line
+the sessions up with the areas and the cc, so the four labels are read once and
+every card after that is a row of numbers.
+
+**Two things a screenshot cannot show, both tested.**
+
+Nothing inside a card is focusable, because there is no per-treatment page to
+link to. Left alone, that means a keyboard reader reaches the four or five cards
+that happen to be on screen and none of the rest. The scroller carries
+`tabIndex={0}` and a `role`/`aria-label`, so it is a tab stop that drives with the
+arrow keys: verified moving `scrollLeft` 0 to 306 on desktop and 0 to 284 on a
+phone, with zero focusable children inside.
+
+And the rails sit in the same 1320px column as the heading above them rather than
+running edge to edge. Full bleed was built first, padded to the column gutter the
+way the home page rails are, and it comes apart above 1320px: at 1440 the heading
+started 60px in from the first card, at 2560 it started 620px in. Measured at five
+widths after the change, heading and first card start at the same x at every one,
+a snapped card comes to rest 0px from the column edge on all five rails, and the
+page body never scrolls sideways.
+
+---
+
+## Seventh pass: the table comes back, with filters
+
+Asked for directly: a normal table, filter features on top, and ticking a
+category gives only that category's rows a different background. Responsive.
+
+The table was the right shape all along. Fifty-eight treatments with three facts
+each is tabular data, and someone hunting for one of them wants rows, not a
+shuffle of card decks. What the original table lacked was any way to cut it down,
+and the two attempts in between tried to solve that by changing the shape instead
+of adding a control.
+
+**Three columns.** Treatment, Family, Sold as. The formats column that started
+all this is gone for good: each cell is now one self-describing line, `1, 5, 10 or
+20 sessions`, `1, 2 or 3 areas`, `1, 2 or 3cc`. Column widths are set at
+44/24/32 rather than left to the content, which had given the names a narrow
+column and pushed Sold as to the far right edge with 300px of nothing in front of
+it.
+
+**Two filters above it.**
+
+| | |
+| --- | --- |
+| Tick a category | Its rows take that category's tint. Nothing is hidden. |
+| Type a name | Narrows across every column, and a section with nothing left drops out. |
+
+Ticking tints rather than hides, which is what was asked for and also the right
+call: someone who ticks Injectables still benefits from seeing that Add-ons
+exists two blocks further down. The search box is there for when narrowing IS
+what you want, and it matches names, families, sections and the sold-as line, so
+"inject" finds all twelve and "3cc" finds the one.
+
+**The five tints were searched for, not chosen.** The brand is a single hue
+family, so an eye-picked set collapses: the first attempt had two pairs less than
+10 apart in RGB distance, which is invisible. A bounded search over the palette
+found a set where **every pair is at least 29 apart**, each is at least 26 from
+an untinted row, and the least contrasty of them still holds 7.39:1 for the
+treatment name and 8.38:1 for the meta:
+
+| section | tint |
+| --- | --- |
+| Facials | `sand/18` |
+| Skin rejuvenation | `bronze/45` |
+| Body & hair | `terracotta/45` |
+| Injectables | `gold/75` |
+| Add-ons | `terracotta-deep/18` |
+
+That 8.38 is why the meta ink is espresso and not terracotta: terracotta falls to
+3.60:1 on the two darkest tints, and one ink has to hold on all five. Same
+reasoning moved the section header rows' rules from bronze to cocoa, which
+otherwise vanish on exactly the section being looked at.
+
+**The control is the legend.** Unticked, a checkbox carries a swatch of the colour
+it would apply. Ticked, the pill fills with that colour and the swatch becomes a
+tick. The first build changed only the border on ticking and it could not be seen:
+five ticked pills looked like five unticked ones.
+
+**Responsive: it stops being a table below `md`.** `thead` is hidden and each row
+becomes a block, name on its own line, the two meta cells labelled under it. The
+usual fix for a table on a phone is to let it scroll sideways, which hides the
+column saying how a treatment is sold. `md` and not `sm` because at 640 the three
+columns technically fit and every one of them wraps.
+
+**One real bug, found by measuring rather than looking.** The page scrolled
+sideways below 640px: 267px of it at 360 wide. Nothing was visibly out of place,
+and a sweep for elements past the viewport edge found none that were not already
+inside a clipping ancestor. The culprit was the sticky filter bar. Its category
+row scrolls sideways inside itself, and that inner clip does not survive the
+sticky, backdrop-filtered boundary: the bar reported a 627px scrollable width and
+took the document with it. `overflow-x: clip` on the bar fixes it, and `clip`
+rather than `hidden` because `hidden` on one axis forces the other to `auto`,
+which would have made the bar a vertical scroll container as well. Now measured
+clean at 360, 390, 430, 640, 768, 1024, 1440 and 1920.
+
+Also verified: ticking paints the ticked section and leaves the others untouched,
+all five fills resolve distinct in the browser, and the checkboxes work from the
+keyboard with the count announced through `aria-live`.
+
+---
+
+## Eighth pass: the filter collapses, the search goes
+
+Asked for directly: ticking a category collapses every other category, and the
+search box comes out.
+
+**The search is gone**, and so is the precomputed search string it needed on each
+of the fifty-eight rows in `constants/menu.ts`. One control now, doing one thing.
+
+**Ticking collapses the rest.** Three states rather than two:
+
+| | |
+| --- | --- |
+| Nothing ticked | Every section open, nothing tinted. The state the page loads in, because the first thing anyone does with a menu is look at all of it. |
+| One or more ticked | Those stay open and take their tint; every other section folds to its header row. |
+| "Show all" | Back to the first state. |
+
+**Collapsed, not hidden.** A section that vanished outright would leave a reader
+thinking the menu is eight items long. The header row stays, still numbered,
+still named, and still counted: `05 Add-ons, 8 treatments`. So what has been put
+away is legible, and the row itself is the way to get it back.
+
+**The header row becomes a button, but only while something is collapsed.** With
+nothing ticked every section is already open, and a heading whose only effect is
+to close the four other sections is not what someone clicking a heading expects.
+Once the filter is on, every header is a toggle with `aria-expanded`, wired to
+the same state as its pill, so ticking from either place agrees. The word reads
+"Show" or "Hide" because the row is an action either way, and drops to just the
+chevron on a phone, where a long title and its count already take two lines.
+
+**Opening a section moves two things into view.** Collapsing four sections can
+shorten the page by thousands of pixels and dump a reader wherever the browser
+clamps the scroll, so opening one scrolls to it. And on a phone the pills scroll
+sideways, so ticking from a header row could leave the matching pill off the end
+of the row: that scrolls into view too, with `block: "nearest"` so it moves its
+own row and never the page. Both are skipped under `prefers-reduced-motion`.
+
+**Layout fix found on the phone.** The header row was one wrapping flex row, so
+"Skin rejuvenation" pushed the chevron onto a line of its own and the collapsed
+headers came out at three different heights. It is two boxes now: the label wraps
+inside its own, the action is pinned outside it and cannot wrap.
+
+Re-verified after the change: seventeen checks pass, none fail. All five sections
+open on load, ticking one leaves exactly that one open, ticking a second opens
+both, clicking a collapsed header opens it and ticks its pill, clicking it again
+collapses it, "Show all" restores everything, the space bar works the pills with
+`aria-expanded` correct on both an open and a collapsed section, and there is no
+sideways page scroll at 360, 390, 430, 640, 768, 1024, 1440 or 1920.
+
+---
+
+## Ninth pass: the nav dropdowns get their own ground
+
+Both dropdown panels were `bg-ms-espresso`, which is `#2C190B`: the same value as
+`ms-field`, which is every page hero and the home hero's scrim. So over a hero the
+panel was not a panel. It was a shadow with links in it, at a 1.00 lift, with
+nothing to sit against.
+
+**They are `ms-panel` #602F0F now**, one stop up the brand's own ladder and
+already this site's colour for a reversed plate. Measured against the hero it
+sits on: **1.53 lift, 56.6 apart in RGB**. Confirmed in the browser on three
+pages, both panels: painted `rgb(96, 47, 15)` with `rgb(44, 25, 11)` behind it
+every time.
+
+**Everything inside had to move with it**, which is the part that is easy to skip.
+Ink chosen against `#2C190B` is a stop too dim on a ground this much brighter, and
+the two places that used `ms-panel` as an accent *on* espresso would have become
+invisible against a ground that now is `ms-panel`.
+
+| what | was | now | why |
+| --- | --- | --- | --- |
+| Row hover | `ms-panel/70` | `ms-terracotta/35` | the old value is the ground |
+| Photo tile | `ms-panel` | `ms-cocoa` | the tile has to be darker than the card, not equal to it |
+| Photo's right-edge fade | `to-ms-espresso/75` | `to-ms-panel/85` | it must land on the card's colour |
+| Section count line | `cream/55` | `cream/80` | 3.87:1 on the new ground, under AA |
+| Card description | `cream/70` | `cream/80` | 5.30:1, and 4.4 on its own hover |
+| All-sections row | `ms-panel/45` | `ms-cocoa/65` | it read as a recess against espresso and as nothing against panel |
+| Mobile note | `sand/75` | `cream/80` | 3.51:1 on the new ground, under AA |
+
+Every value re-measured on the new ground and its two states. Worst case in the
+panel is now 4.56:1 (gold on a hovered row); the treatment names sit at 10.71:1
+and the descriptions at 6.38:1.
+
+The mobile menu takes the same ground for the same reason: it drops out of a
+header bar that is itself over the hero.
+
+### Found while doing it, not fixed
+
+On the home page at phone width, with the mobile menu open **and** a group
+expanded, the hero demo's credit line and dot togglers paint through the bottom
+of the menu. Clicks are unaffected: the bar is `pointer-events-none` and
+hit-testing at four points down the open menu returns the menu's own elements
+every time. It is purely paint.
+
+The cause is a stacking context, not a z-index. `SiteHeader` is `z-40`, but it
+renders inside the hero's foreground wrapper, which is `relative z-10`; the demo
+toggle bar is `z-30` **outside** that wrapper. So the header's 40 is confined
+inside a 10 and never competes with the 30. The comment on the toggle bar asserts
+the opposite and is wrong.
+
+It is left alone deliberately. Lowering the bar below the wrapper was measured and
+breaks its own dots: at `z-5` both are `blocked by div.mx-auto`, the hero's own
+content column, at 390 and at 1440. The fix is to make the hero's foreground
+wrapper `pointer-events-none` and hand pointer events back to each interactive
+child, which is exactly the change that made the whole hero unclickable once
+already, and the toggle bar is a demo control that goes away as soon as the team
+picks a hero. Worth doing on purpose, with the nine-control hit test re-run, not
+as a side effect of a colour change.
+
+---
+
+## Ninth pass: the nav dropdowns get their own ground
+
+Asked for directly: the dropdowns should differ from the hero background, a bit
+brighter than it, but not too light, only slightly different.
+
+A dropdown only ever opens over a page hero, so its ground is read against that
+`#2C190B` and nothing else. It has now been all three things:
+
+| ground | lift off the hero | reads as |
+| --- | --- | --- |
+| `ms-field` `#2C190B` | 1.00 | a shadow with links in it, nothing to sit against |
+| `ms-panel` `#602F0F` | 1.53 | a bold reversed plate, louder than a menu needs |
+| **`ms-drop` `#49250D`** | **1.24** | a card, with the shadow doing the rest |
+
+`ms-drop` is a new token, derived rather than sampled: 55% of the way from field
+to panel. It is the only thing on the site that uses it, which is the point of
+giving it a name instead of an inline hex.
+
+Everything reversed out of it was measured on it and has room to spare: ivory
+13.17:1, cream 11.10, the 80% summaries 7.65, gold 7.35. The row hover,
+terracotta at 35%, still lifts 1.35 off the ground and holds ivory at 9.79.
+
+**Two fills inside had to move with it.** The media plate behind each treatment
+picture and the "All 58 treatments" footer row were `ms-cocoa` `#421E04`, which
+was a recess under the old `#602F0F`. Under `#49250D` cocoa is 1.09 lift the
+wrong way, so both would have stopped reading as inset. They are `ms-field` now,
+the hero's own colour, which sits 1.24 below the panel: the recess this wants,
+and one fewer colour in the header.
+
+Verified on all six routes with a hero (`/`, `/skincare`, `/about`,
+`/cosmetic-dermatology`, `/medical-dermatology`, `/treatment-menu`): the card
+resolves `rgb(73, 37, 13)` over `rgb(44, 25, 11)` on every one, desktop and in
+the mobile menu panel.
+
+---
+
+## Tenth pass: hero B joins the page's lattice
+
+Reported: hero B's background pattern is not synced with the rest of the page,
+and it should look continuous.
+
+Correct, and it was my own doing. When hero B was rebuilt from commit `b894798`
+I kept its pattern as an inline layer at the committed 440px pitch and 0.6
+opacity, on the argument that a snapshot should be a snapshot, and wrote that
+down as a deliberate deviation. It was the wrong call. The rest of the page runs
+one 520x427 lattice, phase-locked to document position and drifting off a single
+`:root` variable, so a hero on a 440px pitch cannot line up with the section
+under it at any scroll position: the pattern visibly restarted at the hero's
+bottom edge. Continuity is a page-wide property and it outranks the pitch of one
+variant.
+
+Hero B now renders `<PatternField>` like every other section. Its ground toggle
+still swaps the tile colours, because a tone's sparkle colour has to BE its
+section's background or the layer stops disappearing into the ground:
+
+| ground | tone |
+| --- | --- |
+| `dark` `#2C190B` | `field`, which this ground literally is |
+| `committed` `#74370C` | `hero-committed`, a tone that exists for this toggle alone |
+
+`hero-committed` keeps the circle gradient from `b894798` and changes one thing:
+the sparkle. That commit used `#7D3F11` against a `#74370C` ground, which leaves
+the interstices a shade lighter than the ground and makes the layer read as a
+printed-on rectangle. It is the ground exactly now. The tone goes when the demo
+does.
+
+Measured after the change, with hero B showing, on both grounds: **all ten
+pattern layers in phase**, every one within 0.6px of `-(docTop mod 427)`, one
+tile size across the whole page, and one drift transform shared by every layer at
+scrollY 0, 600 and 1400. The seam where the hero meets the section below was
+shot on both grounds and the lattice carries straight through it.

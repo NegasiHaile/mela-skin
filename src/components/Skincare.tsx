@@ -1,6 +1,6 @@
 import { SKINCARE_PAGE } from "@/constants";
-import { PatternField } from "./brand/PatternField";
 import { TreatmentMedia } from "./TreatmentMedia";
+import { PatternField } from "./brand/PatternField";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { Callout, Lede, SectionHead, Wrap } from "./ui";
 
@@ -32,15 +32,19 @@ import { Callout, Lede, SectionHead, Wrap } from "./ui";
   Copy: constants/copy.ts → SKINCARE_PAGE.
 */
 
+/*
+  First of the page's shell/paper/cream rotation, `ms-shell` -- see the note on
+  that rotation in app/page.tsx.
+*/
 export function Collection() {
   return (
     <section
       id="collection"
-      className="relative overflow-hidden bg-ms-paper py-24 lg:py-32"
+      className="relative overflow-hidden py-24 lg:py-32"
     >
-      <PatternField tone="paper" />
+      <PatternField tone="light" />
 
-      <Wrap className="relative">
+      <Wrap className="relative z-10">
         <div className="max-w-[660px]">
           <SectionHead title={SKINCARE_PAGE.collectionTitle} />
           <Lede className="mt-7">{SKINCARE_PAGE.collectionLede}</Lede>
@@ -76,7 +80,7 @@ export function Collection() {
                 <h3 className="mt-3.5 font-display text-[1.25rem] leading-[1.2] tracking-[-0.01em] text-ms-cocoa sm:text-[1.35rem]">
                   {item.name}
                 </h3>
-                <p className="mt-3 font-sans text-[14.5px] font-light leading-[1.7] text-ms-espresso/80">
+                <p className="mt-3 font-sans text-[15.5px] font-light leading-[1.65] text-ms-espresso/80">
                   {item.note}
                 </p>
               </div>
@@ -88,15 +92,19 @@ export function Collection() {
   );
 }
 
+/*
+  Second of the page's shell/paper/cream rotation, `ms-paper` -- see the note
+  on that rotation in app/page.tsx.
+*/
 export function Routine() {
   return (
     <section
       id="routine"
-      className="relative overflow-hidden bg-ms-shell py-24 lg:py-32"
+      className="relative overflow-hidden py-24 lg:py-32"
     >
-      <PatternField tone="shell" />
+      <PatternField tone="light" />
 
-      <Wrap className="relative">
+      <Wrap className="relative z-10">
         <div className="max-w-[680px]">
           <SectionHead title={SKINCARE_PAGE.stepsTitle} />
           <Lede className="mt-7">{SKINCARE_PAGE.stepsLede}</Lede>
@@ -122,10 +130,10 @@ export function Routine() {
               <span className="font-display text-[2.4rem] font-light leading-none text-ms-terracotta">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <h3 className="display-caps mt-5 text-[19px] text-ms-cocoa">
+              <h3 className="display-caps mt-5 text-[21px] text-ms-cocoa">
                 {step.title}
               </h3>
-              <p className="mt-4 font-sans text-[16px] font-light leading-[1.8] text-ms-espresso/80">
+              <p className="mt-4 font-sans text-[17px] font-light leading-[1.7] text-ms-espresso/80">
                 {step.body}
               </p>
             </StaggerItem>

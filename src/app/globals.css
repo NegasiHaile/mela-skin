@@ -17,8 +17,10 @@
    row are deliberately unused: #2C190B is the darkest colour the app goes to,
    at the clinic's request. Anything darker read as black rather than as brown.
 
-   Do not round or substitute them. Two tokens below are NOT off the sheet and
-   both say so at the point of definition.
+   Do not round or substitute them. Three tokens below are NOT off the sheet
+   and all three say so at the point of definition: `paper` and `linen` are the
+   two derived light grounds the section ramp needs, and `gold` is measured off
+   the brandmark artwork.
 
    WHY THE WHOLE PALETTE MOVED. Dr. Abseret Hailu, 26 Aug, 00:18:31: "this
    brown is a little bit too red. It has a bit of a red undertone. I would like
@@ -82,6 +84,22 @@
   --color-ms-panel: #602f0f;
 
   /**
+   * DERIVED, not sampled: 55% of the way from field to panel. The nav
+   * dropdown's ground, and the only thing that uses it.
+   *
+   * A dropdown opens over a page hero, so its ground is read against #2C190B
+   * and nothing else. Panel #602F0F was tried and is a full step up: 1.53
+   * lift, a bold plate rather than the near neighbour a menu wants. This sits
+   * at 1.24 lift and 31.4 apart in RGB, which a drop shadow turns into a card
+   * without the panel announcing itself louder than the page behind it.
+   *
+   * Everything reversed out of it has room to spare: ivory 13.17, cream 11.10,
+   * the 80% summaries 7.65, gold 7.35. The row hover, terracotta at 35%, still
+   * lifts 1.35 off it and holds ivory at 9.79.
+   */
+  --color-ms-drop: #49250d;
+
+  /**
    * Primary 4. The accent. Unlike the old #c6722c this clears WCAG AA for
    * small text on all three light grounds (5.48 shell / 5.09 paper / 4.62
    * cream), which is why the hand-darkened `ms-clay` it replaced is gone.
@@ -133,15 +151,40 @@
   /** Secondary 5. The light caramel. Accent on dark grounds, 7.56:1 on field. */
   --color-ms-caramel: #d1a76d;
 
-  /* -- The two that are not on the sheet --------------------------------- */
+  /* -- The three that are not on the sheet -------------------------------- */
 
   /**
-   * DERIVED, not sampled: 45% cream into shell. The layout alternates three
-   * light grounds to keep its section rhythm (shell → paper → cream) and the
-   * sheet supplies two, so this is the midpoint between them rather than a
-   * new colour. Cocoa reads 15.2:1 on it.
+   * DERIVED, not sampled: 45% cream into shell. The second step of the light
+   * ramp (shell → paper → cream → linen); the sheet supplies the off-white and
+   * the cream, so this is the midpoint between them rather than a new colour.
+   * Cocoa reads 15.2:1 on it.
    */
   --color-ms-paper: #f9f3e9;
+
+  /**
+   * DERIVED, not sampled: 30% sand into cream. THE FOURTH AND DEEPEST LIGHT
+   * GROUND, and the reason it exists is the 31 Aug review. The sections were
+   * flipping between the near-white grounds and the field colour four times a
+   * page; the note was that the colour is "to durastic from one to another", and
+   * then that nothing on the home page should be darker than the footer.
+   *
+   * So a page has four light grounds now rather than three, and the footer is
+   * the only flooded thing on it. Measured, adjacent steps in the ramp are 1.08,
+   * 1.10 and 1.18 apart in contrast — small enough that a hard edge between any
+   * two of them is smooth, which is why nothing on the site fades one ground
+   * into the next.
+   *
+   * The value is also, near enough, the terracotta tint on the medical treatment
+   * tiles (#E7D3BC), which is the reference the instruction gave for how light
+   * to go: "lets use lighter color like we used in the dermatology treatment
+   * cards".
+   *
+   * Sand at 30% rather than any other fraction because of what it does to
+   * type: cocoa reads 10.33:1 on it and espresso at 80% reads 6.95, but
+   * terracotta falls to 3.93 and is not usable for small type here. Accents on
+   * linen are terracotta-deep, at 5.04 — the same rule cream already follows.
+   */
+  --color-ms-linen: #e8d5bb;
 
   /**
    * SAMPLED FROM THE BRANDMARK, not from the palette sheet. Gold is not one
@@ -166,13 +209,81 @@
   --font-sans: var(--font-ranade), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* ==========================================================================
+   THE PAGE GROUND -- BACK, ON REQUEST
+
+   THIS WAS ONE GRADIENT FOR THE WHOLE LIGHT PART OF A PAGE, shell at the top
+   to linen at the bottom, then went to isolated per-section flats (`ms-shell`,
+   `ms-paper`, `ms-cream`, rotating section by section) at the clinic's request
+   -- and now comes back the first way, at a later request, for the same
+   reason it existed the first time: one continuous colour reads as one page
+   rather than as a stack of bands.
+
+   THE MECHANISM IS SIMPLER THAN GroundLattice.tsx WAS, on purpose, because the
+   ask this time was speed over fidelity to the original build. `body`'s own
+   background is the gradient, sized to the whole document by nothing more
+   than the default `background-size` on a box that tall -- no separate
+   `.ms-ground` element, no JS-measured band midpoints. Every section that used
+   to flood its own `bg-ms-shell/paper/cream` had that class removed, so the
+   body gradient shows through all of them at once; the dark bands (hero,
+   footer) keep their own opaque `bg-ms-field` and sit on top of it unchanged,
+   same as always. `PatternField`'s `tone="light"` -- the one translucent ink
+   built for exactly this, still in that file, unused by the immersive
+   direction until now -- replaced every `tone="shell"/"paper"/"cream"` call
+   for the same reason: it is depth-ramped against where a section actually
+   sits in the DOCUMENT (see the note in PatternField.tsx), so the motif
+   strengthens down the page instead of jumping between three flat strengths.
+
+   `SeamBlend` CALLS CAME OUT EVERYWHERE THEY APPEARED. They painted a short
+   two-colour blend between two flat neighbours at a join; with no flat
+   neighbours left to blend between, every one of them would have painted a
+   small opaque patch of a fixed colour over the gradient, which is a visible
+   seam, not a fix for one.
+   ========================================================================== */
+
+
 @layer base {
   html {
     scroll-behavior: smooth;
+
+    /*
+      The site header is `position: fixed`, so every anchor jump would otherwise
+      land its target underneath it. This is set once on the scroll container
+      rather than as `scroll-mt` on each target, because the targets are
+      everywhere — section ids, condition cards, the treatment families, the
+      menu's five sections — and one of them will always be missed.
+
+      The three values are SiteHeader's own `h-20 sm:h-24 lg:h-28`. Anything
+      that also has to clear a second sticky bar of its own keeps a `scroll-mt`
+      on top of this; MenuBoard is the only one.
+    */
+    scroll-padding-top: 5rem;
+  }
+
+  @media (min-width: 40rem) {
+    html {
+      scroll-padding-top: 6rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-top: 7rem;
+    }
   }
 
   body {
+    /*
+      SHELL AT THE TOP, LINEN AT THE BOTTOM -- the page ground; see the note
+      above. `background-color` stays as the fallback for the instant before
+      the gradient paints and for anywhere gradients are unsupported.
+    */
     background-color: var(--color-ms-shell);
+    background-image: linear-gradient(
+      to bottom,
+      var(--color-ms-shell),
+      var(--color-ms-linen)
+    );
     color: var(--color-ms-espresso);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -241,23 +352,57 @@
    until it has been rendered once, then remembered at its real height, so the
    scrollbar does not jump around as you go.
 
-   The FIRST section on a page is deliberately excluded. It carries the site
-   header, whose mobile menu panel is absolutely positioned out of the section,
-   and the containment this implies would clip it. The menu page's priced
-   sections are nested a level deeper (inside the wrapper that scopes the
-   sticky nav) so they are not matched either, which is what keeps that nav
-   sticking.
+   `main > section` NOW, not `.ms-ground > section`: every light section is its
+   own flat, isolated `<section>` again (see the note on the retired page
+   gradient above), so there is no shared wrapper left to scope this to.
+
+   TWO KINDS OF SECTION OPT OUT, with `data-no-lazy`, and both did before too:
+
+     the hero        carries the site header, whose mobile menu panel is
+                     absolutely positioned out of the section, and the
+                     containment this implies would clip it.
+     the menu board  its filter bar is `position: sticky`, and
+                     `content-visibility: auto` on an ancestor of a sticky
+                     element can break the sticky positioning it depends on.
+                     See the note in app/treatment-menu/page.tsx.
+
+   `:not(:first-of-type)` does not stand in for `data-no-lazy` here, the way it
+   once could not stand in for `.ms-ground`'s own scoping: the home page's hero
+   sits inside a `<div>` (HeroSwitcher, for the variant toggle), so it is not
+   the first `<section>` under `main` at all -- Focus is -- and first-of-type
+   would exempt the wrong band.
    ========================================================================== */
 
-main > section:not(:first-of-type) {
+main > section:not([data-no-lazy]) {
   content-visibility: auto;
   contain-intrinsic-size: auto 720px;
+}
+
+/* ==========================================================================
+   Section seams
+
+   EVERY JOIN NEEDS THIS NOW: every light section floods its own flat colour
+   (see the note above), so every boundary between two of them is a hard edge
+   that can leak a hairline the same way the hero's and the footer's always
+   could.
+
+   What leaks is the page ground, `--color-ms-shell` on the body: the lightest
+   colour in the palette, showing as a hairline between two bands whose height
+   lands on a fractional pixel -- which is every band here, because the type is
+   set in `clamp()` and `vw`.
+
+   So each band ends one pixel inside the one that follows. One pixel and not
+   two: this is covering a rounding error, not a gap.
+   ========================================================================== */
+
+main > section {
+  margin-bottom: -1px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   /* Nothing to do with motion, but skipped content can confuse a screen
      reader's virtual cursor on some engines. Opting out here is cheap. */
-  main > section:not(:first-of-type) {
+  main > section {
     content-visibility: visible;
   }
 }
@@ -347,16 +492,14 @@ main > section:not(:first-of-type) {
 
 /* ==========================================================================
    Ornament
-   ========================================================================== */
 
-/* Gold hairline that fades out at both ends — the rule above section heads. */
-@utility hairline-gold {
-  height: 1px;
-  background-image: linear-gradient(
-    to right,
-    transparent,
-    color-mix(in oklab, var(--color-ms-gold) 55%, transparent),
-    transparent
-  );
-}
+   `hairline-gold` used to live here: a 1px gold rule fading out at both ends,
+   drawn above every section head and along the top of the footer. Both are gone.
+   Once the bands started ramping into each other it was the only horizontal line
+   left anywhere near a boundary, and a rule a hundred pixels under a join that is
+   deliberately soft reads as the separator that join is trying not to be.
+
+   Nothing has replaced it and nothing should: the change of colour is the
+   division, and it does not want announcing twice.
+   ========================================================================== */
 

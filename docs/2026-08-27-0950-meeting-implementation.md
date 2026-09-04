@@ -599,12 +599,16 @@ we can see what looks good. If we need to remove something, add something."
 | `13-hero-B-dark-ground.png` | Hero B, the committed hero, on today's brown |
 | `14-hero-B-committed-ground.png` | The same, on the committed `#74370c` |
 | `15-hero-toggles.png` | Both dot groups: GROUND and HERO, with the credit beside them |
+| `18-hero-C-serum.png` | Hero C: a glass serum bottle, modelled and lit live in WebGL |
+| `19-hero-C-serum-mobile.png` | The same on a phone, bottle above the copy |
 | `16-pattern-continuity.png` | The pattern running through a section, at its new strength |
 | `17-booking-to-footer.png` | The lattice running from the light band through the booking band and into the footer, with the gold hairline marking the join |
 | `03-home-consultation-band.png` | What replaced the six prices |
 | `04-treatment-menu-hero.png` | How the menu page opens now that it has no prices |
-| `05-treatment-menu-table-desktop.png` | The table |
-| `06-treatment-menu-table-mobile.png` | The table collapsed, no sideways scroll |
+| `05a-menu-all-open.png` | The menu as one table, nothing ticked, all five sections open |
+| `05b-menu-one-ticked.png` | One section ticked: tinted and open, the other four collapsed to a line |
+| `05c-menu-two-ticked.png` | Two ticked, so the tints can be checked against each other |
+| `06-menu-mobile-ticked.png` | The same on a phone, rows stacked with their labels |
 | `07-cosmetic-dermatology.png` | The free-consultation stat in place of the lowest price |
 | `08-medical-dermatology.png` | Twelve conditions, hair loss and nails included |
 | `09-skincare-collection.png` | The collection grid, shaped like the reference sites' |

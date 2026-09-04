@@ -75,6 +75,10 @@ export type MenuSection = {
   title: string;
   /** One line under the section head. Written for the site, not lifted. */
   blurb: string;
+  /** Key into the icon set in components/icons.tsx. The one canonical glyph
+   *  for this section — the home page and the menu page's own filter both
+   *  read it from here rather than keeping their own copy. */
+  icon: string;
   groups: MenuGroup[];
 };
 
@@ -87,6 +91,7 @@ export const MENU: MenuSection[] = [
     title: "Facials",
     blurb:
       "Three families, sorted by what you want out of the hour: barrier repair, tone, or lift. Above them sit the device-led treatments, where the work goes deeper than a facial does.",
+    icon: "peel",
     groups: [
       {
         name: "Renewal",
@@ -175,6 +180,7 @@ export const MENU: MenuSection[] = [
     title: "Skin rejuvenation",
     blurb:
       "Laser, radiofrequency and ultrasound. Almost everything here runs as a course, because one session of any of it is a sample rather than a result.",
+    icon: "laser",
     groups: [
       {
         name: "Laser",
@@ -225,6 +231,7 @@ export const MENU: MenuSection[] = [
     title: "Body & hair",
     blurb:
       "Contouring below the jawline, and the scalp work people come to a dermatology clinic for rather than to a salon.",
+    icon: "body",
     groups: [
       {
         name: "Hair",
@@ -275,6 +282,7 @@ export const MENU: MenuSection[] = [
     title: "Injectables",
     blurb:
       "Sold by treated area or by volume rather than by appointment, because that is what actually goes in. Every product on this list is named, so ask which one you are getting.",
+    icon: "injectable",
     groups: [
       {
         name: "Botulinum toxin & filler",
@@ -305,6 +313,7 @@ export const MENU: MenuSection[] = [
     title: "Add-ons",
     blurb:
       "Short treatments, most of them well under an hour. A few are worth booking on their own; most get added to something else on the day.",
+    icon: "drip",
     groups: [
       {
         name: "In clinic",
@@ -342,6 +351,136 @@ export const MENU_ITEM_COUNT = MENU.reduce(
   (total, section) => total + sectionItemCount(section),
   0,
 );
+
+/**
+ * "facials, skin rejuvenation, body & hair, injectables and add-ons" -- the
+ * five section titles, lowercased and joined for a sentence, so page copy
+ * naming the sections cannot list them differently from the menu itself or
+ * go stale when a section is renamed or added.
+ */
+export function sectionTitleList(): string {
+  const titles = MENU.map((section) => section.title.toLowerCase());
+  if (titles.length <= 1) return titles[0] ?? "";
+  return `${titles.slice(0, -1).join(", ")} and ${titles[titles.length - 1]}`;
+}
+
+/* -- How a treatment is sold, read back out of its formats ---------------- */
+
+/**
+ * A treatment's formats, classified.
+ *
+ * WHY THIS EXISTS. The menu page used to print every treatment's formats beside
+ * it as chips, and measured across the thirteen groups that column turned out
+ * to be almost entirely redundant: three groups have one identical pattern
+ * throughout, six more have one pattern covering over half the group. Fifty-eight
+ * rows of "Single session · Course of 5 · Course of 10" is noise that hides the
+ * one row that says something different.
+ *
+ * So the page states a group's pattern once and marks only the treatments that
+ * depart from it, and that needs the formats read as data rather than printed as
+ * strings. `signature` is what makes two treatments comparable.
+ */
+export type Offering =
+  | { kind: "sessions"; single: boolean; courses: number[]; signature: string }
+  | { kind: "area"; counts: number[]; signature: string }
+  | { kind: "volume"; counts: number[]; signature: string };
+
+const COURSE_LABEL = /^Course of (\d+)$/;
+const AREA_LABEL = /^(\d+) areas?$/;
+const VOLUME_LABEL = /^(\d+)cc$/i;
+
+/** "one, two and three" for prose; `or` where the items are alternatives. */
+function series(parts: (string | number)[], joiner: "and" | "or"): string {
+  if (parts.length <= 1) return String(parts[0] ?? "");
+  return `${parts.slice(0, -1).join(", ")} ${joiner} ${parts[parts.length - 1]}`;
+}
+
+export function readOffering(formats: readonly string[]): Offering {
+  const areas = formats
+    .map((f) => AREA_LABEL.exec(f)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number);
+  if (areas.length) {
+    return { kind: "area", counts: areas, signature: `area:${areas.join(",")}` };
+  }
+
+  const volumes = formats
+    .map((f) => VOLUME_LABEL.exec(f)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number);
+  if (volumes.length) {
+    return {
+      kind: "volume",
+      counts: volumes,
+      signature: `cc:${volumes.join(",")}`,
+    };
+  }
+
+  const single = formats.includes(SINGLE);
+  const courses = formats
+    .map((f) => COURSE_LABEL.exec(f)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number)
+    .sort((a, b) => a - b);
+  return {
+    kind: "sessions",
+    single,
+    courses,
+    signature: `s:${single ? 1 : 0}:${courses.join(",")}`,
+  };
+}
+
+/**
+ * How one treatment is sold, as a single line for a table cell.
+ *
+ * One line rather than a label and a value, because in a table the column
+ * heading is the label and repeating it in all fifty-eight cells is the noise
+ * this page has already been through once. Self-describing, so the cell still
+ * makes sense on a phone where the heading is not on screen.
+ *
+ *   1, 5, 10 or 20 sessions
+ *   Course of 3 or 5
+ *   Single session
+ *   1, 2 or 3 areas
+ *   1, 2 or 3cc
+ *
+ * Session counts are numerals, including the single. Radiesse is the reason: it
+ * sells singly or as a course of two, and the worded form gives "Single, 2",
+ * which reads as a typo.
+ */
+export function offeringLine(offering: Offering): string {
+  if (offering.kind === "area") {
+    const list = series(offering.counts, "or");
+    return offering.counts.length === 1 && offering.counts[0] === 1
+      ? "1 area"
+      : `${list} areas`;
+  }
+  if (offering.kind === "volume") {
+    return `${series(offering.counts, "or")}cc`;
+  }
+  const { single, courses } = offering;
+  if (!courses.length) return "Single session";
+  if (!single) return `Course of ${series(courses, "or")}`;
+  return `${series([1, ...courses], "or")} sessions`;
+}
+
+export type MenuRow = {
+  /** The group it belongs to -- the "Type" column, rather than a heading. */
+  group: string;
+  name: string;
+  offering: string;
+};
+
+/** A section's treatments as table rows, in menu order. */
+export function sectionRows(section: MenuSection): MenuRow[] {
+  return section.groups.flatMap((group) =>
+    group.items.map((item) => ({
+      group: group.name,
+      name: item.name,
+      offering: offeringLine(readOffering(item.formats)),
+    })),
+  );
+}
 
 /**
  * How a section is sold, as a phrase rather than a list.
@@ -397,19 +536,19 @@ export function sectionOffering(section: MenuSection): string {
 }
 
 /**
- * The same in three or four words, for a dropdown row where the long form would
- * wrap onto a second line.
+ * The same in two or three words, for a dropdown row where the long form
+ * would wrap onto a second line.
+ *
+ * ONLY TWO OUTCOMES NOW, on request: a section either sells by unit (area or
+ * volume) or it sells in sessions, and a course is a form of session rather
+ * than a second category worth naming beside it. This used to distinguish
+ * "Single sessions", "Courses" and "Sessions & courses" depending on which
+ * formats a section happened to mix; all three collapse to "Sessions" here.
  */
 export function sectionOfferingShort(section: MenuSection): string {
   const formats = formatsIn(section);
   const byUnit = formats.some(
     (format) => BY_AREA.test(format) || BY_VOLUME.test(format),
   );
-  if (byUnit) return "By area or volume";
-
-  const hasCourses = formats.some((format) => COURSE_OF.test(format));
-  const hasSingle = formats.includes(SINGLE);
-  if (hasCourses && hasSingle) return "Sessions & courses";
-  if (hasCourses) return "Courses";
-  return "Single sessions";
+  return byUnit ? "Area or volume" : "Sessions";
 }

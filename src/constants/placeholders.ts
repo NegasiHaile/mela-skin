@@ -13,12 +13,22 @@
 export const todo = {
   /** Premises and skincare copy: "Doors open …" */
   openingDate: "[December 2026]",
-  /** Booking band: "Online booking opens …" */
-  bookingOpens: "[Date bookings open]",
-  hoursWeekday: "[Mon–Fri, 00:00–00:00]",
-  hoursSaturday: "[Sat, 00:00–00:00]",
+  /*
+    THERE IS NO SEPARATE `bookingOpens` HERE ANY MORE. It used to be its own
+    bracketed placeholder, "[Date bookings open]", answering a question that
+    is really the same question as `openingDate`: online booking has no
+    reason to open before the doors do, and no date has ever been floated for
+    it to open later. So "Online booking opens …" now reads `openingDate`
+    directly wherever it appears (constants/contact.ts and
+    components-editorial/Booking.tsx) rather than a second bracket that would
+    have to be kept in step with this one by hand. If the clinic ever does
+    want booking to open on its own date, that is one line to reintroduce
+    here, not a sign this merge was wrong.
+  */
+  hoursWeekday: "Mon–Fri, 9am–6pm",
+  hoursSaturday: "Sat–Sun, Closed",
   /** Minutes. Used in the visit steps, the booking band and the menu FAQ. */
-  consultLength: "[45]",
+  consultLength: "45",
   /**
    * The MEDICAL consultation fee, and only that one.
    *
@@ -38,9 +48,25 @@ export const todo = {
   consultFee: "[KES 0,000]",
   /** Weeks between the first appointment and the review. */
   reviewGap: "[6]",
-  clinicianName: "[Dr. Full Name]",
+  /*
+    THERE IS NO `clinicianName` HERE ANY MORE. It used to be a generic
+    "[Dr. Full Name]" that copy interpolated without knowing which clinician it
+    meant, which is exactly backwards once a real one exists: filling in her
+    name in constants/clinic.ts left this bracket still showing in three other
+    files. `PRIMARY_CLINICIAN.name`, exported from clinic.ts, is what copy
+    reaches for now — see the note on `PRIMARY_CLINICIAN` there.
+  */
   clinicianRole: "[Consultant Dermatologist]",
   clinicianReg: "[KMPDC Reg. No. 00000]",
+  /**
+   * The two credential rows the provider block has slots for and the clinic has
+   * not supplied. They are separate from the qualifications, which are known:
+   * see constants/clinic.ts -> CLINICIANS. Delete the entry rather than the
+   * brackets if a provider holds neither -- the list is generated from the
+   * array, so four rows and six both work.
+   */
+  clinicianAffiliation: "[Hospital or teaching affiliation, if held]",
+  clinicianMemberships: "[Society membership, research or publications]",
   /** Footer: "Regulated by …" */
   regulator: "[KMPDC]",
   /** Footer: the company's KRA PIN. */
@@ -182,15 +208,129 @@ export const photos = {
    * provider is an empty slot, which is what an unlabelled sample would have to
    * become if nobody replaced it.
    */
+  /**
+   * REAL, AND THE FIRST PHOTOGRAPH ON THIS SITE THAT IS.
+   *
+   * Out of `Resources/Deyabo Capital - Deal Announcement (MELA SKIN).pptx`,
+   * which carries a portrait of each Key Partner. Hers is the one at x=1185 on
+   * the slide, beside "Local / Dr. Margaret Gachanja"; 1000x1250, a white-coat
+   * portrait against a plain wall, converted to WebP at 71KB.
+   *
+   * IT REPLACES A LICENSED STOCK PORTRAIT, `dermatologist.webp`, which had to
+   * carry "[Sample image. Not Dr. Gachanja.]" under it because it was somebody
+   * else's face standing in for the doctor you would actually see. Dr. Abseret
+   * Hailu, 26 Aug 00:17:24: "I'm not a huge fan on the AI pics of the people,
+   * because I do want it to be real." The caption is `null` now, because there
+   * is nothing left to disclose.
+   *
+   * The frame is about 0.76 wide-to-tall and this is 0.80, so `object-cover`
+   * trims a little from the sides and nothing off the top. Her face sits on the
+   * horizontal centre, which is where `object-center` keeps it.
+   */
   gachanja: {
-    src: "/images/dermatologist.webp" as string | null,
-    label: "[Dr. Gachanja's portrait]",
-    /** Rendered under the picture, so the page says what this file says. */
-    caption: "[Sample image. Not Dr. Gachanja.]" as string | null,
+    src: "/images/dr-margaret-gachanja.webp" as string | null,
+    label: "Dr. Margaret Gachanja",
+    /** Rendered under the picture. Nothing to say now that the photo is real. */
+    caption: null as string | null,
   },
+  /**
+   * ALSO REAL, AND DELIBERATELY NOT RENDERED.
+   *
+   * The deck's other Key Partner portrait, x=812, beside "International". It is
+   * wired up so that adding Dr. Hailu back to constants/clinic.ts -> CLINICIANS
+   * is one entry and nothing else; her block came off at the 1 Sep daily for
+   * being nine tenths placeholder, and a photograph does not change that -- it
+   * still needs a bio, a registration, and her agreement to be listed.
+   */
   hailu: {
-    src: null as string | null,
-    label: "[Dr. Hailu's portrait]",
+    src: "/images/dr-abseret-hailu.webp" as string | null,
+    label: "Dr. Abseret Hailu",
     caption: null as string | null,
   },
 };
+
+/**
+ * THE SOCIAL ACCOUNTS. One of them is real; three are not yet.
+ *
+ * LinkedIn was supplied on 1 Sep and is a live link. The other three have no
+ * handle, so their `href` is null and the footer renders each as a visibly
+ * unfinished slot rather than as a link to nowhere — the same rule the
+ * photographs follow. A dead social icon in a footer is worse than no icon: it
+ * gets clicked.
+ *
+ * ALL FOUR ARE LIVE as of 2 Sep. TO DROP A PLATFORM the clinic is not on, delete
+ * its entry — the row is generated from this array, so three icons or five both
+ * work. TO PUT ONE BACK IN PROGRESS, set `href` to `null` and wrap `label` in
+ * brackets; it renders as a dashed, unfocusable slot again with no other change.
+ * The `href: string | null` type and that branch in components/SocialLinks.tsx
+ * both stay for exactly that.
+ *
+ * WHY THESE FOUR. Instagram and TikTok are where aesthetic clinics in Nairobi
+ * actually post before-and-afters, Facebook is where the older half of the
+ * catchment looks a business up, and LinkedIn is for hiring rather than for
+ * patients. Whether the clinic wants all four is its call.
+ *
+ * WHATSAPP IS DELIBERATELY NOT HERE. It came out of the 31 Aug benchmarking as
+ * the one clear channel gap — both comparable Nairobi clinics pin a WhatsApp
+ * widget to every page — but it is a way of reaching a person rather than a
+ * feed to follow, so it belongs beside the phone number and the email, not in a
+ * row of social icons. Still not built, still the clinic's decision.
+ */
+export type SocialAccount = {
+  /** Picks the glyph in components/SocialLinks.tsx. */
+  id: "instagram" | "facebook" | "tiktok" | "linkedin";
+  /** The accessible name, and the visible one while the slot is unfilled. */
+  label: string;
+  href: string | null;
+};
+
+/**
+ * ONE HANDLE, WRITTEN TWO WAYS, AND THE PLATFORMS ARE WHY.
+ *
+ * The clinic's handle is `mela-skin`. LinkedIn takes it literally, because a
+ * company-page slug is the one of these four that permits a hyphen. The other
+ * three do not permit one at all:
+ *
+ *     LinkedIn (company)   letters, numbers, hyphens        mela-skin
+ *     Instagram            letters, numbers, . _            melaskin
+ *     Facebook (page)      letters, numbers, . (5 min)      melaskin
+ *     TikTok               letters, numbers, _ .            melaskin
+ *
+ * So `melaskin` is not a shortening anybody chose here; it is the only form of
+ * `mela-skin` those three will accept. It is also the form the clinic already
+ * uses everywhere else it has to be one word — `melaskin.ke` and
+ * `info@melaskin.ke` — which is the reason to close up the hyphen rather than
+ * replace it with a dot or an underscore.
+ *
+ * NOBODY HAS CONFIRMED THE CLINIC HOLDS THE THREE NEW ONES. LinkedIn came from
+ * the clinic directly on 1 Sep; these three are derived from the handle it gave.
+ * A footer link to an account somebody else owns is worse on a clinic site than
+ * a dashed placeholder, so if any of the three is not the clinic's, set that
+ * `href` back to `null` and its `label` back to brackets — the row renders the
+ * unfinished slot again with no other change.
+ */
+const HANDLE = "melaskin";
+
+export const SOCIAL: SocialAccount[] = [
+  {
+    id: "instagram",
+    label: "Instagram",
+    href: `https://www.instagram.com/${HANDLE}/`,
+  },
+  {
+    id: "facebook",
+    label: "Facebook",
+    href: `https://www.facebook.com/${HANDLE}`,
+  },
+  {
+    id: "tiktok",
+    label: "TikTok",
+    href: `https://www.tiktok.com/@${HANDLE}`,
+  },
+  {
+    /* The one that keeps the hyphen. See the note above. */
+    id: "linkedin",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/mela-skin/",
+  },
+];

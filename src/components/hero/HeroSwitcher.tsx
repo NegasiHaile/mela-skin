@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { heroSampleCredit } from "@/constants";
+import { HeroSerum } from "./HeroSerum";
 import { HeroOriginal } from "./HeroOriginal";
 import type { HeroGround } from "./HeroOriginal";
 import { HeroPhoto } from "./HeroPhoto";
 
 /*
-  TWO HEROES ON ONE PAGE, with a toggle, for the team to choose between.
+  THREE HEROES ON ONE PAGE, with a toggle, for the team to choose between.
 
   Built for the review the 26 Aug meeting set up. Abseret, 00:57:11: "why don't
   you send us screenshots of the landing page, because obviously it's going to be
@@ -16,12 +17,18 @@ import { HeroPhoto } from "./HeroPhoto";
   moment: "you can play around with it and share with us; we can pick, you know,
   the one that comes out best."
 
-  Screenshots are one way to do that. Two live heroes with a switch is better:
-  the difference between these two is motion and proportion, and neither survives
-  a still.
+  Screenshots are one way to do that. Live heroes with a switch is better: what
+  separates them is motion and proportion, and neither survives a still.
 
-    photo     The current one. Four elements over a full-bleed sliding
-              photograph, on Primary 2.
+    serum     The clinic's own demonstration clip, full-bleed, same overlay as
+              A. Was a glass dropper bottle modelled and lit live in the
+              browser — that scene is still in SerumScene.tsx / serumShader.ts,
+              just not rendered here any more. See HeroSerum.tsx. First in the
+              list on request, moved from third -- still labelled Hero C,
+              which is the letter the team already knows it by, even though it
+              is no longer the third dot.
+    photo     Four elements over a full-bleed sliding photograph, on Primary 2.
+              The default until this reordering.
     committed The hero on the last commit (b894798), restored with its own
               palette: copy on the left, a cut-out portrait push-sliding on the
               right half, on the old #74370c brown.
@@ -33,10 +40,10 @@ import { HeroPhoto } from "./HeroPhoto";
 
   THERE ARE TWO TOGGLES, and only one of them is always there.
 
-    Hero    A or B, always.
+    Hero    A, B or C, always.
     Ground  B's brown: today's #2C190B or the committed #74370c. Rendered only
-            while B is showing, because A has a photograph where B has a colour
-            and there is nothing on A for it to change.
+            while B is showing. A opens on a photograph and C on a lit scene, so
+            on those two there is no flat colour for it to change.
 
   A control that appears and disappears is usually a smell. It is the right thing
   here: the alternative is a dead third dot on variant A, and in a demo a dot
@@ -58,6 +65,15 @@ import { HeroPhoto } from "./HeroPhoto";
 */
 
 const VARIANTS = [
+  {
+    id: "serum",
+    label: "Hero C — the clinic's own demonstration video, full-bleed",
+    short: "C",
+    /** Its own footage, not borrowed — no attribution needed, unlike A and B. */
+    credit: "MELA SKIN's own demonstration footage.",
+    /** No ground toggle: C's opening is a video, not a colour. */
+    grounds: false,
+  },
   {
     id: "photo",
     /** Read out by the dot's accessible name, so it has to say what it picks. */
@@ -143,20 +159,40 @@ function Dots<T extends string>({
 }
 
 export function HeroSwitcher() {
-  const [variant, setVariant] = useState<"photo" | "committed">("photo");
+  /*
+    DEFAULTS TO "serum" NOW, matching `VARIANTS[0]` -- a reload has to land on
+    the same one the first dot shows, or the dot and the hero it points at
+    disagree the moment the page loads.
+  */
+  const [variant, setVariant] = useState<"photo" | "committed" | "serum">(
+    "serum",
+  );
   const [ground, setGround] = useState<HeroGround>("dark");
   const current = VARIANTS.find((entry) => entry.id === variant) ?? VARIANTS[0];
 
   return (
     <div className="relative">
-      {variant === "photo" ? <HeroPhoto /> : <HeroOriginal ground={ground} />}
+      {variant === "photo" ? <HeroPhoto /> : null}
+      {variant === "committed" ? <HeroOriginal ground={ground} /> : null}
+      {variant === "serum" ? <HeroSerum /> : null}
 
       {/*
         Sits over the hero rather than under it, so it lands in the corner both
-        variants leave empty. `z-30` clears the header's own `z-40` stacking
-        without competing with it: they are at opposite ends of the screen.
+        variants leave empty.
+
+        `z-50`, NOT `z-30` -- it was `z-30` and the dots were unclickable for
+        it: whichever hero variant is showing wraps its own header-plus-copy in
+        a `relative z-40` div (see the note on that div in PageHero.tsx and the
+        matching one in each hero variant), and that div's box runs the full
+        `min-h-svh` height of the section, empty flex space and all, right down
+        through this corner. At `z-30` this whole strip lost the stacking
+        comparison to that div and every click landed on empty space inside it
+        instead of a dot -- confirmed the same way the header stacking bug was,
+        by asking the browser which element actually sat at a dot's screen
+        position rather than assuming the z-index numbers alone. `z-50` clears
+        every hero variant's `z-40` outright.
       */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-5 z-30 flex items-center justify-end gap-4 px-6 sm:bottom-6 sm:px-10 lg:px-14">
+      <div className="pointer-events-none absolute inset-x-0 bottom-5 z-50 flex items-center justify-end gap-4 px-6 sm:bottom-6 sm:px-10 lg:px-14">
         {/*
           `min-w-0` rather than a `vw` cap: at 45vw the line wrapped onto two on
           a phone even though there was room for it beside the dots.

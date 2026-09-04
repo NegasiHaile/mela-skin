@@ -3,7 +3,6 @@ import { BookingCta } from "@/components/BookingCta";
 import { GoldDefs } from "@/components/brand/Marks";
 import { PageHero } from "@/components/PageHero";
 import { Collection, Routine } from "@/components/Skincare";
-import { ScrollProgress } from "@/motion";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SKINCARE_PAGE, META } from "@/constants";
 import { PillGhost, PillSolid } from "@/components/ui";
@@ -32,7 +31,6 @@ export default function Skincare() {
   return (
     <>
       <GoldDefs />
-      <ScrollProgress />
       <main>
         <PageHero
           id="hero-skincare"
@@ -41,7 +39,9 @@ export default function Skincare() {
           lede={SKINCARE_PAGE.lede}
           aside={
             <div className="rounded-[20px] border border-ms-gold/30 bg-ms-espresso/35 p-7 backdrop-blur-sm">
-              <p className="eyebrow text-ms-gold">{SKINCARE_PAGE.asideTitle}</p>
+              <p className="font-display text-[1.35rem] leading-[1.2] text-ms-cream">
+                {SKINCARE_PAGE.asideTitle}
+              </p>
               <p className="mt-4 font-sans text-[16px] font-light leading-[1.8] text-ms-cream/85">
                 {SKINCARE_PAGE.asideBody}
               </p>
@@ -58,6 +58,10 @@ export default function Skincare() {
           </div>
         </PageHero>
 
+        {/*
+          COLOUR: the site's shell/paper/cream rotation -- see the note in
+          app/page.tsx. Collection=shell, Routine=paper, BookingCta=cream.
+        */}
         <Collection />
         <Routine />
         <BookingCta />

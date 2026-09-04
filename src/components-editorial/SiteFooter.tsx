@@ -25,15 +25,9 @@ export function SiteFooter() {
           <Reveal className="flex flex-col gap-4 sm:col-span-2 lg:col-span-6">
             <Wordmark size="md" tone="text-ms-cream" />
             <p className="max-w-[280px] font-sans text-[14px] font-light leading-[1.7] text-ms-sand/70">
-              {brand.address.line1}, {brand.address.line2}, {brand.address.city}.
+              {brand.address.oneLine}.
             </p>
             <div className="flex flex-col gap-1.5 font-sans text-[14px] font-light text-ms-sand/70">
-              <a
-                href={brand.phoneHref}
-                className="transition-colors hover:text-ms-cream"
-              >
-                {brand.phone}
-              </a>
               <a
                 href={`mailto:${brand.email}`}
                 className="transition-colors hover:text-ms-cream"

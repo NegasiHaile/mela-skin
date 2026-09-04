@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Sparkle } from "./brand/Marks";
-import { DrawRule, Lines } from "@/motion";
+import { Lines } from "@/motion";
 
 /**
  * Primitives for the immersive direction: full-bleed sections flooded with a
@@ -41,20 +41,16 @@ export function Wrap({
   );
 }
 
-export function Eyebrow({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return <p className={`eyebrow ${className ?? ""}`}>{children}</p>;
-}
-
 /**
- * Section heading. The gold hairline draws itself in from the left, then the
- * words rise out from behind their own masks — so the head announces the
- * section rather than simply being present when you arrive at it.
+ * Section heading: the words rise out from behind their own masks, so the head
+ * announces the section rather than simply being present when you arrive at it.
+ *
+ * A GOLD HAIRLINE USED TO DRAW ITSELF IN ABOVE THE WORDS, 220px of it, and it
+ * has gone. Once the bands started ramping into each other it was the only
+ * horizontal line left near a boundary, and a line sitting a hundred pixels
+ * under a join that is deliberately soft reads as the separator that join is
+ * trying not to be. The colour change is the division now, and it does not need
+ * announcing twice.
  *
  * `title` is a plain string, not a node: `Lines` has to split it into words to
  * mask them individually.
@@ -63,19 +59,15 @@ export function SectionHead({
   title,
   tone = "light",
   className,
-  rule = true,
 }: {
   title: string;
   tone?: "light" | "dark";
   className?: string;
-  /** Set false where the head sits tight under other ornament. */
-  rule?: boolean;
 }) {
   const head = tone === "dark" ? "text-ms-ivory" : "text-ms-cocoa";
 
   return (
     <div className={className}>
-      {rule ? <DrawRule className="hairline-gold mb-7 w-full max-w-[220px]" /> : null}
       <h2 className={`display-caps text-[clamp(2.15rem,4vw,3.5rem)] ${head}`}>
         <Lines text={title} />
       </h2>
@@ -131,9 +123,14 @@ export function PillGhost({
 }
 
 /**
- * The paragraph that sits under a section head. One size larger than body copy
- * and held to about 60 characters a line, because it is the only thing between
- * a heading and a wall of cards and it has to be read rather than skimmed.
+ * The paragraph that sits under a section head. It is the only thing between a
+ * heading and a wall of cards, so it is set to be read rather than skimmed.
+ *
+ * IT WENT UP A SIZE AND IN A MEASURE ON 1 SEP — 18/19/20px at 62 characters to
+ * 19/21/23 at 54. Both halves of that are the same change: the ledes were cut to
+ * roughly two thirds of their length, and a shorter line of larger type is what
+ * that buys. 54ch is still inside the 45-75 the typographic rule of thumb gives,
+ * and at 23px it is about nine words a line.
  */
 export function Lede({
   children,
@@ -147,7 +144,7 @@ export function Lede({
   const skin = tone === "dark" ? "text-ms-cream/85" : "text-ms-espresso/80";
   return (
     <p
-      className={`max-w-[62ch] font-sans text-[18px] font-light leading-[1.75] sm:text-[19px] lg:text-[20px] lg:leading-[1.8] ${skin} ${className ?? ""}`}
+      className={`max-w-[54ch] font-sans text-[19px] font-light leading-[1.7] sm:text-[21px] lg:text-[23px] lg:leading-[1.65] ${skin} ${className ?? ""}`}
     >
       {children}
     </p>
@@ -158,6 +155,12 @@ export function Lede({
  * A highlighted aside. Used for the things a visitor genuinely needs to see
  * and would otherwise scroll past — the caution on skin tags, the note on what
  * a consultation covers, the one service that is not bookable yet.
+ *
+ * ITS LABEL IS LARKEN, NOT TRACKED CAPS. "On deeper skin" appears ten times on
+ * /medical-dermatology, which made it the most repeated small title on the site
+ * and the clearest instance of the thing the 1 Sep note was about. The label
+ * still earns its place — inside a coloured box it is what tells you why the box
+ * is there — so it was set as a heading rather than removed.
  */
 export function Callout({
   eyebrow,
@@ -180,7 +183,13 @@ export function Callout({
     <div
       className={`rounded-r-[10px] border-l-2 py-5 pl-5 pr-5 sm:pl-6 sm:pr-6 ${skin} ${className ?? ""}`}
     >
-      {eyebrow ? <p className={`eyebrow mb-2.5 ${label}`}>{eyebrow}</p> : null}
+      {eyebrow ? (
+        <p
+          className={`mb-2.5 font-display text-[1.2rem] leading-[1.2] ${label}`}
+        >
+          {eyebrow}
+        </p>
+      ) : null}
       <div className="font-sans text-[16px] font-light leading-[1.8] sm:text-[16.5px]">
         {children}
       </div>
@@ -205,7 +214,7 @@ export function PhotoSlot({
   const skin =
     tone === "dark"
       ? "border-ms-sand/30 bg-gradient-to-br from-ms-panel to-ms-espresso text-ms-sand/85"
-      : "border-ms-bronze/25 bg-gradient-to-br from-ms-shell to-ms-sand/55 text-ms-bronze";
+      : "border-ms-bronze/35 bg-gradient-to-br from-ms-shell to-ms-sand/55 text-ms-terracotta-deep";
 
   return (
     <div

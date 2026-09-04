@@ -1,10 +1,17 @@
-import { CONDITIONS, CONTACT, COSMETIC, brand } from "@/constants";
+import { CONDITIONS, CONTACT, COSMETIC, SOCIAL, brand } from "@/constants";
 
 /** Local clinic schema for Google / rich results. */
 export function clinicJsonLd() {
   const address = {
     "@type": "PostalAddress",
     streetAddress: `${brand.address.line1}, ${brand.address.line2}`,
+    /*
+      THE SUBURB IS ITS OWN FIELD, and it has to be: `addressLocality` is the
+      city, and Muthaiga in the street line would be read as part of the street.
+      Google matches a Kenyan address on the suburb more than on anything else
+      in it.
+    */
+    addressRegion: brand.address.area,
     addressLocality: brand.address.city,
     addressCountry: brand.address.country,
   };
@@ -14,25 +21,33 @@ export function clinicJsonLd() {
     "@graph": [
       {
         "@type": "MedicalClinic",
-        "@id": "https://melaskin.com/#clinic",
+        "@id": `${brand.origin}/#clinic`,
         name: brand.name,
         legalName: brand.entity,
         alternateName: "MELA SKIN",
         description:
-          "Medical and cosmetic dermatology clinic built for melanin-rich skin in Westlands, Nairobi.",
-        url: "https://melaskin.com",
-        logo: "https://melaskin.com/brand/brandmark-gold.png",
-        image: "https://melaskin.com/og-image.jpg",
-        telephone: brand.phone,
+          "Medical and cosmetic dermatology clinic built for melanin-rich skin in Muthaiga, Nairobi.",
+        url: brand.origin,
+        logo: `${brand.origin}/brand/brandmark-gold.png`,
+        image: `${brand.origin}/og-image.jpg`,
+        /* No `telephone`. See the note in constants/brand.ts. */
         email: brand.email,
         slogan: brand.tagline,
         address,
-        geo: {
-          "@type": "GeoCoordinates",
-          // Approximate Westlands / The Atrium — refine with exact coords at launch
-          latitude: -1.2674,
-          longitude: 36.8108,
-        },
+        /*
+          NO `geo`, deliberately.
+
+          There was one, at -1.2674 / 36.8108, commented "approximate Westlands
+          / The Atrium". The final letterhead puts the clinic in Muthaiga, which
+          makes those coordinates not approximate but wrong, and a wrong pin in
+          structured data is what a phone's Maps app navigates to. Nobody has
+          stood outside OLA Energy Plaza with a handset yet, so there is no
+          honest replacement and the field is absent instead -- `hasMap` below
+          hands Google the address to resolve, which it does well.
+
+          Add `geo` back the same day somebody reads the real coordinates off
+          the door, and swap CONTACT.map over to a place link at the same time.
+        */
         areaServed: {
           "@type": "City",
           name: "Nairobi",
@@ -51,7 +66,7 @@ export function clinicJsonLd() {
           "@type": "MedicalProcedure",
           name: family.title,
           description: family.summary,
-          url: `https://melaskin.com/cosmetic-dermatology#${family.slug}`,
+          url: `${brand.origin}/cosmetic-dermatology#${family.slug}`,
         })),
         /*
           NO PRICING CLAIMS, deliberately.
@@ -64,15 +79,21 @@ export function clinicJsonLd() {
           the version that ends up in a search result rather than on a page a
           patient can read in context.
         */
-        sameAs: [],
+        /*
+          The accounts that exist. Three of the four in constants/placeholders.ts
+          are still bracketed, and `flatMap` drops those rather than asserting a
+          profile the clinic does not have -- which is what an empty array used
+          to do to all four, LinkedIn included.
+        */
+        sameAs: SOCIAL.flatMap((account) => (account.href ? [account.href] : [])),
       },
       {
         "@type": "WebSite",
-        "@id": "https://melaskin.com/#website",
-        url: "https://melaskin.com",
+        "@id": `${brand.origin}/#website`,
+        url: brand.origin,
         name: brand.name,
-        description: `${brand.descriptor} in Westlands, Nairobi.`,
-        publisher: { "@id": "https://melaskin.com/#clinic" },
+        description: `${brand.descriptor} in ${brand.address.area}, ${brand.address.city}.`,
+        publisher: { "@id": `${brand.origin}/#clinic` },
         inLanguage: "en-KE",
       },
     ],

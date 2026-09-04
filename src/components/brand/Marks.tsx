@@ -247,6 +247,16 @@ export function WordmarkLetters({
  * everything else — the mark is sized against it and the descriptor's tracking
  * is set so the line ends near the wordmark's right edge, which is the
  * relationship the supplied lockup has.
+ *
+ * THE MARK BESIDE THE TYPE, which is what a 96px bar has room for, and the top
+ * bar is the only thing that uses this now.
+ *
+ * A STACKED VARIANT WAS BUILT ON 1 SEP AND TAKEN OUT ON 2 SEP. It composed the
+ * letterhead's arrangement out of parts — the 3D emblem as an image, these
+ * wordmark paths, a live Ranade descriptor — at gaps measured off the printed
+ * sheet. It landed in the right place and it was still a reconstruction. The
+ * footer serves `1_Logo/Primary Logo/SVG/MELA SKIN - Primary Logo_2.svg` itself
+ * now, so there is nothing left for a second layout to do.
  */
 const LOCKUP = {
   sm: { mark: 26, word: 108, desc: "text-[6.5px]", gap: "gap-2" },

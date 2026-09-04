@@ -73,7 +73,7 @@ export function Treatments() {
   return (
     <Shell>
       <Card id="treatments" className="mt-4 bg-ms-shell">
-        <PatternField tone="shell" />
+        <PatternField tone="light" />
         <Inner>
           <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
             <div>

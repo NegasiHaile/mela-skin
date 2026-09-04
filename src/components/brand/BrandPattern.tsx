@@ -35,6 +35,21 @@
  * the same colour at y=0 and y=H, which is why it runs from → to → from rather
  * than from → to: a straight ramp would put a light edge against a dark one at
  * every horizontal seam.
+ *
+ * THE TILE NO LONGER PAINTS ITS OWN GROUND, and dropping that is what lets a
+ * section have a gradient ground at all.
+ *
+ * It used to open with a full-bleed `<rect>` filled with the section's own
+ * background colour, so the interstices matched the band the tile sat on. On a
+ * FLAT ground that rect is provably invisible: the layer composites as
+ * `opacity x tile + (1 - opacity) x ground`, and in the interstices the tile
+ * pixel WAS the ground, so the result is the ground either way. Removing it
+ * changes nothing that was on screen.
+ *
+ * On a ground that ramps from one colour to another it changes everything. The
+ * rect is one flat colour, so at 0.4-0.5 opacity it dragged 40-50% of the ramp
+ * back toward the section's own colour and halved the transition. Interstices
+ * are transparent now and the ramp reads through them at full strength.
  */
 
 /** Tile width in px. ONE value for the whole site — see the note above. */
@@ -43,7 +58,7 @@ export const TILE_W = 520;
 const H_RATIO = 0.821;
 const R_RATIO = 0.506;
 
-/** Tile height in px. Also the drift period, which is why it is exported. */
+/** Tile height in px. Exported for the record; nothing reads it at present. */
 export const TILE_H = Math.round(TILE_W * H_RATIO);
 
 const RADIUS = Math.round(TILE_W * R_RATIO);
@@ -51,12 +66,13 @@ const RADIUS = Math.round(TILE_W * R_RATIO);
 /**
  * The tile as a data URI, ready for `background-image`.
  *
- * @param from    circle gradient at the tile's top and bottom edges
- * @param to      circle gradient at the tile's middle
- * @param sparkle the colour revealed in the interstices, which is always the
- *                section's own background colour
+ * Circles on nothing: whatever is behind the layer shows through the
+ * interstices, which is what a gradient ground needs. See the note above.
+ *
+ * @param from circle gradient at the tile's top and bottom edges
+ * @param to   circle gradient at the tile's middle
  */
-export function patternTileUrl(from: string, to: string, sparkle: string): string {
+export function patternTileUrl(from: string, to: string): string {
   /*
     SINGLE QUOTES INSIDE, DOUBLE QUOTES OUTSIDE. This is the whole reason the
     payload is built by hand: a data URI written as url("…<svg xmlns="…") is
@@ -72,7 +88,6 @@ export function patternTileUrl(from: string, to: string, sparkle: string): strin
     `<stop offset='0.5' stop-color='${to}'/>`,
     `<stop offset='1' stop-color='${from}'/>`,
     `</linearGradient></defs>`,
-    `<rect width='${TILE_W}' height='${TILE_H}' fill='${sparkle}'/>`,
     `<g fill='url(#g)'>`,
     `<circle cx='0' cy='0' r='${RADIUS}'/>`,
     `<circle cx='${TILE_W}' cy='0' r='${RADIUS}'/>`,

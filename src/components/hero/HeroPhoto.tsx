@@ -58,10 +58,21 @@ import { PillGhost, PillSolid, Wrap } from "../ui";
 */
 export function HeroPhoto() {
   return (
-    <section id="top" className="relative min-h-svh overflow-hidden bg-ms-field">
+    <section
+      id="top"
+      data-no-lazy
+      className="relative min-h-svh overflow-hidden bg-ms-field"
+    >
       <HeroBackground />
 
-      <div className="relative z-10 flex min-h-svh flex-col">
+      {/*
+        `z-40`, not the usual `z-10` -- this div carries the fixed SiteHeader,
+        and a later section's own `relative z-10` wrapper would otherwise tie
+        with this one and win the stacking comparison by DOM order, painting
+        over the header once scrolled far enough. Full explanation on the
+        identical div in components/PageHero.tsx.
+      */}
+      <div className="relative z-40 flex min-h-svh flex-col">
         <SiteHeader tone="dark" />
 
         <Wrap className="flex flex-1 items-center py-16 sm:py-20 lg:py-24">
@@ -71,11 +82,15 @@ export function HeroPhoto() {
                 {/*
                   The visible heading is the tagline. The clinic and what it does
                   go in front of it for anything reading the heading rather than
-                  looking at it, since the descriptor now only appears in the
-                  header lockup, which is vector artwork.
+                  looking at it — the wordmark above is vector artwork, so the
+                  name is not in the heading otherwise, and the place a search
+                  engine looks for what this business is is its h1.
+
+                  It stays even though the sentence below now opens on the
+                  descriptor: that is a paragraph, and this is the heading.
                 */}
                 <span className="sr-only">
-                  Mela Skin, dermatology and cosmetic clinic in Westlands,
+                  Mela Skin, dermatology and cosmetic clinic in Muthaiga,
                   Nairobi.{" "}
                 </span>
                 {brand.tagline}
@@ -95,7 +110,7 @@ export function HeroPhoto() {
                   tone="dark"
                   className="min-h-13 px-9 text-[13.5px] sm:min-h-14 sm:px-10 sm:text-[14px]"
                 >
-                  Book a consultation
+                  Book an appointment
                 </PillSolid>
                 <PillGhost
                   href="/treatment-menu"

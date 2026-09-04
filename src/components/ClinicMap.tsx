@@ -1,6 +1,6 @@
-import { CONTACT, PREMISES, brand } from "@/constants";
+import { CONTACT, brand } from "@/constants";
 import { PatternField } from "./brand/PatternField";
-import { Reveal, Stagger, StaggerItem, Wipe } from "@/motion";
+import { Reveal, Wipe } from "@/motion";
 import { PillSolid, SectionHead, Wrap } from "./ui";
 
 /*
@@ -17,97 +17,85 @@ import { PillSolid, SectionHead, Wrap } from "./ui";
 
   Why a search rather than a pin, and what to replace it with, is written up in
   constants/contact.ts.
+
+  FULL WIDTH, MAP FIRST, DETAILS BELOW -- on request, and it dropped
+  `CONTACT.map.notes` along with the old two-column layout. Those three rows
+  -- Parking, Getting here, Access -- were visible placeholders nobody had
+  supplied real answers for, and unlike a labelled photo slot a paragraph of
+  bracketed guesses ("[Where patients park, whether it is validated...]") on a
+  contact page reads as the clinic not knowing its own building. Removed
+  rather than shown unconfirmed; `CONTACT.map.notes` is gone from
+  constants/contact.ts too; see the note there for how to bring a note back
+  once the clinic has answered it.
+
+  HOURS CAME OFF THIS SECTION TOO, on request: the Booking section right
+  above this one already carries them (constants/clinic.ts -> CONTACT_DETAILS,
+  rendered in components/Booking.tsx), so a second "Hours" row here one
+  section down the same page was the exact repetition the rest of this pass
+  was for. What is left below the map is the address, with directions the
+  one action on offer.
+
+  LAST OF /CONTACT'S ROTATION, `ms-cream` -- see the note on that rotation in
+  app/page.tsx. It is the page's own closing section, the way BookingCta is
+  everywhere else, so it takes the deepest of the three for the same reason:
+  the shortest step into the footer's brown.
+
+  `SEAMBLEND FROM="SHELL"`, NOT "PAPER". This section used to follow the
+  clinician band (`ms-paper`), which sat between it and Booking; that band
+  came off /contact on request (see the note in app/contact/page.tsx), so this
+  now follows Booking's `ms-shell` directly. The blend has to name whatever is
+  actually immediately above it, not whatever used to be.
 */
 export function ClinicMap() {
   return (
     <section
       id="map"
-      className="relative scroll-mt-4 overflow-hidden bg-ms-paper py-24 lg:py-32"
+      className="relative scroll-mt-4 overflow-hidden py-24 lg:py-32"
     >
-      <PatternField tone="paper" />
+      <PatternField tone="light" />
 
-      <Wrap className="relative">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-4">
-            <Reveal y={18}>
-              <p className="eyebrow text-ms-terracotta-deep">
-                {CONTACT.map.eyebrow}
-              </p>
-            </Reveal>
+      <Wrap className="relative z-10">
+        <SectionHead title={CONTACT.map.title} />
 
-            <SectionHead
-              title={CONTACT.map.title}
-              rule={false}
-              className="mt-5"
+        <Wipe className="mt-10 lg:mt-12">
+          <div className="relative h-[380px] w-full overflow-hidden rounded-[24px] ring-1 ring-ms-bronze/25 sm:h-[460px] lg:h-[560px]">
+            <iframe
+              title={CONTACT.map.frameTitle}
+              src={CONTACT.map.embedUrl}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 h-full w-full border-0"
             />
-
-            <Stagger
-              as="dl"
-              step={0.1}
-              delay={0.2}
-              className="mt-9 flex flex-col"
-            >
-              <StaggerItem y={18} className="border-t border-ms-bronze/25 py-5">
-                <dt className="eyebrow font-normal text-ms-bronze">Address</dt>
-                <dd className="mt-2.5 font-sans text-[16px] font-light leading-[1.7] text-ms-espresso">
-                  {brand.address.line1}
-                  <br />
-                  {brand.address.line2}
-                  <br />
-                  {brand.address.city}
-                </dd>
-              </StaggerItem>
-
-              {CONTACT.map.notes.map((note) => (
-                <StaggerItem
-                  key={note.label}
-                  y={18}
-                  className="border-t border-ms-bronze/25 py-5"
-                >
-                  <dt className="eyebrow font-normal text-ms-bronze">
-                    {note.label}
-                  </dt>
-                  <dd className="mt-2.5 font-sans text-[16px] font-light leading-[1.7] text-ms-espresso/85">
-                    {note.body}
-                  </dd>
-                </StaggerItem>
-              ))}
-
-              <StaggerItem y={18} className="border-t border-ms-bronze/25 py-5">
-                <dt className="eyebrow font-normal text-ms-bronze">Hours</dt>
-                <dd className="mt-2.5 font-sans text-[16px] font-light leading-[1.7] text-ms-espresso">
-                  {PREMISES.facts
-                    .find((fact) => fact.label === "Hours")
-                    ?.lines.map((line) => (
-                      <span key={line} className="block">
-                        {line}
-                      </span>
-                    ))}
-                </dd>
-              </StaggerItem>
-            </Stagger>
-
-            <Reveal delay={0.3} className="mt-8">
-              <PillSolid
-                href={CONTACT.map.directionsUrl}
-                className="min-h-13 px-8"
-              >
-                {CONTACT.map.directionsLabel}
-              </PillSolid>
-            </Reveal>
           </div>
+        </Wipe>
 
-          <Wipe className="lg:col-span-8">
-            <div className="relative h-[380px] w-full overflow-hidden rounded-[24px] ring-1 ring-ms-bronze/25 sm:h-[460px] lg:h-[560px]">
-              <iframe
-                title={CONTACT.map.frameTitle}
-                src={CONTACT.map.embedUrl}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 h-full w-full border-0"
-              />
-            </div>
-          </Wipe>
+        <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between lg:mt-12">
+          <Reveal delay={0.15}>
+            <dl>
+              <dt className="eyebrow font-normal text-ms-terracotta-deep">Address</dt>
+              <dd className="mt-2.5 font-sans text-[17px] font-light leading-[1.65] text-ms-espresso">
+                {/*
+                  The letterhead's three lines, from one place, rather than
+                  three fields picked out by hand -- which is how the suburb
+                  came to be missing from here when the address gained one.
+                */}
+                {brand.address.lines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </dd>
+            </dl>
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <PillSolid
+              href={CONTACT.map.directionsUrl}
+              className="min-h-13 shrink-0 px-8"
+            >
+              {CONTACT.map.directionsLabel}
+            </PillSolid>
+          </Reveal>
         </div>
       </Wrap>
     </section>

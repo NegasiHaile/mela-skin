@@ -5,6 +5,32 @@ Motion. Static: every route prerenders and nothing is fetched at runtime. The
 markup is still overwhelmingly server-rendered — the client boundaries are the
 motion wrappers, the hero slider and the contact form.
 
+## The vocabulary
+
+One word per concept. "Treatment" used to name all three, so the same word
+described a whole page, a family of procedures and a single line item, and the
+home page's heading was false of half its own content.
+
+| word | what it means | where it lives | how many |
+| --- | --- | --- | --- |
+| **condition** | what the patient arrives with | `/medical-dermatology` | 12 |
+| **treatment** | what the clinic does, by family | `/cosmetic-dermatology` | 10 families |
+| **service** | one named, individually sold item | the service menu | 58 |
+
+So the home section is **"Conditions and treatments"** (it was "What we treat",
+which nobody arrives at a filler wanting), the menu is the **"Service menu"**,
+and each page names its own unit and nothing else's.
+
+Two things are deliberately exempt. The `*Keywords` arrays and the opening
+phrase of each meta description are search queries, not labels — people type
+"dermatology treatments Nairobi". And generic English is fine: "no treatment you
+do not need" means what it says. The rule governs names, not the word.
+
+**The route is still `/treatment-menu`** while everything a visitor reads says
+"Service menu". Renaming it is 19 references plus the sitemap and wants a
+redirect; it is a pre-launch decision the clinic has not made. Written up in
+`docs/2026-09-03-0030-naming-and-redundancy.md`.
+
 ## Routes
 
 | Route | What it carries |
@@ -12,10 +38,10 @@ motion wrappers, the hero slider and the contact form.
 | `/` | Hero, the argument for the clinic, both service lists in summary, the consultation model, the visit, the clinician, reviews, booking |
 | `/medical-dermatology` | The twelve conditions, one anchored entry each, plus what to bring to a first appointment |
 | `/cosmetic-dermatology` | The ten cosmetic treatment families and what each does, plus the service that is not open yet |
-| `/treatment-menu` | The whole menu — 58 treatments across five sections, as a responsive table — plus the FAQ |
+| `/treatment-menu` | The whole menu — 58 treatments across five sections, as one filterable table — plus the FAQ |
 | `/skincare` | The collection the clinic will stock, then the four-step routine that makes it work |
 | `/about` | Why the clinic exists, the two providers, the six operating commitments, what a consultation records, the premises |
-| `/contact` | The booking form, the phone and email, and the map with directions |
+| `/contact` | The booking form, the email and the address, and the map with directions |
 | `/editorial` | The alternate design direction. `noindex`, and absent from the sitemap. |
 
 The home page states each thing once and hands off: the pillar cards orient,
@@ -118,7 +144,7 @@ file that carries each:
 | Decision | Where it landed |
 | --- | --- |
 | No prices anywhere on the site | `constants/menu.ts`, `components/Consultation.tsx`, `lib/jsonld.ts` — see **Pricing** above |
-| Menu as a plain, easy, responsive table | `components/MenuBoard.tsx` |
+| Menu shown simply, no prices | `components/MenuBoard.tsx` — one table; ticking a section collapses the rest |
 | Cosmetic detail belongs in clinic brochures, not on the web | `COSMETIC_PAGE.detailNote`, and the trimmed bodies in `constants/cosmetic.ts` |
 | The official palette, and the flooded sections on the *second* brown — "that darker chocolate" | `app/globals.css`, `brand/PatternField.tsx` |
 | Ranade as the secondary face | `app/layout.tsx`, `src/fonts` |
@@ -158,11 +184,13 @@ treated as historical.
 | Brandmark (vector paths) | `2_Brand Mark/SVG/…Primary Brandmark_2.svg` |
 | Gold ramp (sampled) | `2_Brand Mark/PNG/…Brandmark_1_3D Gold Emblem.png` |
 | Wordmark letterforms (vector paths) | `1_Logo/Secondary Logo/SVG/…Secondary Logo_3.svg` |
+| The footer lockup | `1_Logo/Primary Logo/SVG/…Primary Logo_2.svg`, served as the file. Not composed from the parts above — see below |
 | Larken (display face) | `5_Typography/Primary Font/Larken`, self-hosted in `src/fonts` |
 | Ranade (secondary face) | `5_Typography/Secondary Font/Ranade_Complete`, self-hosted |
 | Circle-and-sparkle pattern | `4_Pattern/`, checked against the drawn version |
 | Tagline "Richer. Radiant. You." | Letterhead + the brand's own banners |
-| Address, phone, email | `Brand Identity/Letterhead/…Letterhead_DRAFT.docx` |
+| Address, email, site | `MELA SKIN - Letterhead_vf.docx` — the FINAL sheet. The site was built on `Brand Identity/Letterhead/…Letterhead_DRAFT.docx` until 2 Sep, which had a different building AND a different domain; see `docs/2026-09-02-1400-final-letterhead-contacts.md` |
+| Phone | nowhere. The number on both sheets is not a real line, so there is none on the site |
 | Patient-journey steps | `Operations/…/Mela Skin - Focus Area.docx` |
 | The service offering — the medical conditions, the cosmetic families, laser hair removal as "coming soon" | `Resources/more-info.md`, plus two conditions from the 26 Aug meeting |
 | The treatment menu — names and structure, no figures | `Resources/REVISED MENU OF GLO365 - 2025.pdf` |
@@ -192,16 +220,47 @@ Three notes on fidelity:
   gold is in the mark and printed on every swatch of the sheet but is not one of
   the fourteen.
 
-## The pattern as a section ground
+## The pattern as a page ground
 
-**It is one image running down the whole page, with the colour changing at each
-section boundary.** That is the design and it is the constraint: a sparkle
-straddling a boundary renders its top half in one section's colour and its bottom
-half in the next.
+**It is one image running down the whole page.** Since 2 Sep it is also, for the
+light part of a page, literally one element — which is what finally made that
+true rather than nearly true.
 
-`BrandPattern` builds a tileable data-URI SVG. `brand/PatternField.tsx` paints it
-and keeps it in phase, and it is what every section uses — 34 call sites, all of
-them now just `<PatternField tone="…" />`.
+`BrandPattern` builds a tileable data-URI SVG. Two components wear it:
+
+| | where | ink |
+| --- | --- | --- |
+| `brand/GroundLattice.tsx` | once, on `.ms-ground` — the whole light body of a page | one translucent amber, `rgba(140,84,10,·)` |
+| `brand/PatternField.tsx` | per band, on the three dark ones: hero, page hero, footer | opaque, tuned to the flat field colour |
+
+**Why the light lattice had to become one layer, and one ink.** A layer per band
+put a full-width hairline at every join, twice over, and both failures came from
+the same root: the tile was tuned to flat grounds, and the ground is a gradient
+now.
+
+- **The ink stepped.** An opaque tile has to be tuned to one ground, so it had to
+  change where the tone changed. Measured on `/about`: 4-7 units out of 255,
+  across 87-99% of the page width, three times down the page.
+- **Then, once translucent, the ink doubled.** Two bands share a boundary that
+  rarely lands on a whole pixel, and the browser gives each of them that whole
+  row, so both painted it. Opaque, the second just covered the first; translucent,
+  they add. Measured on `/medical-dermatology`: 18.8 units.
+
+One layer has no internal boundary and can do neither. It also replaced six to
+nine phase measurements per page with one, and the per-band depth constant — which
+stepped by about 1.7 units at every join — with a mask that does not step at all.
+No ground seam on any route now exceeds **3.0 units**, and that figure is the same
+on every page because it is the pattern's own circle edges.
+
+The ink is **fitted, not picked**: one colour and one alpha per gradient stop,
+least squares against what the four opaque tones rendered over their own grounds.
+Worst residual is under four units, against a step of four to seven that it
+removes. `#8C540A` sits on the line all four old pairs were already walking —
+each was its ground pushed a few percent toward this colour, which is why one ink
+fits all four.
+
+`/editorial` still runs the opaque per-band path through its own component tree,
+on flat card grounds, where that is correct.
 
 **What every section shares, and why it has to.** The pattern used to restart at
 every boundary because four things were per-section props, and all four had to
@@ -210,33 +269,81 @@ become page-wide:
 | | why it could not stay per section |
 | --- | --- |
 | `scale` | Two sections at 400px and 620px can never line up, whatever else is done. One `TILE_W` of 520 for the site. |
-| `drift` | Per-section parallax *is* per-section phase drift. One global value now, set on `:root` by `PatternDrift`. |
+| `drift` | Per-section parallax *is* per-section phase drift. One global value, set on `:root` by `PatternDrift`. Horizontal — see below. |
 | `fade` | A mask that fades the motif out towards a section edge puts a gap at exactly the join we are hiding. Gone. |
 | `opacity` | Not an alignment problem, but it had drifted to seven values for four grounds. One number per tone. |
 
 **The phase.** A repeating background starts at its own element's top-left, so
 two stacked sections both start a fresh tile. Each layer therefore offsets itself
-by `-(its distance from the top of the document mod TILE_H)`, which lands it on
-the tile the page-wide lattice would have there. Measured in an effect rather than
-derived, with a `ResizeObserver` on the body, because section heights depend on
-content, fonts and images. Before hydration each section starts its own tile,
-which is the old behaviour — briefly out of phase, never missing.
+by `-(its distance from the top of the document mod TILE_H)`, which lands it on the
+tile the page-wide lattice would have there. Measured in an effect
+rather than derived, with a `ResizeObserver` on the body, because section heights
+depend on content, fonts and images. Before hydration each section starts its own
+tile, which is the old behaviour — briefly out of phase, never missing.
 
-**The overhang is exactly one tile**, top and bottom. Not a round number picked
-for comfort: at any other size the tile origin shifts and has to be corrected for
-in the phase. At `TILE_H` the correction is a no-op, because
+**The overhang is exactly one tile**, on all four sides — `TILE_H` top and bottom
+for the phase, `TILE_W` left and right for the drift. Not a round number picked
+for comfort: the pattern is periodic with exactly those two lengths, so a
+translation that wraps at one of them is invisible and an overhang of exactly that
+much can never expose an edge. `TILE_H` also costs the phase nothing, since
 `(docTop - TILE_H) mod TILE_H` equals `docTop mod TILE_H`.
 
-**The drift wraps at one tile**, which is invisible: the pattern is periodic with
-exactly that period, so translating by `t` and by `t - TILE_H` paint the same
+**The drift pans sideways, and it used to counter-scroll.** The ground travelled
+up at 6% of the scroll distance, so the lattice appeared to lag behind the page —
+the most common parallax there is, and against a motif this large it read as the
+whole background sliding. It moves across now, at 9%: the type, the rules and the
+cards all move vertically, so a ground that also moves vertically competes with
+them and a ground that moves across does not.
+
+Horizontal is also the axis this pattern can afford to move on. Vertically the
+tile has a phase pinned to the document or the sections stop lining up;
+horizontally there is nothing to line up against.
+
+**It wraps at one tile width**, which is invisible: the pattern is periodic with
+exactly that period, so translating by `t` and by `t - TILE_W` paint the same
 pixels. It is a `transform` rather than a moving `background-position`, so
-scrolling composites instead of repainting eight tiled backgrounds. Reduced motion
+scrolling composites instead of repainting nine tiled backgrounds. Reduced motion
 never sets the property and the layers fall back to `0px`.
+
+**A zoom was tried on 1 Sep and reverted the same day**, and the arithmetic is
+worth keeping so it is not tried a third time. Three things cannot all hold: one
+lattice running unbroken down the page, a zoom you can see, and no sliding.
+Anchored to the document the lattice stays unbroken, but its boundaries sit at
+multiples of the tile height, so growing the tile by a fraction `f` slides the
+boundary near depth `d` by `d x f` — and keeping that slide down forces `f` so
+small that nothing is visible. Anchored per band the zoom is visible with no
+slide, but neighbouring bands sit at different scales and the arcs step at every
+join. **The connected flow down the page is worth more than the movement**, and
+the pan already gives the ground the life a zoom was being asked for.
 
 **What is still per section: the colour.** Each tone's sparkle colour IS the
 section's own background, so the interstices disappear into the ground and only
-the circles read. Tones are keyed to the grounds they sit on — `field`,
-`espresso`, `panel`, `shell`, `paper`, `cream`, `sand`.
+the circles read. Tones are keyed to the grounds they sit on — `field`, `panel`,
+`shell`, `paper`, `cream`, `linen`, `sand`, plus `hero-committed` for the hero
+demo's brown.
+
+**The tile paints circles on nothing.** It used to open with a `<rect>` filled
+with the section's own ground so the interstices matched the band. On a flat
+ground that rect is provably invisible - the layer composites as `opacity x tile
++ (1 - opacity) x ground`, and in the interstices the tile pixel WAS the ground -
+so removing it changed nothing on screen. On a ground that ramps it changes
+everything: one flat colour at 0.4-0.5 opacity dragged half the ramp back toward
+the band's own colour.
+
+**A ramp cannot change which ink the lattice needs.** A tile is one fixed set of
+colours, so across a light-to-dark ramp a lattice toned for either end is wrong at
+the other: linen's would invert over a darkening ground, the field's would be dark
+blobs over a lightening one. Fixing that means cross-fading two masked lattice
+layers, which was built on 1 Sep and taken out the same day when both joins that
+needed it went back to hard edges. `RampTone` is typed to exclude the dark grounds
+so the trap cannot be re-entered by accident. Between two light grounds the two
+tiles differ by two or three percent of one colour, which is why every ramp that
+is left needs one unmasked layer and nothing more.
+
+**A stroked version of the pattern was tried on 31 Aug and rejected.** Hairline
+circle outlines with the brandmark's own sparkle picked out at each node. It is written up in `docs/2026-09-01-0030-light-ramp-and-pattern-motion.md` with what it cost and
+what it bought; the short version is that the clinic wanted the pattern it
+already had, and the filled tile here is that pattern unchanged.
 
 **Two traps, both of which bit.**
 
@@ -252,6 +359,96 @@ A section carrying a `PatternField` must (a) be `relative overflow-hidden` and
 (b) put its own content in a positioned wrapper — usually `<Wrap className=
 "relative">`. The field is absolutely positioned and would otherwise paint over
 static in-flow content.
+
+## No tracked-caps kickers
+
+**There is no small uppercase title above any heading on this site.** 1 Sep: the
+small titles "makes it AI generated UI", which is the right read — a 12px
+tracked-caps kicker over a display heading is the single most recognisable tell of
+a generated layout, and in nearly every case here it was saying a word the heading
+under it already said.
+
+Twelve went outright: the page-hero subject line, and the kickers over the
+consultation, clinician-teaser, booking, assessment, providers, map, partners and
+coming-soon headings.
+
+Four were the only name their content had, so they were promoted rather than
+removed:
+
+| | was | is |
+| --- | --- | --- |
+| Pillar cards | `Medical dermatology` in 12px caps over `Diagnosed first` as the heading | the subject IS the heading; the phrase is an italic Larken line under it |
+| The two treatment rails | 12px caps | Larken 1.5/1.7rem |
+| "At your appointment" | 12px caps | Larken 1.3rem |
+| `Callout`'s label, incl. "On deeper skin" x10 on /medical | 12px caps | Larken 1.2rem |
+
+Three folded into what they labelled: the jump bar's "Jump to" (a row of condition
+names is self-evidently a jump list), and "On the menu" — dropped above the pill
+list on /cosmetic, folded into the value on the home cards, which now read
+"4 on the menu" in one line rather than a caps label over a number.
+
+**What still uses the `eyebrow` utility, and why it is not the same thing:**
+definition-list terms (Address, Hours, Parking), the footer's four column
+headings, the mobile menu's Call and Email actions, product categories on the
+skincare cards, and every `PhotoSlot` label. Those are data labels and unfinished
+markers, not titles over headings. The `Eyebrow` primitive in `ui.tsx` is gone —
+it had no callers.
+
+## The pattern's depth ramp
+
+**Faint at the top of a page, full strength by four fifths of the way down**, which
+is what `Resources/MELA SKIN - Letterhead_vf.docx` does. Measured off that
+artwork — the difference between an interstice and the middle of a circle, row by
+row — rather than chosen:
+
+| depth | 5% | 20% | 35% | 45% | 55% | 65% | 80% | 100% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| strength | 0.31 | 0.46 | 0.54 | 0.77 | 0.85 | 0.85 | 1.00 | 1.00 |
+
+**The light ground does not ramp any more.** The clinic looked at it and kept the
+top: "the entire page patter color should be as what of on the top part under the
+hero section of the pattern color." So `GroundLattice` paints one strength
+everywhere — `opacity: 0.15`, which is what the ramp used to evaluate to at the
+top of the ground, averaged over the routes (measured 0.1356 to 0.1716, mean
+0.1514) and rounded.
+
+A single constant also settles something the ramp got wrong on its own: it was a
+fraction of each *document*, and documents differ in length, so the top of
+`/contact` rendered 27% stronger than the top of `/medical-dermatology`. The thing
+being pointed at was not the same on every route.
+
+It still softens a little toward the footer, and nothing is doing that on purpose:
+the ink is translucent, so its contrast is `alpha x (ink - ground)`, and the ground
+darkens down the page. About 6.2 units of blue under the hero against 4.6 at the
+booking band — under two units across a whole page.
+
+**The three dark bands still ramp**, and `DEPTH_FLOOR = 0.32` is the letterhead's
+own measured 0.31 rounded. It sat at 0.248 for a few hours on 2 Sep, which was the
+right number for the *light* ink — translucent, over a ground that lightens toward
+the top, where more contrast comes per unit of alpha — and the wrong one here once
+that ink moved to `GroundLattice`. Every ground this file still paints is flat, so
+alpha and contrast are the same number. Each dark band multiplies its tone's
+opacity by where its own MIDDLE sits in the document, the middle and not the top,
+because a band is often taller than a screen. Computed in the same effect as the
+phase, off the same rect.
+
+## No horizontal card scrollers
+
+Both lists in "What we treat" were horizontal rails and are **responsive grids**:
+twelve condition tiles at four across, ten treatment cards at three. A horizontal
+scroller on a desktop page has no affordance — no scrollbar, no arrows, and a
+gesture most visitors never try — so it showed four of twelve and three of ten and
+quietly kept the rest. A grid is also keyboard-reachable, prints, reflows on a
+phone with no gesture, and is read whole by a crawler.
+
+## Icons, not pictures, on the treatment cards
+
+Every cosmetic family renders the treatment mark on the brand ground. Five used to
+carry generated imagery; it is gone, along with 14MB of orphaned files, because it
+was not the clinic's work and five illustrated cards beside five iconographic ones
+made the grid look half-finished. `constants/cosmetic.ts` keeps the `image` field
+and `TreatmentMedia` keeps the branch, so a real photograph of this clinic's own
+work drops in per family with no component change.
 
 ## Placeholders
 
@@ -289,6 +486,22 @@ Beyond that, three things need a human before this goes live:
 4. **The reviews are deliberately empty.** The clinic has not opened, so there
    are no patients to quote. Each card states what belongs in it. Get written
    consent before publishing any real ones, and keep attribution to initials.
+5. **Three of the four social accounts have no handle.** LinkedIn is live;
+   `constants/placeholders.ts` → `SOCIAL` still has Instagram, Facebook and
+   TikTok on `href: null`, and the footer renders each of those as a dashed slot
+   rather than as a link to nowhere — a dead social icon is worse than a missing
+   one, because it gets clicked. Put the profile URL in `href`, take the
+   brackets off `label`, and it becomes a link; delete an entry for a platform
+   the clinic is not on. `lib/jsonld.ts` reads the same list for `sameAs`, so
+   filling one in also tells Google about it. WhatsApp is deliberately not in
+   that list: it is a way of reaching a person rather than a feed, and it is
+   still unbuilt.
+6. **There is no phone number anywhere on the site.** The number on both
+   letterheads is not a line anybody answers, so `brand.phone` and
+   `brand.phoneHref` are deleted rather than blanked — which makes every call
+   site a compile error the day a real one arrives. It is the one unconfirmed
+   fact NOT held as a bracketed placeholder, because those render, and a footer
+   reading "[Phone number]" is worse than a footer with no phone in it.
 
 ## Two directions
 
@@ -297,7 +510,7 @@ delete the other.
 
 | Route | Direction | Shape |
 | --- | --- | --- |
-| `/` | **Immersive** | Full-bleed sections flooded with `ms-field`, wide-tracked Larken caps, pill controls, and a hero that is one background image with four things on it |
+| `/` | **Immersive** | Full-bleed sections on a four-step light ramp with a flooded hero and footer, wide-tracked Larken caps, pill controls, and a hero that is one background image with four things on it |
 | `/editorial` | **Editorial** | Rounded cards floating on `ms-paper`, mixed roman/italic headings, square buttons, nav inside the hero card |
 
 `/` uses `src/components`, `/editorial` uses `src/components-editorial`. They
@@ -306,6 +519,131 @@ placeholders and the motion vocabulary stay in one place. Only the immersive dir
 links into them rather than duplicating them, and is `noindex` so it never
 competes with `/` in search. When you settle on one, delete the other component folder
 and its route.
+
+## Section grounds: one gradient, and the footer
+
+**Every route is the same shape: a flooded hero, a light body, a flooded
+footer.** Nothing between them is dark and nothing between them is faded.
+
+**The light body is ONE gradient**, on a wrapper that holds every light band:
+
+```css
+.ms-ground {
+  background-image: linear-gradient(
+    to bottom in oklab,
+    var(--color-ms-shell),   /* #FDFCF8 — the colour under the hero        */
+    var(--color-ms-linen)    /* #E8D5BB — the colour of the booking band   */
+  );
+}
+```
+
+The bands inside it are transparent and carry no ground of their own. Sampled on
+`/about`: `#FAF8F3` under the hero, ramping monotonically to `#E4CFB3` at the
+booking band, no step anywhere.
+
+**It is a wrapper and not a background on `main`, so nothing has to be
+measured.** The wrapper begins where the hero ends and ends where the footer
+begins, so `0%` and `100%` are exactly the two colours asked for. On `main` the
+first stop would land at the top of the *hero*, and each page's visible top would
+start a tenth of the way into the ramp — by a different amount on every route,
+because the heroes are different heights.
+
+**Adding a band needs nothing but the band.** No neighbour to declare, no ground
+to pick, no tone to choose.
+
+### What this replaced, and why
+
+A four-step ramp of flat grounds — `ms-shell`, `ms-paper`, `ms-cream`,
+`ms-linen` — where every band also painted a 96/140px opaque gradient at each
+end, running to the midpoint it shared with its neighbour. Out with it went the
+per-band `bg-ms-*`, both ramp elements, the `above`/`below` props at 24 call
+sites, the `--ms-ramp` token, the `RampTone` type and the `meet()` helper.
+
+The ramps worked. They were also eight or nine transitions per page, each one a
+fact stated twice: a band declared its own ground *and* the grounds either side
+of it. A wrong `above` rendered as a band fading in from a colour that is not
+there, and reordering a page meant editing the bands on both sides of the move.
+The four tokens all still exist — they are the palette — and `ms-shell` and
+`ms-linen` are now the two ends of the gradient rather than steps one and four.
+
+Written up in `docs/2026-09-02-1800-one-ground-one-lattice.md`.
+
+### Two joins stay hard, and there is nothing to divide between them
+
+**The hero handing over to the ground, and the ground handing over to the
+footer.** Both deliberate, and they are the only two joins on the site between a
+light ground and the field colour. Each ends one pixel inside what follows
+(`main > section, main > .ms-ground { margin-bottom: -1px }`), because a band
+whose height lands on a fractional pixel can otherwise show a hairline of the
+page ground — `#FDFCF8`, the lightest colour in the palette — against the dark
+band beside it. **There is no join inside the ground to guard**: it is one
+gradient on one element.
+
+**There is no horizontal rule anywhere near a boundary.** The gradient is the
+division; a line and a gradient across the same join say the same thing twice,
+and the line is the one that reads as a separator rather than as a handover.
+Three went for that reason: the border under `/medical-dermatology`'s jump-to
+bar, the gold hairline `SectionHead` drew above every heading, and the
+full-width bronze rule between the two treatment rails. The `hairline-gold`
+utility went with them. Every border still in the codebase is inside a band —
+card edges, ruled list entries, form field underlines, the menu's sticky filter
+bar — and the footer has exactly one, over its legal copy.
+
+### `content-visibility` is scoped to the ground
+
+`.ms-ground > section`, not `main > section:not(:first-of-type)`. The hero is
+the one band outside the wrapper, so the exclusion it needs — it carries the
+header, whose mobile menu is positioned out of the section, and containment
+would clip it — is structural now rather than positional. The menu page's priced
+bands are nested a level deeper and so are still not matched, which is what
+keeps its sticky nav sticking.
+
+One consequence: `contain-intrinsic-size: auto 720px` guesses an unrendered
+band's height, so the wrapper's height, and therefore the gradient's scale, is an
+estimate until every band has rendered once. On a first scroll down the home page
+the ground drifts by about a tenth of the span — four units of red, seven of
+blue. Not worth giving up the containment for.
+
+### The bands themselves
+
+**The home page and `/about` run the same six**, after the 1 Sep daily took four
+sections off the site:
+
+| | home | /about |
+| --- | --- | --- |
+| | hero `field` | hero `field` |
+| | Focus | Story |
+| | Pillars | Clinician |
+| | Treatments | Principles |
+| | Visit | Assessment |
+| | AboutTeaser | Premises |
+| | BookingCta | BookingCta |
+| | footer `field` | footer `field` |
+
+Only the two dark ends name a tone now. **What this replaced:** the home page
+alternated near-white and `#2C190B` six times — three flooded bands with a light
+one between each pair — and `/about` five. Two notes from the 31 Aug review: the
+colour was "to durastic from one to another", and then "we do not have to use
+much darker version other than the footer in the home page". The footer's own
+colour is untouched.
+
+**Where the brown still is**, since it is no longer a section ground: the hero,
+every `PillSolid`, the submit button, the fixed header once the page moves, the
+tint on the medical tiles, and the footer.
+
+### One background had to be re-tinted for the ramp
+
+MenuBoard's filter bar is `position: sticky` and travels about 3,900px down the
+board. Its section used to be a flat `bg-ms-shell`, so a `bg-ms-shell/95` bar
+matched it the whole way; against the ramp, by the bottom of the table it was 49
+units of blue too light — a pale box sliding down a warm page. It is
+`bg-ms-cream/55` now, the midpoint of the ramp at half strength, which is within
+about ten units of the ground at *both* ends. Chip text holds 8.84:1 or better
+all the way down.
+
+Every other light background was checked and left. They are cards, chips and
+plates, which are meant to read as sheets on the ground, and most are already
+translucent so they pick the ramp up on their own.
 
 ### The immersive direction (`/`)
 
@@ -331,15 +669,18 @@ asked for what.
 `SiteHeader` is the bar, and it is the same component on every route —
 `tone="dark"` on the field colour, `tone="light"` on paper. It does not stick.
 The long pages pin their own section nav instead, which is what you actually
-want on screen while scanning sixty rows of menu.
+want on screen while scanning the menu.
 
 ### The mobile menu
 
 Below `lg` the links collapse into a panel that drops the full width of the
 screen from the underside of the bar: espresso ground, a gold hairline across
 the top, 72px rows set in Larken at 1.7rem and divided by hairlines, then the
-phone and email under a gold rule, then a full-width booking button. The rows
-rise into place in sequence.
+email under a gold rule, then a full-width booking button. The rows rise into
+place in sequence.
+
+There were two rows under that gold rule until 2 Sep, the phone over the email.
+The phone came off the whole site; the email inherited the rule.
 
 Three things about it are load-bearing:
 
@@ -385,9 +726,23 @@ Two conventions hold the tone together:
 - **One italic word per heading.** Larken italic in `ms-terracotta` marks the
   operative word ("studied *less*", "one *roof*", "start to *finish*"). It is
   the only decorative move in the type, so it should stay at one per heading.
+- **The home hero is a demo switcher with three options**, and one of them is a
+  live WebGL scene: `hero/HeroSerum.tsx` models a glass dropper bottle as signed
+  distance fields and refracts through it, in a single fragment shader with no 3D
+  library. The canvas is transparent, so the brand pattern is the ground. It
+  parks when scrolled past or hidden, renders one still frame under reduced
+  motion, and vanishes where WebGL2 is unavailable. It all goes when the clinic
+  picks a hero.
+- **The site header is `position: fixed`, and it renders its own spacer.** Its
+  height is one constant in `SiteHeader.tsx` read by both, and `html` carries a
+  matching `scroll-padding-top` so every anchor on the site clears it. Anything
+  else that sticks (only `MenuBoard`'s filter bar) offsets by the same three
+  values.
 - **Cards separate by lightness, not by rules.** `ms-shell` sits above
-  `ms-paper`, tinted cards use `ms-sand/40`, reversed cards use `ms-panel`.
-  Borders are hairlines at low opacity; nothing is boxed in hard strokes.
+  `ms-paper`, tinted cards use `ms-sand/40`, reversed cards use `ms-panel`, and
+  the nav dropdowns use `ms-drop`, a near neighbour of the `ms-field` hero they
+  open over rather than a step up from it. Borders are hairlines at low opacity;
+  nothing is boxed in hard strokes.
 - **The card is the section, so the card carries the motion.** `Card` animates
   itself — a short rise out of a 1.5% underscale as it enters, which reads as a
   sheet being laid onto the paper. Everything inside then staggers against that
@@ -535,7 +890,7 @@ and the frame budget it cost was. That single change took p95 from 33 ms to
 
 **Paint.** `content-visibility: auto` on every section after the first lets the
 browser skip layout and paint for bands nowhere near the viewport, which
-matters on a 13,000px menu page. The first section is excluded on purpose: it
+matters on a long menu page. The first section is excluded on purpose: it
 holds the header, and the containment would clip the mobile menu panel. The
 `backdrop-blur` came off the panels that repeat — the condition cards and the
 cosmetic family cards, each its own backdrop root — and their fills went up a notch
@@ -561,9 +916,10 @@ could click anything.
 bar was offering /contact three times inside a few centimetres. It is still
 reachable from every route — the pill, each page hero's second button, the
 BookingCta band that closes every route, the footer's "Contact & directions", and
-the mobile menu's booking button. Tap-to-call stays in the mobile menu, where it
-is the shortest route to an appointment rather than a duplicate of the button
-next to it.
+the mobile menu's booking button. What is left in the mobile menu under its gold
+rule is the email address: one tap into an app rather than a duplicate of the
+button next to it, which is what tap-to-call was there for until the number came
+off.
 
 The two panels are deliberately different shapes. Treatments is a pair of
 picture cards, because the choice there is which half of dermatology you need.
@@ -594,6 +950,132 @@ nav wraps to two lines without saying so.
 **Mobile (below lg).** The same full-width `<details>` panel, with Treatments
 as a nested `<details>` inside it. Still no JavaScript.
 
+## The footer
+
+Four parts, on every route:
+
+```
+the mark        the supplied logo at its column's full width,
+                the social row centred under it
+the four lists  medical, cosmetic, the menu, the clinic
+contact         the email at the left, the address at the right
+                ────────────────────────────────────────────
+the bottom bar  the copyright at the left, the disclaimer at the right
+```
+
+**One rule in the whole footer**, over the legal copy. Everything above it is
+held apart by space, which is the same call the section grounds got — "please
+avoide using separator line between sections, or you are using space that shows
+light colored line". The contact strip had a hairline over it for an afternoon
+and it came off: two rules 92px apart is one more than the site draws anywhere
+else, and the strip sits 80px under the columns against 28 over the rule, so
+it reads as the head of the lower band without one.
+
+**The mark is the supplied file, not a reconstruction.**
+`1_Logo/Primary Logo/SVG/MELA SKIN - Primary Logo_2.svg` is copied into
+`public/brand/` and served with a plain lazy `<img>` at its own viewBox,
+245.7 x 110.62. `_2` is the cream variant, which is the one drawn for a dark
+ground. A stacked lockup WAS built here from the parts in `brand/Marks.tsx` —
+emblem, wordmark paths, live descriptor, at gaps measured off the printed sheet
+— and it was rejected on 2 Sep: "I was expecting exactly the same as what is in
+this. No need to update." That is the right call. A logo is a supplied artefact
+and reproducing one from its pieces is a decision nobody asked for, however
+carefully the proportions are measured.
+
+`<img>` and not `next/image`, because Next will not optimise an SVG unless
+`dangerouslyAllowSVG` is set: the component would pass the file through
+unchanged while adding a wrapper and a srcset that cannot apply.
+
+**One thing was added to the file, and only one.** Its descriptor is live
+`<text>` in Ranade with an absolute `x` on each tspan, and an SVG loaded through
+`<img>` cannot reach the page's webfonts — so it drew in the browser's default
+serif at Ranade's letter positions and read "DERM ATOLOGY & COSMETIC CLINIC".
+There is now one `@font-face` at the top of the file's own `<style>` carrying
+Ranade Medium, subset to the sixteen characters the descriptor uses: 1,808
+bytes, 3.2KB on the file. No path, no coordinate, no colour and no glyph
+position is touched. Rebuild it from `Resources/` rather than editing it in
+place, and keep angle brackets out of any comment inside that `<style>` — it is
+XML text, not CDATA, so a tag name in a CSS comment stops the document parsing.
+
+**The file is 654KB, 495KB gzipped**, almost all of it an embedded 884px PNG of
+the 3D emblem rendering at about 35px. `loading="lazy"` is what keeps that off
+the critical path — the footer is below the fold on all seven routes — so it
+costs nothing until somebody scrolls, and then once. Resampling only the raster,
+leaving every vector path untouched, takes the file under 40KB; that is the
+clinic's call, since it changes the artwork.
+
+**It is its column's full width, and that is where 376px comes from.** The grid
+is `lg:grid-cols-12` with `gap-x-10` in a 1208px measure, so a column is 64px
+and the logo's four plus their three gaps come to exactly 376. `w-full` at `lg`;
+264px on a phone and 320 from `sm`, because the `sm` column spans the whole grid
+and `w-full` there would give a 720px logo on a tablet. The descriptor scales
+with it, from about 8px to 12px, which is the part that matters: the whole line
+is set at 7.93px in a 245.7-wide viewBox, so at 246px it drew at its own size
+and was the smallest type on the site.
+
+**The social row is centred under it**, on the lockup's axis rather than the
+footer's column — the supplied logo is a centred stack, and a row of icons hung
+off its left edge would be the one thing in that column not on that axis. They
+were at the right-hand end of the bottom bar until 2 Sep, which put the clinic's
+channels in the same breath as a KRA PIN and a medical disclaimer.
+
+**44px slots around 21px glyphs, and a real URL wears a filled disc at rest.**
+The row was 40 around 18, which is the smallest WCAG 2.5.8 allows — at 40 with
+`gap-1` the icon *centres* are exactly 44px apart, which is what the rule
+measures — and under the enlarged mark it read as a line of specks. The disc is
+`cream/18` at rest (1.66:1 against the footer) and `gold/30` on hover, a change
+of hue because gold is what every other interaction in this footer uses. An
+account with no URL renders instead as a dashed, unfocusable slot announcing
+"…, not set up yet"; nothing uses that branch right now, and it stays as the way
+to add a platform or pull one.
+
+**All four accounts are live, on one handle written two ways.** The clinic's
+handle is `mela-skin`, and only LinkedIn will take it literally — a company-page
+slug is the one of the four that permits a hyphen:
+
+| | permitted in a username | used |
+| --- | --- | --- |
+| LinkedIn (company) | letters, numbers, hyphens | `mela-skin` |
+| Instagram | letters, numbers, `.` `_` | `melaskin` |
+| Facebook (page) | letters, numbers, `.`, 5 min | `melaskin` |
+| TikTok | letters, numbers, `_` `.` | `melaskin` |
+
+So `melaskin` is not a shortening anybody chose; it is the only form those three
+accept, and it is the form the clinic already uses wherever it has to be one word
+(`melaskin.ke`, `info@melaskin.ke`). The set also feeds the JSON-LD `sameAs`, so
+the four profiles are declared to search engines from the same array.
+
+**Nobody has confirmed the clinic holds the three new ones.** LinkedIn came from
+the clinic; the others are derived from the handle it gave. If one is not theirs,
+set that `href` to `null` and bracket its `label` — see
+`constants/placeholders.ts → SOCIAL`.
+
+**The tagline is not in the footer.** It was the middle of the contact row, then
+spent an afternoon centred under this mark, and the clinic took it off the footer
+entirely. It is on the home hero and nowhere else: a brand line printed twice on
+one page is a brand line nobody reads once. `brand.tagline` still feeds the three
+heroes and the JSON-LD `slogan`.
+
+**The contact strip is two items on two margins**: the email at the left, the
+address on one line at the right. It carried the tagline in the middle first,
+which is the letterhead's arrangement and does not survive the translation —
+`auto 1fr auto` centres the tagline in the leftover space and lands it 133px
+left of the footer's axis, and `1fr auto 1fr` fixes the axis by handing the
+address a 469px half-row when it needs 476, so the one thing the line exists to
+keep on one line wraps. Two items have neither problem. Horizontal from `md`;
+the three-item version needed 1024.
+
+Two of the letterhead's five lines are deliberately absent — the phone, which is
+not a real number, and `www.melaskin.ke`, which is the address of the page you
+are reading — and the tagline is the third thing off it. Written up in
+`docs/2026-09-02-1400-final-letterhead-contacts.md`.
+
+**Its type is `ms-cream`, not `ms-sand`.** Everything in here was sand at 75%,
+which is 4.91:1 on the field colour — over the line for AA and under it for
+anything comfortable, on the one band of the page that is entirely small print.
+Measured now: links 9.22:1, the contact row 10.24, the copyright 8.27, the
+disclaimer 5.77.
+
 ## The map
 
 `/contact` embeds Google Maps through the keyless `?q=…&output=embed` form,
@@ -602,10 +1084,14 @@ account. `loading="lazy"` keeps the third-party request out of the initial
 load.
 
 **It searches the address rather than pinning coordinates**, and that is
-deliberate. The only coordinates the clinic has supplied are approximate
-(`lib/jsonld.ts` carries them, flagged), and a pin on approximate coordinates
-sends a patient to the wrong door with more confidence than no pin at all.
-Google resolves the address better than a guessed lat/lng does.
+deliberate: the clinic has supplied no coordinates at all, and a pin dropped on
+a guess sends a patient to the wrong door with more confidence than no pin at
+all. Google resolves the address better than a lat/lng nobody has stood on.
+
+There WERE approximate coordinates, in `lib/jsonld.ts`. They were Westlands',
+and the final letterhead puts the clinic in Muthaiga — so on 2 Sep they stopped
+being approximate and became wrong, and the `geo` block was deleted rather than
+moved. A wrong pin in structured data is what a phone's Maps app navigates to.
 
 `CONTACT.map.placeUrl` is a placeholder for the clinic's own Maps place link.
 Once somebody has stood outside the building with a phone, paste it there and
@@ -753,8 +1239,44 @@ All of it is Framer Motion, and all of it comes from one file: `src/motion.tsx`.
 That file sits outside both component folders because it is direction-neutral —
 `/` and `/editorial` import the same primitives.
 
-The vocabulary is deliberately small, so the page reads as one object rather
-than as a collection of tricks:
+### The trigger has a dead zone at the end of a document, and it cost the footer its small print
+
+Every reveal fires off one viewport setting,
+`margin: "0px 0px -12% 0px"` — the trigger line 12% of the viewport height above
+its bottom edge. So a block fires when `top < scrollY + 0.88 x V`, and scrolling
+stops at `scrollY = doc - V`. The highest threshold a reader can ever reach is
+therefore `doc - 0.12 x V`, and **any block whose top is inside the last
+0.12 x V of a document never fires at all** — 108px at a 900px viewport, 173px at
+1440.
+
+The footer's legal bar sits 60px from the end of the document on every route. It
+needed a viewport under 500px tall to appear, and had never rendered once. Two
+fixes, for two different things:
+
+- **`eager`**, a prop on `Reveal` and `Stagger`, is the same once-only trigger
+  with `margin: "0px"` — no dead zone at either end. Every motion wrapper in the
+  footer takes it. Anything new placed within about 200px of the end of a page
+  needs it too.
+- **The legal bar does not animate at all.** It is plain markup at full opacity.
+  It is the one block on the site that is compliance text — registered name, KRA
+  PIN, regulator, medical disclaimer — and the reason to animate two lines of it
+  was never strong enough to put them behind an observer.
+
+`amount` is not the fix: a fractional threshold can never be satisfied by a block
+taller than the screen, which trades this bug for a worse one on the long
+sections.
+
+**Headless Chrome cannot verify any of this.** Under `--virtual-time-budget` it
+does not re-deliver `IntersectionObserver` on a programmatic scroll: measured on
+`/contact`, 19 of 56 `[data-motion]` elements had fired at scroll 0 and still
+exactly 19 after scrolling to the bottom. So the `eager` fix is verified
+arithmetically and the legal bar statically, from the built HTML. Written up in
+`docs/2026-09-02-1800-one-ground-one-lattice.md`.
+
+### The vocabulary
+
+Deliberately small, so the page reads as one object rather than as a collection
+of tricks:
 
 | Primitive | What it does | Where it is used |
 | --- | --- | --- |
@@ -810,7 +1332,7 @@ src/
     page.tsx               /
     medical-dermatology/   the twelve conditions
     cosmetic-dermatology/  the ten treatment families
-    treatment-menu/        the menu, as a responsive table, + the FAQ
+    treatment-menu/        the menu, as one filterable table, + the FAQ
     skincare/              the collection, and the routine that uses it
     editorial/             the alternate direction (noindex)
     globals.css
@@ -838,7 +1360,8 @@ src/
     hero/        TWO HEROES UNDER REVIEW + the toggle between them:
                  HeroSwitcher (demo control), HeroPhoto (A), HeroOriginal (B),
                  HeroBackground (A's sliding ground), HeroOriginalFrames (B's)
-    MenuBoard    the menu as a per-section responsive table
+    MenuBoard    the menu as one table; section filters tint and collapse
+    Partners     /about: the two skincare ranges, as placeholders
     Skincare     the collection grid + the routine
     icons.tsx    24 condition/treatment/skincare marks + a name registry
   fonts/         Larken — 4 cuts (the family is not variable despite the
@@ -852,7 +1375,7 @@ src/
 No component hard-codes a service name, a heading or a paragraph.
 `constants/menu.ts` holds the menu; `constants/conditions.ts` and
 `constants/cosmetic.ts` hold every service; `constants/copy.ts` holds the prose
-around them. Everything else reads from those — the menu tables, the cosmetic
+around them. Everything else reads from those — the menu table, the cosmetic
 cards, the footer columns, the page metadata, the JSON-LD, the counts on the
 pillar cards, and the editorial direction as well as the immersive one.
 

@@ -1,7 +1,7 @@
-import { CONTACT_DETAILS, brand, todo } from "@/constants";
+import { CONTACT_DETAILS, PRIMARY_CLINICIAN, brand, todo } from "@/constants";
 import { Reveal, Stagger, StaggerItem } from "@/motion";
 import { PatternField } from "./brand/PatternField";
-import { ButtonGhost, ButtonPrimary, Card, Inner, Shell } from "./ui";
+import { ButtonPrimary, Card, Inner, Shell } from "./ui";
 
 export function Booking() {
   return (
@@ -24,7 +24,7 @@ export function Booking() {
 
             <Reveal delay={0.18}>
             <p className="mt-6 max-w-[54ch] font-sans text-[16px] font-light leading-[1.85] text-ms-cream/80">
-              {todo.consultLength} minutes with {todo.clinicianName}: an
+              {todo.consultLength} minutes with {PRIMARY_CLINICIAN.name}: an
               examination, a diagnosis in plain language, and a written plan you
               leave with. {todo.consultFee}, redeemable against treatment
               [confirm your policy].
@@ -33,18 +33,21 @@ export function Booking() {
 
             <Reveal delay={0.26}>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-                <ButtonPrimary href={brand.phoneHref} tone="dark">
-                  Call {brand.phone}
-                </ButtonPrimary>
-                <ButtonGhost href={`mailto:${brand.email}`} tone="dark">
+                {/*
+                  ONE BUTTON, since 2 Sep. It was "Call +254 ..." over a ghost
+                  "Email the clinic"; the number is not a real line, so the
+                  email is promoted into the primary and the ghost has nothing
+                  left to be.
+                */}
+                <ButtonPrimary href={`mailto:${brand.email}`} tone="dark">
                   Email the clinic
-                </ButtonGhost>
+                </ButtonPrimary>
               </div>
             </Reveal>
 
             <Reveal delay={0.34}>
               <p className="mt-7 font-sans text-[12px] font-light tracking-[0.05em] text-ms-sand/65">
-                Online booking opens {todo.bookingOpens}.
+                Online booking opens {todo.openingDate}.
               </p>
             </Reveal>
 

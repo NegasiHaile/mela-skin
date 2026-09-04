@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { brand } from "@/constants";
-import { patternTileUrl } from "../brand/BrandPattern";
+import { PatternField } from "../brand/PatternField";
 import { HeroOriginalFrames } from "./HeroOriginalFrames";
 import { SiteHeader } from "../SiteHeader";
 import { MountItem, MountStagger, ScrollAway } from "@/motion";
@@ -32,17 +32,20 @@ import { PillGhost, PillSolid, Wrap } from "../ui";
 
   TWO DELIBERATE DEVIATIONS from the commit, both stated rather than smuggled:
 
-  1. The second button read "See the prices". It says "Treatment menu" here. The
+  1. The second button read "See the prices". It says "Service menu" here. The
      26 Aug meeting removed pricing from the site and there are no prices behind
      that link any more, so the original wording would send somebody looking for
      something the clinic decided not to publish. That is a content rule rather
      than a design choice, and it outranks snapshot fidelity.
-  2. The pattern is drawn inline at the committed scale and opacity rather than
-     by `PatternField`, which is now page-wide and shares one tile size so the
-     lattice runs continuously between sections. Wiring this variant back into it
-     would either break that continuity or restyle the snapshot; an inline layer
-     does neither, and it is also what lets the tile colours follow the ground
-     toggle. The motif, its 440px pitch and its 0.6 opacity are as committed.
+  2. The pattern is the page-wide `PatternField`, not the committed inline layer.
+     It was inline at first, at the committed 440px pitch and 0.6 opacity, on the
+     argument that a snapshot should be a snapshot. That was the wrong call: the
+     rest of the page runs one 520x427 lattice, phase-locked to document
+     position, so a hero on a 440px pitch cannot line up with the section under
+     it at any scroll position and the pattern visibly restarted at the hero's
+     bottom edge. Continuity is a page-wide property and it outranks the pitch of
+     one variant. The motif and the ground toggle are unchanged; the pitch is now
+     the site's and the opacity is its tone's 0.5 rather than 0.6.
 
   The header is the current one, as asked — it was excluded from the comparison.
 */
@@ -88,48 +91,41 @@ const LEGACY_PALETTE = {
 const GROUNDS = {
   dark: {
     field: "#2c190b",
-    /** The `field` tone from brand/PatternField.tsx, which this ground now is. */
-    tile: patternTileUrl("#201208", "#49250d", "#2c190b"),
+    /** Literally the page's own tone: this ground IS `--color-ms-field`. */
+    tone: "field",
   },
   committed: {
     field: "#74370c",
-    /** The `field` tone as it was on b894798, for the ground it was tuned to. */
-    tile: patternTileUrl("#5e2c09", "#966029", "#7d3f11"),
+    /** Its own tone, which exists for this toggle alone. See PatternField. */
+    tone: "hero-committed",
   },
 } as const;
 
 export type HeroGround = keyof typeof GROUNDS;
 
-/* The committed PatternField call: scale 440, opacity 0.6, no fade. */
-const LEGACY_TILE_W = 440;
-const LEGACY_TILE_H = Math.round(LEGACY_TILE_W * 0.821);
-
 export function HeroOriginal({ ground = "dark" }: { ground?: HeroGround }) {
-  const { field, tile } = GROUNDS[ground];
+  const { field, tone } = GROUNDS[ground];
 
   return (
     <section
       id="top"
+      data-no-lazy
       className="relative min-h-svh overflow-hidden bg-ms-field"
       style={{ ...LEGACY_PALETTE, "--color-ms-field": field } as CSSProperties}
     >
       {/*
         The letterhead ground, unmasked across the whole first screen. Held low
-        enough (0.6) to sit under both the display type and the 15px subcopy
-        without touching their contrast, and the portrait is a cut-out on
-        transparency, so the motif reads through the gaps around her rather than
-        stopping at a photographic plate.
+        enough to sit under both the display type and the 15px subcopy without
+        touching their contrast, and the portrait is a cut-out on transparency,
+        so the motif reads through the gaps around her rather than stopping at a
+        photographic plate.
+
+        This is the same layer every other section carries, which is the whole
+        point: one tile size, one drift, and a phase measured from the top of the
+        document, so the lattice carries on across the hero's bottom edge into
+        the section below instead of restarting there.
       */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          backgroundImage: tile,
-          backgroundRepeat: "repeat",
-          backgroundSize: `${LEGACY_TILE_W}px ${LEGACY_TILE_H}px`,
-          opacity: 0.6,
-        }}
-      />
+      <PatternField tone={tone} />
 
       {/* Portrait stack — tall & bottom-anchored on mobile; right half at lg */}
       <div className="absolute inset-x-0 bottom-0 z-0 h-[78vh] min-h-[520px] overflow-hidden lg:inset-y-0 lg:right-0 lg:left-auto lg:h-auto lg:min-h-0 lg:w-[56%]">
@@ -137,7 +133,14 @@ export function HeroOriginal({ ground = "dark" }: { ground?: HeroGround }) {
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-48 bg-gradient-to-b from-ms-field via-ms-field/70 to-transparent lg:h-40 lg:from-ms-field lg:via-ms-field/50" />
       </div>
 
-      <div className="pointer-events-none relative z-10 flex min-h-svh flex-col">
+      {/*
+        `z-40`, not the usual `z-10` -- this div carries the fixed SiteHeader,
+        and a later section's own `relative z-10` wrapper would otherwise tie
+        with this one and win the stacking comparison by DOM order, painting
+        over the header once scrolled far enough. Full explanation on the
+        identical div in components/PageHero.tsx.
+      */}
+      <div className="pointer-events-none relative z-40 flex min-h-svh flex-col">
         <SiteHeader tone="dark" />
 
         {/* Copy — absolute below nav on mobile; centred in remaining space at lg */}
@@ -192,7 +195,7 @@ export function HeroOriginal({ ground = "dark" }: { ground?: HeroGround }) {
                         tone="dark"
                         className="min-h-13 px-9 text-[13.5px] sm:min-h-14 sm:px-10 sm:text-[14px]"
                       >
-                        Book a consultation
+                        Book an appointment
                       </PillSolid>
                       <PillGhost
                         href="/treatment-menu"

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { brand } from "@/constants";
 
 /*
   Seven public routes. `/editorial` is the alternate design direction and is
@@ -6,7 +7,7 @@ import type { MetadataRoute } from "next";
   the home page in search results.
 */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://melaskin.com";
+  const base = brand.origin;
   const lastModified = new Date();
 
   return [

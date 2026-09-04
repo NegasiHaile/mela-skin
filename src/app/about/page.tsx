@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { ABOUT, META } from "@/constants";
-import { Assessment } from "@/components/Assessment";
 import { BookingCta } from "@/components/BookingCta";
 import { Clinician, Premises } from "@/components/Clinic";
 import { GoldDefs } from "@/components/brand/Marks";
 import { PageHero } from "@/components/PageHero";
 import { Principles } from "@/components/Principles";
-import { ScrollProgress } from "@/motion";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Story } from "@/components/Story";
 import { PillGhost, PillSolid } from "@/components/ui";
@@ -25,19 +23,40 @@ export const metadata: Metadata = {
   clinic, our mission and vision, and then each provider that we have a little
   bit of a bio about them." So those two come first — the story, then the
   providers — and how the clinic works, what a consultation examines and where
-  the building is follow. The providers used to sit fifth, behind six operating
-  commitments and seven assessment readings, which buried half the reason
-  somebody opens this page.
+  the building is follow.
+
+  TWO SECTIONS CAME OFF ON 1 SEP, at the daily: the skincare partners band (off
+  the whole site, not just this page) and Dr. Hailu's provider block. The
+  providers section is one clinician now, so the copy around it says one rather
+  than two.
 
   The provider and premises sections live here rather than on the home page.
   Home carries a short teaser and links across, so neither page says the same
   thing twice.
-*/
-export default function About() {
+
+  ASSESSMENT CAME OFF ON REQUEST -- "how your skin gets read" is not rendered
+  on this page for now. components/Assessment.tsx and ABOUT.assessment are
+  untouched, so putting the section back is one import and one line here.
+
+  COLOUR. Each section floods its own flat ground now and picks it from the
+  site's three-tone rotation -- see the note in app/page.tsx for what that
+  rotation is and why it replaced one continuous gradient:
+
+      PageHero    field    the opening
+      Story       shell  ┐
+      Clinician   paper  │ the rotation, one stop at a time
+      Principles  cream  │
+      Premises    shell  ┘
+      BookingCta  cream    always last, always the deepest of the three
+      footer      field
+
+  Nothing between them is faded or gradiated: the steps are small enough that a
+  hard edge is the smooth answer, and the only large steps are the hero's and
+  the footer's.
+*/ export default function About() {
   return (
     <>
       <GoldDefs />
-      <ScrollProgress />
       <main>
         <PageHero
           id="hero-about"
@@ -49,12 +68,13 @@ export default function About() {
               aria-label="On this page"
               className="flex flex-col gap-1 rounded-[20px] border border-ms-gold/30 bg-ms-espresso/35 p-7 backdrop-blur-sm"
             >
-              <p className="eyebrow mb-3 text-ms-gold">On this page</p>
+              <p className="mb-4 font-display text-[1.35rem] leading-[1.2] text-ms-cream">
+                On this page
+              </p>
               {[
                 { label: ABOUT.story.title, href: "#story" },
                 { label: ABOUT.providers.title, href: "#clinician" },
                 { label: ABOUT.principles.title, href: "#principles" },
-                { label: ABOUT.assessment.title, href: "#assessment" },
                 { label: "The premises", href: "#premises" },
               ].map((item) => (
                 <a
@@ -76,9 +96,13 @@ export default function About() {
         >
           <div className="flex flex-wrap gap-3.5">
             <PillSolid href="/contact" tone="dark" className="min-h-13 px-8">
-              Book a consultation
+              Book an appointment
             </PillSolid>
-            <PillGhost href="/treatment-menu" tone="dark" className="min-h-13 px-8">
+            <PillGhost
+              href="/treatment-menu"
+              tone="dark"
+              className="min-h-13 px-8"
+            >
               Treatment menu
             </PillGhost>
           </div>
@@ -87,7 +111,6 @@ export default function About() {
         <Story />
         <Clinician />
         <Principles />
-        <Assessment />
         <Premises />
         <BookingCta />
       </main>

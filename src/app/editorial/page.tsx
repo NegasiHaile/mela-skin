@@ -4,8 +4,6 @@ import { FeatureRow } from "@/components-editorial/FeatureRow";
 import { Focus } from "@/components-editorial/Focus";
 import { GoldDefs } from "@/components-editorial/brand/Marks";
 import { Hero } from "@/components-editorial/Hero";
-import { Reviews } from "@/components-editorial/Reviews";
-import { ScrollProgress } from "@/motion";
 import { SiteFooter } from "@/components-editorial/SiteFooter";
 import { Treatments } from "@/components-editorial/Treatments";
 import { Visit } from "@/components-editorial/Visit";
@@ -26,7 +24,6 @@ export default function EditorialDirection() {
   return (
     <>
       <GoldDefs />
-      <ScrollProgress />
       <main className="bg-ms-paper pt-3 sm:pt-5">
         <Hero />
         <FeatureRow />
@@ -35,7 +32,6 @@ export default function EditorialDirection() {
         <Visit />
         <Clinician />
         <Premises />
-        <Reviews />
         <Booking />
       </main>
       <SiteFooter />

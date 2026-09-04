@@ -1,97 +1,25 @@
-import Image from "next/image";
-import { ABOUT, CLINICIANS } from "@/constants";
-import { PatternField } from "./brand/PatternField";
-import { Drift, Reveal, Wipe } from "@/motion";
-import { PhotoSlot, PillGhost, PillSolid, Wrap } from "./ui";
+import { ClinicianBand } from "./ClinicianBand";
 
 /*
-  The clinician on the home page, in short.
+  The clinician on the home page, in full.
 
-  The full biography, the credentials and the premises live on /about. This
-  band exists so the landing page still puts a face to the clinic without
-  repeating a whole section: portrait, name, role, one line, and the way
-  through. Whoever you will actually see is the thing people scroll a clinic
-  site looking for.
+  THE BAND ITSELF IS `ClinicianBand`, shared with /contact. All this file
+  supplies is the `clinic` anchor: the two pages are otherwise identical, which
+  is the point of having one component.
 
-  Content: constants/about.ts → ABOUT.teaser, constants/clinic.ts → CLINICIANS.
+  A LIGHT BAND, `ms-shell`, like every other section on this page except the
+  footer -- see the note in app/page.tsx. ClinicianBand floods that same
+  colour on every page it appears on (/about, /contact, here), which is what
+  keeps her card looking identical everywhere without this page picking up a
+  second dark band. It briefly did flood dark, matching a rust design that
+  needed reversed type; that would have reopened exactly what the 31 Aug review
+  objected to twice on this page ("to durastic from one to another", then "we
+  do not have to use much darker version other than the footer in the home
+  page"), so the card moved to a light ground instead of the page moving to fit
+  it.
+
+  Content: constants/about.ts -> ABOUT.teaser, constants/clinic.ts -> CLINICIANS.
 */
 export function AboutTeaser() {
-  const clinician = CLINICIANS[0];
-
-  return (
-    <section
-      id="clinic"
-      className="relative overflow-hidden bg-ms-field py-24 lg:py-32"
-    >
-      <PatternField tone="field" />
-
-      <Wrap className="relative">
-        <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
-          <Wipe className="lg:col-span-5">
-            <div className="relative h-[380px] w-full overflow-hidden ring-1 ring-ms-gold/25 lg:h-[500px]">
-              {/* Null until the clinic has been photographed — see
-                  constants/placeholders.ts → photos.clinician. */}
-              {clinician.portrait.src ? (
-                <Drift distance={28} className="absolute inset-x-0 -inset-y-[9%]">
-                  <Image
-                    src={clinician.portrait.src}
-                    alt={clinician.portrait.alt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                    className="object-cover object-center"
-                  />
-                </Drift>
-              ) : (
-                <PhotoSlot
-                  tone="dark"
-                  label={clinician.portrait.label}
-                  className="h-full w-full"
-                />
-              )}
-            </div>
-
-            {/* Same rule as /about: a stand-in says so on the page. */}
-            {clinician.portrait.caption ? (
-              <p className="mt-3.5 font-sans text-[13px] font-light tracking-[0.02em] text-ms-sand/70">
-                {clinician.portrait.caption}
-              </p>
-            ) : null}
-          </Wipe>
-
-          <div className="lg:col-span-6 lg:col-start-7">
-            <Reveal y={18}>
-              <p className="eyebrow text-ms-gold">{ABOUT.teaser.eyebrow}</p>
-            </Reveal>
-
-            <Reveal delay={0.12}>
-              <h2 className="display-caps mt-6 text-[clamp(2rem,3.6vw,3rem)] text-ms-ivory">
-                {clinician.name}
-              </h2>
-            </Reveal>
-
-            <Reveal delay={0.2}>
-              <p className="eyebrow mt-5 font-normal text-ms-gold">
-                {clinician.role} &nbsp;&middot;&nbsp; {clinician.registration}
-              </p>
-            </Reveal>
-
-            <Reveal delay={0.28}>
-              <p className="mt-8 max-w-[48ch] font-sans text-[17px] font-light leading-[1.85] text-ms-cream/80">
-                {ABOUT.teaser.body}
-              </p>
-            </Reveal>
-
-            <Reveal delay={0.36} className="mt-10 flex flex-wrap gap-3.5">
-              <PillSolid href="/about#clinician" tone="dark" className="min-h-13 px-8">
-                {ABOUT.teaser.cta}
-              </PillSolid>
-              <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">
-                Book a consultation
-              </PillGhost>
-            </Reveal>
-          </div>
-        </div>
-      </Wrap>
-    </section>
-  );
+  return <ClinicianBand id="clinic" />;
 }

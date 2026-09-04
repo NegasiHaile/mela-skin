@@ -18,16 +18,22 @@ import { Lede, SectionHead, Wrap } from "./ui";
   relief and cleaning protocol are exactly the sort of thing a clinic website
   asserts without checking, and exactly the sort of thing a patient notices is
   untrue on the day.
+
+  Third of the page's shell/paper/cream rotation, `ms-cream` -- see the note
+  on that rotation in app/page.tsx. It was the deepest of the four grounds the
+  old continuous ramp offered until the skincare partners band came off at the
+  1 Sep daily; cream is the deepest of the three the rotation uses now, so this
+  is still where the page reads as settling before Assessment opens back up.
 */
 export function Principles() {
   return (
     <section
       id="principles"
-      className="relative overflow-hidden bg-ms-cream py-24 lg:py-32"
+      className="relative overflow-hidden py-24 lg:py-32"
     >
-      <PatternField tone="cream" />
+      <PatternField tone="light" />
 
-      <Wrap className="relative">
+      <Wrap className="relative z-10">
         <div className="max-w-[680px]">
           <SectionHead title={ABOUT.principles.title} />
           <Lede className="mt-7">{ABOUT.principles.lede}</Lede>
@@ -53,10 +59,10 @@ export function Principles() {
               </span>
 
               <div className="min-w-0 flex-1">
-                <h3 className="font-display text-[1.45rem] leading-[1.2] tracking-[-0.01em] text-ms-cocoa sm:text-[1.6rem]">
+                <h3 className="font-display text-[1.6rem] leading-[1.15] tracking-[-0.01em] text-ms-cocoa sm:text-[1.8rem]">
                   {item.title}
                 </h3>
-                <p className="mt-4 font-sans text-[16.5px] font-light leading-[1.8] text-ms-espresso/80">
+                <p className="mt-4 font-sans text-[17.5px] font-light leading-[1.7] text-ms-espresso/80">
                   {item.body}
                 </p>
               </div>

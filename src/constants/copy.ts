@@ -17,9 +17,10 @@
  * glyphs — those are interface, not content, and they live with the markup.
  */
 
+import { PRIMARY_CLINICIAN } from "./clinic";
 import { CONDITIONS } from "./conditions";
 import { COSMETIC, COMING_SOON } from "./cosmetic";
-import { MENU, MENU_ITEM_COUNT } from "./menu";
+import { MENU_ITEM_COUNT, sectionTitleList } from "./menu";
 import { todo } from "./placeholders";
 
 /**
@@ -50,20 +51,20 @@ export const HOME = {
     title: "Deeper skin isn’t harder to treat",
     subtitle: "It has simply been studied less.",
     paragraphs: [
-      "Dermatology teaching images are overwhelmingly of white skin. On deeper complexions, inflammation reads violet or grey rather than red. It leaves pigment behind for months after the condition itself has cleared. Wounds that would flatten elsewhere raise into keloid. None of this is unusual. It is under-taught, which is why so many patients arrive having already been told their condition was something else.",
-      `Mela Skin was built to close that gap. ${todo.clinicianName}’s practice is organised around the conditions that present most often, and most stubbornly, in melanin-rich skin. The medical and cosmetic sides of that care sit under one roof, so a diagnosis and the treatment it calls for do not need two clinics.`,
+      "Dermatology is taught on white skin. On deeper complexions inflammation reads violet or grey, leaves pigment behind, and raises into keloid. None of that is rare. It is under-taught.",
+      `MELA SKIN was built around it. ${PRIMARY_CLINICIAN.name}’s practice is organised around the conditions that behave most stubbornly in melanin-rich skin, with the medical and cosmetic sides under one roof.`,
     ],
   },
 
   /** Three cards that orient the visitor and hand off to the subpages. */
   pillars: {
     title: "Two halves of one clinic",
-    lede: "The two halves behave differently from the first phone call onwards. One has to be diagnosed before anyone can say what treating it involves. The other you can browse, then talk through. Start with whichever sounds like your problem.",
+    lede: "One half has to be diagnosed before anyone can say what treating it involves. The other you can browse, then talk through. Start with whichever sounds like yours.",
     cards: [
       {
         eyebrow: "Medical dermatology",
         title: "Diagnosed first",
-        body: `${InWords(CONDITIONS.length)} conditions, from acne, eczema and hair loss through psoriasis, melasma and mole checks. Each one gets named before anything is prescribed, so you leave with a plan rather than a shelf of creams.`,
+        body: `${InWords(CONDITIONS.length)} conditions, from acne and eczema to hair loss, melasma and mole checks. Named before anything is prescribed, so you leave with a plan rather than a shelf of creams.`,
         href: "/medical-dermatology",
         cta: "What we treat",
         count: `${CONDITIONS.length} conditions`,
@@ -71,108 +72,132 @@ export const HOME = {
       {
         eyebrow: "Cosmetic dermatology",
         title: "Chosen, then tailored",
-        body: "Injectables, fillers, boosters, PRP, hair, facials, peels, laser and body work. Read the whole menu here, then bring it to a consultation, which for the cosmetic side costs nothing.",
+        body: "Injectables, fillers, boosters, PRP, hair, facials, peels, laser and body work. Read the menu here, then bring it to a consultation. On this side it is free.",
         href: "/cosmetic-dermatology",
         cta: "See the treatments",
         count: `${COSMETIC.length} families`,
       },
       {
-        eyebrow: "Skincare",
-        title: "Coming with the clinic",
-        body: "The products worth using on melanin-rich skin, chosen by the people who will be treating it, and stocked at the clinic rather than recommended and left to you to find.",
-        href: "/skincare",
-        cta: "What we will stock",
-        count: "At opening",
+        /*
+          WAS THE SKINCARE CARD. Swapped for the service the clinic actually
+          named as its third, coming thing — Resources/more-info.md, section 3:
+          medical, cosmetic, then laser hair removal, marked coming soon.
+          Skincare is still its own page (/skincare, off the top nav until the
+          shelf is stocked — see constants/navigation.ts), it just is not one
+          of the three cards this section orients a visitor with any more.
+
+          DISABLED ON REQUEST: it no longer has anywhere to send anyone, since
+          the destination band on /cosmetic-dermatology came off that page
+          (see CosmeticFamilies.tsx). `href: null` is what tells Pillars.tsx to
+          render this one as a plain, unlinked card instead of a `<Link>` —
+          same shape as the other two, nothing to click. The service is also
+          named, just as inertly, in the Dermatology dropdown — see
+          constants/navigation.ts.
+
+          `eyebrow` and `body` both read off `COMING_SOON` (./cosmetic.ts)
+          rather than repeating it, so the one place left that states this
+          service's name and status is the one place worth editing.
+        */
+        eyebrow: COMING_SOON.title,
+        title: "Coming soon",
+        body: COMING_SOON.body,
+        href: null as string | null,
+        cta: null as string | null,
+        count: "Not yet bookable",
       },
     ],
-  },
-
-  /** Both service lists in summary. */
-  treatments: {
-    title: "What we treat",
-    lede: "Two lists. One is what people arrive worried about. The other is what they arrive wanting. Nothing has been added to either to make the clinic look bigger than it is.",
-    medicalLabel: "Medical dermatology",
-    medicalLink: `All ${CONDITIONS.length} in detail`,
-    cosmeticLabel: "Cosmetic dermatology",
-    cosmeticLink: "Every treatment family",
   },
 
   /**
-   * WHAT REPLACED THE PRICE BAND.
+   * BOTH LISTS IN SUMMARY, and the heading names them rather than describing
+   * them.
    *
-   * Six figures used to sit here in display type. The 26 Aug meeting took
-   * pricing off the site, so the section that held the numbers now states the
-   * model instead — which is the thing a visitor actually needs to know before
-   * ringing, and the thing the old band never said.
+   * IT WAS "WHAT WE TREAT", which was false of half of what is under it. The
+   * medical list is twelve conditions the clinic treats; the cosmetic list is
+   * what it offers, and nobody arrives with a filler. The lede has always said
+   * so -- "one list is what people arrive worried about, the other is what
+   * they arrive wanting" -- so the title was contradicted one line below
+   * itself.
    *
-   * Dr. Abseret Hailu, 00:15:01: "We want patients to feel that we're tailoring
-   * a treatment for them, and not necessarily them selecting treatments … we
-   * should have a section about … tailoring treatments directly to the patient,
-   * and for that it's best done through consultation." This is that section.
+   * "Conditions and treatments" is also where the site's vocabulary is taught.
+   * Those two words are reserved from here on: a CONDITION is what a patient
+   * has, a TREATMENT is what the clinic does, and an individually named item on
+   * the menu is a SERVICE. "Treatment" used to mean all three.
+   *
+   * The lede is unchanged. It explains WHY there are two lists, which the title
+   * deliberately does not.
+   *
+   * COSMETIC IS FIVE CATEGORIES HERE, NOT TEN FAMILIES. It used to repeat the
+   * full family grid /cosmetic-dermatology already carries -- the exact list,
+   * twice, on two pages. This band's job is orientation, not the second copy
+   * of a list that already has a home; the five menu sections are the level a
+   * visitor actually needs to pick a direction before landing on either the
+   * explanations (/cosmetic-dermatology) or the priced menu
+   * (/treatment-menu), and each category card on the home page goes straight
+   * to its own slice of the menu -- see components/Treatments.tsx. The medical
+   * side stays all twelve conditions, because there is no grouping above them
+   * that is not invented: each condition is its own reason to click, not a
+   * member of some other category.
    */
-  consult: {
-    eyebrow: "Consultation",
-    title: "Tailored first, quoted second",
-    lede: "There is no price list on this site, and that is deliberate. What an aesthetic treatment costs depends on how much of it your skin actually needs, and that is not a thing anyone can work out from a page.",
-    notes: [
-      {
-        heading: "A list would be wrong for most people",
-        body: "Two people asking for the same treatment rarely need the same amount of it. One cheek might take a fraction of what a full jawline does. A single published figure is wrong for both of them, and it pushes everyone towards picking a treatment before anybody has looked at their skin.",
-      },
-      {
-        heading: "You leave with the plan and its cost",
-        body: "Written down, before anything is booked: what is recommended, how many sessions it takes, how long before anything shows, and what the whole thing comes to. That is the figure that matters, and it is yours to take away and think about.",
-      },
-    ],
-    /** The three ways a first appointment can go, as the meeting set them out. */
-    tracks: [
-      {
-        label: "Cosmetic & aesthetic",
-        kind: "Complimentary",
-        body: "Injectables, fillers, boosters, facials, peels, laser, hair and body work. The consultation is free, so you can find out what is worth doing, and what is not, without committing to anything.",
-      },
-      {
-        label: "Medical dermatology",
-        kind: "Standard visit",
-        body: `Acne, eczema, hair loss, psoriasis, melasma, nails, mole checks and the rest. This is a clinical appointment rather than a free consult, because it is where the diagnosis happens. ${todo.consultFee}, ${todo.consultLength} minutes.`,
-      },
-      {
-        label: "The full detail",
-        kind: "In clinic",
-        body: "Every cosmetic treatment has a brochure at the clinic covering what it involves, what it feels like, and what to expect afterwards. Take one home; nobody remembers this much from a conversation.",
-      },
-    ],
-    primary: "Book a consultation",
-    secondary: "See the treatment menu",
+  treatments: {
+    title: "Our dermatology services",
+    lede: "One list is what people arrive worried about. The other is what they arrive wanting. Nothing has been added to either to make the clinic look bigger.",
+    medicalLabel: "Medical dermatology",
+    medicalLink: `All ${CONDITIONS.length} conditions`,
+    cosmeticLabel: "Cosmetic dermatology",
+    cosmeticLink: `All ${MENU_ITEM_COUNT} treatments`,
   },
 
-  visit: { title: "What actually happens on your visit" },
-  reviews: { title: "In their words" },
-  comingSoon: { eyebrow: "Coming soon", ...COMING_SOON },
+  /*
+    THE PRICING SECTION IS GONE, and this is the note rather than the copy.
+
+    It was "Tailored first, quoted second", taken off the site at the 1 Sep
+    daily ("the Tailored first, quoted second section which is not clear its
+    purpose on the website"), and the constant sat here unrendered until the
+    production review on 2 Sep found it.
+
+    Its argument still exists, once, where a reader is actually looking at a
+    list of things they cannot see a price for: COSMETIC_PAGE.closingTitle,
+    "Quoted for your skin, not from a list". That is the only place the model is
+    argued now. The menu page's own FAQ answers the mechanical question
+    directly ("Why are there no prices on this page?"), which is now the only
+    place THAT is stated -- MENU_PAGE.rules, which used to cover the same
+    ground under a "Costs" heading, is gone along with the rest of the aside
+    it lived in (see the note on MENU_PAGE below).
+
+    Dr. Abseret Hailu, 26 Aug 00:15:01, is the source and still holds: "We want
+    patients to feel that we're tailoring a treatment for them, and not
+    necessarily them selecting treatments."
+  */
+
+  visit: { title: "What to expect on your visit" },
 };
 
 /* -- /medical-dermatology -------------------------------------------------- */
 
 export const MEDICAL_PAGE = {
   eyebrow: "Medical dermatology",
-  title: "Named before it is treated",
-  lede: `${InWords(CONDITIONS.length)} conditions the clinic sees most, set out plainly: what each one actually is, how it tends to present on brown and black skin, and what the first appointment is for. Hair and nails are on this list too. Both are dermatology, and both are regularly taken somewhere else first. If your condition is not here we may still be able to help. The list is a starting point rather than a catalogue.`,
-  asideTitle: "How to read this page",
-  asideBody:
-    "Every entry answers the same three questions in the same order: what it is, how it looks on deeper skin, and what happens at your appointment. Skip to whichever one you came for.",
+  /*
+    WAS "Named before it is treated" -- a fair sentence, but a play on the
+    page's own argument (diagnose, then treat) rather than a plain statement
+    of what the page is. Replaced on request with something a reader does not
+    have to unpack first.
+  */
+  title: "The conditions we treat",
+  lede: `${InWords(CONDITIONS.length)} conditions the clinic sees most, and how each one presents on brown and black skin. If yours is not here, we may still be able to help.`,
   indexLabel: "Jump to",
   /** The block under the conditions. Numbering is generated, not stored. */
   prepTitle: "Three things worth bringing",
   prepLede:
-    "None of this is required and nobody will be sent home without it. It is simply what turns a first appointment from a guess into a diagnosis.",
+    "None of it is required and nobody is sent home without it. It is what turns a first appointment from a guess into a diagnosis.",
   prep: [
     {
       title: "Photograph the bad days",
-      body: "Most conditions behave. Almost none of them behave in a consulting room at eleven on a Tuesday. A phone picture of a flare at its worst is worth more than a paragraph describing it.",
+      body: "Almost nothing behaves in a consulting room at eleven on a Tuesday. A phone picture of a flare at its worst beats any description of one.",
     },
     {
       title: "Bring what you have used",
-      body: "Every cream, tablet, oil and injection, including the ones bought without a prescription and the ones a relative recommended. Skin-lightening products matter most here, because they change what is safe to do next.",
+      body: "Every cream, tablet, oil and injection, prescribed or not. Skin-lightening products matter most: they change what is safe to do next.",
     },
     {
       title: "Know roughly when it started",
@@ -186,13 +211,12 @@ export const MEDICAL_PAGE = {
 export const COSMETIC_PAGE = {
   eyebrow: "Cosmetic dermatology",
   title: "Chosen, not prescribed",
-  lede: `This is the half of the clinic you can browse: ${inWords(COSMETIC.length)} families of treatment, and what each one actually does to the skin. What none of it can tell you is which is right for yours, or how much of it you need. That part is the consultation, and on this side of the clinic it is free.`,
+  lede: `The half of the clinic you can browse: ${inWords(COSMETIC.length)} families, and what each does to skin. Which suits yours is the consultation, and on this side that is free.`,
   stats: [
     { value: `${COSMETIC.length}`, label: "Treatment families" },
-    { value: `${MENU_ITEM_COUNT}`, label: "Treatments on the menu" },
+    { value: `${MENU_ITEM_COUNT}`, label: "Services on the menu" },
     { value: "Free", label: "Cosmetic consultation" },
   ],
-  menuItemsLabel: "On the menu",
   /**
    * The brochures, stated once rather than on all ten cards. Aser Hailu,
    * 00:33:50: "we can also have clinic brochures for the cosmetics /
@@ -200,62 +224,114 @@ export const COSMETIC_PAGE = {
    * people come in and ask questions, we can just give them a pamphlet."
    */
   detailNote:
-    "Each of these has a brochure at the clinic going considerably further than a web page usefully can: what the treatment involves, what it feels like, what to expect in the days after, and what it will not do. Ask for the one you are considering.",
+    "Each has a brochure at the clinic going further than a web page usefully can, including what the treatment will not do. Ask for the one you are considering.",
+
   closingTitle: "Quoted for your skin, not from a list",
   closingLede:
-    "Aesthetic pricing arrives as a figure on a page and then changes at the appointment, which is the worst of both. So there is no page: you get one plan, written down, with its cost on it, after somebody has looked at your skin. If it is not worth doing, that is what you will be told, and it will not have cost you a consultation fee to find out.",
+    "A figure that changes at the appointment is the worst of both. So there is no price list: one plan, in writing, with its cost on it, after somebody has looked at your skin.",
 };
 
 /* -- /treatment-menu ------------------------------------------------------- */
 
+/**
+ * Hoisted out of `MENU_PAGE` so `faqLede` can count it -- an object literal
+ * cannot read its own `faq` field while building `faqLede` in the same
+ * literal, so the array has to exist first under its own name.
+ */
+const MENU_FAQ = [
+  {
+    q: "Why are there no prices on this page?",
+    a: "A treatment is sized to the person having it, so a published figure is wrong for most people reading it. The cost comes with the plan, in writing, at the consultation.",
+  },
+  {
+    q: "What does a course actually get me?",
+    a: "A prepaid block of sessions at a better rate than buying singly. Where a course length appears beside something here, it is because it works considerably better as one.",
+  },
+  {
+    q: "Why are injectables measured by area and by cc?",
+    a: "The appointment is not what you are buying. One cheek takes a single cc and a jawline four. Toxin goes by treated area, filler and boosters by volume.",
+  },
+  {
+    q: "Do I need a consultation before booking a treatment?",
+    a: `Yes, and on the cosmetic side it is free. Allow ${todo.consultLength} minutes. Medical dermatology is a clinical appointment rather than a free consult.`,
+  },
+  {
+    q: "Which of these are safe on deeper skin?",
+    a: "How a treatment is set matters more than which one it is. Most trouble on Fitzpatrick IV to VI is a device run at settings validated on lighter skin. Ask what is being used, and why.",
+  },
+  {
+    q: "What is not on this menu?",
+    a: "Laser hair removal, which is still coming. And medical dermatology, which is diagnosed first and treated second, so it is not a menu item at all.",
+  },
+];
+
 export const MENU_PAGE = {
+  /**
+   * "TREATMENTS MENU", on request -- it was "Service menu", specifically to
+   * avoid the word "treatment" clashing with the cosmetic side's word for a
+   * whole family and the home page's word for what the clinic treats. That
+   * clash is a real one and worth knowing if this ever reads ambiguous: what
+   * this page lists is one named SERVICE each, sold on its own, asked for by
+   * name -- fifty-nine of them. The ten FAMILIES they belong to are the
+   * cosmetic dermatology page's subject.
+   *
+   * TITLE FIXED ON REQUEST: "Everything the clinic offers" was not true. This
+   * page lists cosmetic SERVICES, sold on their own; medical dermatology is
+   * diagnosed first and is not a menu item at all, which the FAQ's own last
+   * question already said ("What is not on this menu? ... medical
+   * dermatology ... is not a menu item at all") -- the title was contradicting
+   * the page under it. "Every treatment on the menu" is the claim this page
+   * can actually back up.
+   *
+   * LEDE REWRITTEN ONCE ALREADY, for the same reason as the rules below: it
+   * introduced "family" -- the cosmetic dermatology page's word for a group of
+   * services -- as if this page had already explained it, when this page
+   * groups by SECTION and never uses "family" anywhere else. A reader landing
+   * here first had no way to know what it meant. That rewrite stated what
+   * this page is, pointed elsewhere for what a treatment does, and stated the
+   * no-price policy in one line -- correctly, but as one 40-word sentence
+   * doing three jobs at once ("... of them across ... sections, and how each
+   * one is sold") that took a second read to parse.
+   *
+   * REWRITTEN AGAIN ON REQUEST, FOR PLAINER WORDS AND SHORTER SENTENCES. Three
+   * short sentences now, one job each: what is here, what is not (with where
+   * to find it instead), and how the cost works. The section names are read
+   * out of `MENU` itself via `sectionTitleList()` rather than typed here a
+   * second time, so a section renamed in menu.ts cannot leave this sentence
+   * saying something else.
+   *
+   * NO COUNT IN THIS SENTENCE ANY MORE, on request, and deliberately not
+   * replaced with `MENU_ITEM_COUNT` the way the old one had one: the number is
+   * exact and live either way (it is computed off `MENU`, so it can never go
+   * stale), but a specific figure in the opening line reads as a claim the
+   * page has to keep matching, and the list is expected to change. The table
+   * itself still states the live count as you filter it -- see MenuBoard.tsx
+   * -- which is where a reader wants the precise number, not in a sentence
+   * that is trying to say what kind of page this is.
+   */
   eyebrow: "Treatment menu",
-  title: "Everything the clinic offers",
-  lede: `${MENU_ITEM_COUNT} treatments across ${inWords(MENU.length)} sections, each listed with how it is sold: a session, a course, a treated area, or a volume. No prices: what a treatment costs depends on how much of it your skin needs, so it is quoted at your consultation.`,
-  rulesTitle: "How to read it",
-  rules: [
-    {
-      label: "Sessions and courses",
-      body: "Blocks of 3, 5, 10 or 20 where a treatment works better as a course than as a one-off.",
-    },
-    {
-      label: "Areas and volumes",
-      body: "Toxin by treated area, filler and boosters by cc. That is the unit, not the appointment.",
-    },
-    {
-      label: "Costs",
-      body: "Quoted in writing at your consultation, which is free for anything on this page.",
-    },
-  ],
+  title: "Every treatment on the menu",
+  lede: `We provide treatments across ${sectionTitleList()}. What each one does is on the cosmetic dermatology page. What it costs is quoted at your consultation, once we know what your skin needs.`,
+  /*
+    THE "HOW TO READ IT" ASIDE CAME OFF THIS PAGE'S HERO ENTIRELY, on request
+    -- `rulesTitle` and `rules` (two entries: how the tick-a-section filter
+    works, and what "sold as" means) used to fill it and are gone with it,
+    rather than left here unread by anything. The text column takes the full
+    width the aside used to share with it now (PageHero.tsx renders the text
+    at `lg:col-span-12` rather than `lg:col-span-7` whenever no `aside` is
+    passed).
+
+    Neither rule's job has vanished, in case that reads as a gap: the filter
+    is a checkbox with a label, which does not need a caption to be usable,
+    and "sold as" is a column header sitting directly next to the values it
+    describes. The FAQ still carries the one thing that genuinely needed
+    stating in words -- "Why are there no prices on this page?" -- so nothing
+    the aside said is unsaid, it just is not repeated up here as well.
+  */
   faqTitle: "Before you book",
-  faqLede:
-    "Six things people ask on the phone, answered here so you do not have to.",
-  faq: [
-    {
-      q: "Why are there no prices on this page?",
-      a: "Because an aesthetic treatment is sized to the person having it, and a published figure would be wrong for most of the people reading it. It also changes the conversation: patients start choosing treatments off a list rather than being told what their skin actually needs. So the menu tells you what we do and how it is sold, and the cost comes with the plan, in writing, at the consultation. For the cosmetic side that consultation is free, so finding out costs you nothing.",
-    },
-    {
-      q: "What does a course actually get me?",
-      a: "A prepaid block of sessions, at a better rate than buying them one at a time. The blocks run in threes, fives, tens and twenties depending on the treatment, and where a treatment appears with a course length beside it on this page, that is because it works considerably better as a course than as a single visit. The difference is worked out for you at the consultation.",
-    },
-    {
-      q: "Why are injectables measured by area and by cc?",
-      a: "Because the appointment is not what you are buying. One cheek might take a single cc and a full jawline four, so charging by session would charge two people the same for very different work. Toxin goes by treated area, filler and boosters by volume, and the product name sits next to the treatment so you can ask which one you are getting.",
-    },
-    {
-      q: "Do I need a consultation before booking a treatment?",
-      a: `Yes, and for the cosmetic side it is free. Allow ${todo.consultLength} minutes. It is where your skin gets examined properly, where the plan and its cost get written down, and where anything that should not be done to your skin gets ruled out. Medical dermatology is a standard clinical appointment rather than a free consult, because that is where a diagnosis is made.`,
-    },
-    {
-      q: "Which of these are safe on deeper skin?",
-      a: "How a treatment is set matters more than which treatment it is. Most of the trouble on Fitzpatrick IV to VI comes from a device run at settings validated on lighter skin, or a peel taken deeper than the skin will forgive, and the mark left behind is worse than what you walked in with. Ask what is being used and why. Anywhere worth your money will tell you.",
-    },
-    {
-      q: "What is not on this menu?",
-      a: "Laser hair removal, which is still coming. And all of medical dermatology: acne, eczema, hair loss, nail disease, psoriasis, melasma and the rest are diagnosed first and treated second, so they are not menu items at all.",
-    },
-  ],
+  /** Counts `MENU_FAQ` rather than saying "Six" by hand, so an FAQ added or removed there cannot leave this sentence stating the wrong number. */
+  faqLede: `${InWords(MENU_FAQ.length)} things people ask on the phone, answered here so you do not have to.`,
+  faq: MENU_FAQ,
 };
 
 /* -- /skincare ------------------------------------------------------------- */
@@ -292,9 +368,9 @@ export const MENU_PAGE = {
 export const SKINCARE_PAGE = {
   eyebrow: "Skincare",
   title: "Skincare that holds on deeper skin",
-  lede: "A short shelf, chosen by the people who will be treating your skin, and the routine that makes it work. Both are deliberately short. The routines that get abandoned are the long ones, and an abandoned routine does nothing at all.",
+  lede: "A short shelf, chosen by the people treating your skin, and the routine that makes it work. Both are short on purpose. The routines that get abandoned are the long ones.",
   asideTitle: "Opening with the clinic",
-  asideBody: `The shelf is being chosen now and will be stocked from ${todo.openingDate}. Until then this page is the advice without the products. Worth reading either way, and none of it depends on buying anything from us.`,
+  asideBody: `The shelf is being chosen now and stocked from ${todo.openingDate}. Until then this page is the advice without the products, and none of it depends on buying anything from us.`,
   /**
    * THE COLLECTION. Eight tiles, in the order a routine uses them.
    *
@@ -369,11 +445,11 @@ export const SKINCARE_PAGE = {
   steps: [
     {
       title: "Cleanse",
-      body: "Once in the evening is enough for most people; twice if you have been in dust or heavy sunscreen. The test is how your skin feels ten minutes later. Tight and squeaky means the cleanser is too strong, and a stripped barrier is what half of the irritation we see is actually about.",
+      body: "Once in the evening is enough for most people. The test is how your skin feels ten minutes later: tight and squeaky means the cleanser is too strong.",
     },
     {
       title: "Treat",
-      body: "The one active step, and the one that changes anything: a retinoid, a vitamin C, an exfoliating acid or a pigment-directed agent, chosen for what you are trying to shift. One at a time, introduced slowly. Stacking three of them is the fastest route to the inflammation that leaves marks on deeper skin.",
+      body: "The one step that changes anything: a retinoid, a vitamin C, an acid or a pigment-directed agent. One at a time, slowly. Stacking three is the fastest route to marks on deeper skin.",
     },
     {
       title: "Moisturise",
@@ -381,42 +457,64 @@ export const SKINCARE_PAGE = {
     },
     {
       title: "Sunscreen",
-      body: "Every morning, indoors near a window included. On melanin-rich skin this is not about burning. It is the single thing standing between you and the pigmentation that brings most people to this clinic, and it is doing more for melasma and post-acne marks than anything else on the menu.",
+      body: "Every morning, indoors near a window included. On melanin-rich skin this is not about burning: it is what stands between you and the pigmentation most people come here about.",
     },
   ],
   cautionEyebrow: "One warning",
   caution:
-    "Skin-lightening creams sold over the counter are the single most common cause of the damage we will be treating. The hydroquinone-and-steroid mixtures thin the skin, spread pigment into patterns that are far harder to treat than what you started with, and rebound worse the moment you stop. Nothing of that kind will be sold here, and if you are using one, bring it in; it changes what is safe to do next.",
+    "Over-the-counter lightening creams are the most common cause of the damage we treat. They thin the skin and rebound worse the moment you stop. Nothing of the kind is sold here. If you use one, bring it in.",
 };
 
 /* -- Search engines -------------------------------------------------------- */
 
+/*
+  WESTLANDS IS NOT IN HERE ANY MORE, and it was in nine of these strings.
+
+  Every description and every location keyword named Westlands, because the
+  draft letterhead put the clinic at The Atrium on 88 Serenity. The final sheet
+  moves it to OLA Energy Plaza in Muthaiga -- see constants/brand.ts -- and a
+  meta description advertising the wrong suburb is the one kind of stale copy
+  that gets a clinic found by people who then cannot find it.
+
+  The suburb is written out rather than interpolated from `brand.address.area`,
+  on purpose: these are sentences and keyword phrases, not fields, and half of
+  them would need the surrounding words changed anyway if the clinic moved.
+  Grepping for a place name finds all of them in one pass, which is how these
+  were caught.
+*/
 export const META = {
   siteDescription:
-    "Medical and cosmetic dermatology built for melanin-rich skin. Acne, eczema, hair loss, melasma, psoriasis, nail disease and mole checks, alongside injectables, facials, laser and PRP. Complimentary cosmetic consultation. Westlands, Nairobi.",
+    "Medical and cosmetic dermatology built for melanin-rich skin. Acne, eczema, hair loss, melasma, psoriasis, nail disease and mole checks, alongside injectables, facials, laser and PRP. Complimentary cosmetic consultation. Muthaiga, Nairobi.",
   shortDescription:
-    "Medical and cosmetic dermatology built for melanin-rich skin, in Westlands, Nairobi.",
+    "Medical and cosmetic dermatology built for melanin-rich skin, in Muthaiga, Nairobi.",
   medicalDescription:
-    "Acne, eczema, hair loss, nail disease, melasma, psoriasis, rosacea, warts, skin tags, stretch marks, vascular birthmarks and mole checks, diagnosed and treated for melanin-rich skin in Westlands, Nairobi.",
-  cosmeticDescription: `Injectables, fillers, skin boosters, PRP and PRF, facials, peels, laser and body treatments in Westlands, Nairobi. ${MENU_ITEM_COUNT} treatments across ${COSMETIC.length} families, tailored and quoted at a complimentary consultation.`,
-  menuDescription: `Every treatment at Mela Skin: ${MENU_ITEM_COUNT} across facials, skin rejuvenation, body and hair, injectables and add-ons, with how each one is sold. Quoted at a complimentary consultation. Westlands, Nairobi.`,
+    "Acne, eczema, hair loss, nail disease, melasma, psoriasis, rosacea, warts, skin tags, stretch marks, vascular birthmarks and mole checks, diagnosed and treated for melanin-rich skin in Muthaiga, Nairobi.",
+  /*
+    The opening phrase of each stays as somebody would search it -- "laser and
+    body treatments in Nairobi" is a query, not a label. What follows counts
+    things, and there the vocabulary applies: services on the menu, families on
+    the cosmetic page. The `*Keywords` arrays below are search terms throughout
+    and are deliberately not touched.
+  */
+  cosmeticDescription: `Injectables, fillers, skin boosters, PRP and PRF, facials, peels, laser and body treatments in Muthaiga, Nairobi. ${MENU_ITEM_COUNT} services across ${COSMETIC.length} treatment families, tailored and quoted at a complimentary consultation.`,
+  menuDescription: `Every service at MELA SKIN: ${MENU_ITEM_COUNT} across ${sectionTitleList()}, with how each one is sold. Quoted at a complimentary consultation. Muthaiga, Nairobi.`,
   skincareDescription:
-    "The four-step routine that holds on melanin-rich skin, and the products Mela Skin will stock: cleansers, actives, pigment care and sun protection. Westlands, Nairobi.",
+    "The four-step routine that holds on melanin-rich skin, and the products MELA SKIN will stock: cleansers, actives, pigment care and sun protection. Muthaiga, Nairobi.",
   contactDescription:
-    "Contact Mela Skin: the clinic is on the fourth floor of The Atrium, 88 Serenity, Westlands, Nairobi. Phone, email, opening hours, parking and a map with directions.",
+    "Contact MELA SKIN: 1st floor, OLA Energy Plaza, Muthaiga, Nairobi. Email, opening hours and a map with directions.",
   contactKeywords: [
-    "Mela Skin contact",
-    "dermatology clinic Westlands address",
+    "MELA SKIN contact",
+    "dermatology clinic Muthaiga address",
     "skin clinic Nairobi directions",
-    "The Atrium 88 Serenity Westlands",
+    "OLA Energy Plaza Muthaiga",
     "book dermatologist Nairobi",
   ],
   aboutDescription:
-    "Why Mela Skin was built around melanin-rich skin, how the clinic works, and the seven readings a consultation records before any treatment is recommended. Westlands, Nairobi.",
+    "Why MELA SKIN was built around melanin-rich skin, how the clinic works, and the seven readings a consultation records before any treatment is recommended. Muthaiga, Nairobi.",
   keywords: [
-    "Mela Skin",
+    "MELA SKIN",
     "dermatology Nairobi",
-    "cosmetic clinic Westlands",
+    "cosmetic clinic Muthaiga",
     "melanin-rich skin",
     "melasma Kenya",
     "acne treatment Nairobi",
@@ -429,21 +527,21 @@ export const META = {
     "Botox Nairobi",
     "dermal filler Kenya",
     "PRP hair Nairobi",
-    "dermatologist Westlands",
+    "dermatologist Muthaiga",
   ],
   cosmeticKeywords: [
     "Botox Nairobi",
     "dermal filler Nairobi",
     "Profhilo Kenya",
     "PRP hair Nairobi",
-    "facials Westlands",
+    "facials Muthaiga",
     "chemical peel Nairobi",
     "HIFU Nairobi",
   ],
   /** One per condition, so the list stays in step with ./conditions.ts. */
   medicalKeywords: CONDITIONS.map((condition) => `${condition.title} Nairobi`),
   aboutKeywords: [
-    "dermatology clinic Westlands",
+    "dermatology clinic Muthaiga",
     "skin analysis Nairobi",
     "Fitzpatrick skin type",
     "dermatologist Nairobi about",
@@ -451,10 +549,10 @@ export const META = {
   ],
   menuKeywords: [
     "dermatology treatments Nairobi",
-    "cosmetic dermatology Westlands",
+    "cosmetic dermatology Muthaiga",
     "Botox Kenya",
     "filler Nairobi",
-    "facials Westlands",
+    "facials Muthaiga",
     "HIFU Kenya",
     "PRP Nairobi",
   ],
@@ -463,6 +561,6 @@ export const META = {
     "sunscreen dark skin Kenya",
     "retinoid Nairobi",
     "hyperpigmentation skincare Nairobi",
-    "dermatologist skincare Westlands",
+    "dermatologist skincare Muthaiga",
   ],
 };

@@ -53,11 +53,12 @@ export function Hero() {
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* The phone number until 2 Sep. It is not a real line. */}
             <a
-              href={brand.phoneHref}
+              href={`mailto:${brand.email}`}
               className="hidden font-sans text-[12px] tracking-[0.05em] text-ms-sand transition-colors hover:text-ms-ivory md:inline"
             >
-              {brand.phone}
+              {brand.email}
             </a>
 
             <details className="relative lg:hidden [&_summary::-webkit-details-marker]:hidden">
@@ -83,10 +84,10 @@ export function Hero() {
                   </a>
                 ))}
                 <a
-                  href={brand.phoneHref}
+                  href={`mailto:${brand.email}`}
                   className="flex min-h-11 items-center border-t border-ms-bronze/20 px-4 font-sans text-[12.5px] text-ms-bronze md:hidden"
                 >
-                  {brand.phone}
+                  {brand.email}
                 </a>
               </nav>
             </details>
@@ -102,7 +103,7 @@ export function Hero() {
               className="flex flex-col justify-center px-7 py-16 sm:px-10 lg:px-14 lg:py-24"
             >
             {/* <p className="eyebrow text-ms-terracotta-deep">
-              {brand.descriptor} &middot; Westlands, Nairobi
+              {brand.descriptor} &middot; {brand.address.area}, {brand.address.city}
             </p> */}
 
               <MountItem y={26}>
@@ -153,7 +154,13 @@ export function Hero() {
               aria-hidden="true"
               className="absolute inset-0 h-full w-full"
               style={{
-                backgroundImage: patternTileUrl("#33180a", "#a86f3a", "#f3e7d6"),
+                /*
+                  The tile paints circles on nothing since 1 Sep, so the ground
+                  its interstices used to carry (#F3E7D6) is set here instead.
+                  Same two colours, same result.
+                */
+                backgroundColor: "#f3e7d6",
+                backgroundImage: patternTileUrl("#33180a", "#a86f3a"),
                 backgroundRepeat: "repeat",
                 backgroundSize: "235px 193px",
               }}
