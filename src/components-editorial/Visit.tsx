@@ -8,14 +8,14 @@ export function Visit() {
   return (
     <Shell>
       <Card id="visit" className="mt-4 bg-ms-sand/35">
-        <PatternField id="ed-visit" tone="sand" fade="top" scale={400} opacity={0.85} drift={34} />
+        <PatternField tone="sand" />
         <Inner>
           <div className="max-w-[42ch]">
             <SectionLabel index="03">Your visit</SectionLabel>
             <Reveal delay={0.12}>
             <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] tracking-[-0.014em] text-ms-cocoa">
               What actually happens, start to{" "}
-              <em className="italic text-ms-clay">finish</em>.
+              <em className="italic text-ms-terracotta">finish</em>.
             </h2>
             </Reveal>
           </div>
@@ -24,7 +24,7 @@ export function Visit() {
             {VISIT_STEPS.map((step, index) => (
               <StaggerItem as="li" key={step.title} y={28} className="flex">
                 <Lift amount={6} className="flex w-full flex-col gap-3.5 rounded-[18px] border border-ms-bronze/15 bg-ms-shell px-7 py-9">
-                <span className="font-display text-[2.2rem] font-light leading-none text-ms-clay/55">
+                <span className="font-display text-[2.2rem] font-light leading-none text-ms-terracotta/65">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="font-display text-[22px] font-normal text-ms-cocoa">

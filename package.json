@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "brand:assets": "python scripts/extract-logo.py",
-    "hero:frames": "python scripts/build-hero-frames.py"
+    "brand:assets": "python scripts/build-brand-assets.py"
   },
   "dependencies": {
     "framer-motion": "^13.1.1",

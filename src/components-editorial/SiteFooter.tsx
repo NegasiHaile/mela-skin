@@ -7,20 +7,13 @@ import { Card, Shell } from "./ui";
 export function SiteFooter() {
   return (
     <Shell>
-      <Card as="footer" className="mb-4 mt-4 bg-ms-espresso">
+      <Card as="footer" className="mb-4 mt-4 bg-ms-field">
        {/*
          The pattern reads strongest at the foot of the page, the way it does
          on the letterhead: inked along the bottom edge, falling away under the
          link columns.
        */}
-       <PatternField
-         id="ed-footer"
-         tone="espresso"
-         fade="bottom"
-         scale={260}
-         opacity={0.75}
-         drift={30}
-       />
+       <PatternField tone="field" />
        <div className="relative px-7 py-11 sm:px-10 lg:px-16 lg:py-12">
         {/*
           Two columns from `sm` up. Stacked, the four link lists run to the
@@ -32,15 +25,9 @@ export function SiteFooter() {
           <Reveal className="flex flex-col gap-4 sm:col-span-2 lg:col-span-6">
             <Wordmark size="md" tone="text-ms-cream" />
             <p className="max-w-[280px] font-sans text-[14px] font-light leading-[1.7] text-ms-sand/70">
-              {brand.address.line1}, {brand.address.line2}, {brand.address.city}.
+              {brand.address.oneLine}.
             </p>
             <div className="flex flex-col gap-1.5 font-sans text-[14px] font-light text-ms-sand/70">
-              <a
-                href={brand.phoneHref}
-                className="transition-colors hover:text-ms-cream"
-              >
-                {brand.phone}
-              </a>
               <a
                 href={`mailto:${brand.email}`}
                 className="transition-colors hover:text-ms-cream"

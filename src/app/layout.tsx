@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Space_Grotesk } from "next/font/google";
 import { MotionProvider } from "@/components/MotionProvider";
 import { META, brand } from "@/constants";
 import { clinicJsonLd } from "@/lib/jsonld";
@@ -31,31 +30,51 @@ const larken = localFont({
 });
 
 /*
-  Secondary typography, option 3 of the three the brand deck offers (p.9).
+  Ranade — the brand's official secondary typeface, from
+  Resources/MELA SKIN - Visual Identity Assets/5_Typography/Secondary Font/
+  Ranade_Complete. It is the face the official logo lockup sets
+  "DERMATOLOGY & COSMETIC CLINIC" in, so it is what the descriptor line and all
+  body copy should be in.
 
-  Three weights, not four. Nothing on the site sets `font-bold` on sans type —
-  the only bold on the page is the Larken wordmark — so 700 was a font file
-  fetched and never used.
+  It replaced Space Grotesk, which was a stand-in from Google Fonts chosen
+  before the brand package arrived. Self-hosting it drops a third-party origin
+  from every page load, and the package ships production .woff2 files plus an
+  ITF Free Font License that permits self-hosting.
+
+  Three upright cuts, matching the three the stand-in loaded. No italic: the
+  only italic on the site is Larken (the tagline and the family summaries), so
+  an italic Ranade would be 23KB fetched and never drawn.
 */
-const grotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-grotesk",
+const ranade = localFont({
+  src: [
+    { path: "../fonts/Ranade-Light.woff2", weight: "300", style: "normal" },
+    { path: "../fonts/Ranade-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Ranade-Medium.woff2", weight: "500", style: "normal" },
+  ],
+  variable: "--font-ranade",
   display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
-const titleDefault = `${brand.name} — ${brand.descriptor} in Westlands, Nairobi`;
+const titleDefault = `${brand.name} — ${brand.descriptor} in ${brand.address.area}, ${brand.address.city}`;
 const description = META.siteDescription;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://melaskin.com"),
+  /*
+    ONE ORIGIN, from constants/brand.ts, and it changed on 2 Sep. It was
+    `https://melaskin.com`, written out by hand here and in ten other places
+    across robots.ts, sitemap.ts and lib/jsonld.ts. The final letterhead prints
+    `www.melaskin.ke`, so all eleven now read `brand.origin` and there is one
+    line to edit if it ever moves again.
+  */
+  metadataBase: new URL(brand.origin),
   title: {
     default: titleDefault,
     template: `%s — ${brand.name}`,
   },
   description,
   applicationName: brand.name,
-  authors: [{ name: brand.entity, url: "https://melaskin.com" }],
+  authors: [{ name: brand.entity, url: brand.origin }],
   creator: brand.entity,
   publisher: brand.entity,
   keywords: META.keywords,
@@ -77,7 +96,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${brand.name} — ${brand.descriptor}`,
     description: META.shortDescription,
-    url: "https://melaskin.com",
+    url: brand.origin,
     siteName: brand.name,
     locale: "en_KE",
     type: "website",
@@ -107,8 +126,16 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  /*
+    `telephone: false` since 2 Sep, and the reason is the phone coming off the
+    site rather than a change of heart about the feature. With no number to
+    linkify, Safari's detector has nothing to find and everything to get wrong:
+    what is left in this shape on these pages is a KRA PIN, a KMPDC
+    registration number and a consultation fee, and a tel: link wrapped round
+    any of those is a dial prompt to nothing.
+  */
   formatDetection: {
-    telephone: true,
+    telephone: false,
     email: true,
     address: true,
   },
@@ -116,8 +143,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3e7d6" },
-    { media: "(prefers-color-scheme: dark)", color: "#74370c" },
+    { media: "(prefers-color-scheme: light)", color: "#f4e7d6" },
+    { media: "(prefers-color-scheme: dark)", color: "#2c190b" },
   ],
   colorScheme: "light",
   width: "device-width",
@@ -130,7 +157,7 @@ export default function RootLayout({
   const jsonLd = clinicJsonLd();
 
   return (
-    <html lang="en-KE" className={`${larken.variable} ${grotesk.variable}`}>
+    <html lang="en-KE" className={`${larken.variable} ${ranade.variable}`}>
       <head>
         {/*
           Framer Motion renders its `initial` state into the server HTML, which
@@ -146,7 +173,6 @@ export default function RootLayout({
               transform: none !important;
               clip-path: none !important;
             }
-            [data-motion="progress"] { display: none !important; }
           `}</style>
         </noscript>
       </head>

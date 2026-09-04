@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { brand } from "@/constants";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://melaskin.com/sitemap.xml",
-    host: "https://melaskin.com",
+    sitemap: `${brand.origin}/sitemap.xml`,
+    host: brand.origin,
   };
 }

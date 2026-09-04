@@ -24,14 +24,7 @@ export function FeatureRow() {
         </Wipe>
 
         <Card className="border border-ms-bronze/15 bg-ms-sand/40">
-          <PatternField
-            id="ed-facts"
-            tone="sand"
-            fade="edges"
-            scale={280}
-            opacity={0.9}
-            drift={26}
-          />
+          <PatternField tone="sand" />
           <div className="relative flex h-full flex-col items-center justify-center gap-6 px-8 py-12 text-center">
             <Reveal y={16} delay={0.1}>
               <Monogram size={58} />

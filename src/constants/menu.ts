@@ -1,47 +1,68 @@
 /**
- * EVERY PRICE ON THE SITE. Nothing else in the codebase hard-codes a figure —
- * the home price band, the cosmetic cards, the page metadata and the
- * structured data all read from this file.
+ * THE TREATMENT MENU — what the clinic offers, and how each treatment is sold.
  *
- * The priced treatment menu.
+ * SOURCE — Resources/REVISED MENU OF GLO365 - 2025.pdf. Every treatment name,
+ * every section and every group below is transcribed from that printed sheet.
  *
- * SOURCE — Resources/REVISED MENU OF GLO365 - 2025.pdf, transcribed item for
- * item and figure for figure. Nothing below is estimated, rounded, averaged or
- * interpolated. Four departures from the printed sheet, listed here rather than
- * made silently:
+ * THERE ARE NO PRICES IN THIS FILE, AND NONE SHOULD BE ADDED.
  *
- *  1. GLO2FACIAL and MESOESTETIC PEEL each print a fourth tier as
- *     "370,000 (10x)" when 10x is already set at 200,000. Whether that fourth
- *     block is 15, 20 or something else cannot be read off the sheet, so the
- *     tier is omitted rather than guessed at.
- *  2. "SHPERE SCULPT FACIAL" is set as "Sphere Sculpt Facial", matching
+ * That is a decision, not an omission. From the service-offerings meeting of
+ * 26 Aug 2026:
+ *
+ *   Dr. Abseret Hailu (00:13:54) — "It's not typically routine to disclose
+ *   pricing on websites. You want patients to come in for a free consultation …
+ *   pricing I would like not to have on a website."
+ *
+ *   Dr. Abseret Hailu (00:15:01) — "We want patients to feel that we're
+ *   tailoring a treatment for them, and not necessarily them selecting
+ *   treatments."
+ *
+ *   Dr. Margaret Gachanja (00:26:27) — "on the aesthetic side, everything will
+ *   be tailor made for each person, so maybe putting a blanket figure may not
+ *   be ideal."
+ *
+ *   Aser Hailu (00:33:50) — "we can also have clinic brochures for the
+ *   cosmetics / aesthetics stuff, so we don't need to publicise it on the
+ *   website." Abseret: "I like that idea a lot."
+ *
+ * WHY THE FIGURES LEFT THE FILE RATHER THAN JUST THE SCREEN. A constant in
+ * this directory is bundled and shipped to the browser. A price that is in the
+ * bundle but not rendered is still published — it is one view-source away — so
+ * "do not display prices" can only be honoured by not carrying them. The
+ * printed sheet in Resources/ remains the clinic's record of them.
+ *
+ * WHAT IS STILL HERE, and why it is not a price: how each treatment is sold.
+ * Single sessions, courses of three, five, ten or twenty, treated areas, and
+ * cc of product. Those are units, and a visitor deciding whether a treatment
+ * is a one-off or a commitment needs them. Nothing here says what any of it
+ * costs.
+ *
+ * BEFORE LAUNCH: confirm with the clinic that this menu is Mela Skin's own.
+ * The source PDF is titled for GLO365 and a few item names ("Glo+ Facial
+ * Premium") read as another operator's house branding.
+ *
+ * Four departures from the printed sheet, recorded rather than made silently:
+ *
+ *  1. "SHPERE SCULPT FACIAL" is set as "Sphere Sculpt Facial", matching
  *     "SPHERE SCULPT BODY" on the body page.
- *  3. "02 TO Derm" is set as "O2 to Derm", and "NAD+ 3" as "NAD+" — a zero for
- *     an O, and a stray digit that belongs to no tier on the sheet.
- *  4. BOTOX (CROMA) falls inside the biostimulator grid on the printed sheet
+ *  2. "02 TO Derm" is set as "O2 to Derm", and "NAD+ 3" as "NAD+" — a zero for
+ *     an O, and a stray digit that belonged to no tier on the sheet.
+ *  3. BOTOX (CROMA) falls inside the biostimulator grid on the printed sheet
  *     purely because of where the layout put it. It is grouped with the other
  *     botulinum toxin item here.
- *
- * The printed sheet carries no service descriptions — those live in
- * `cosmetic.ts`, which maps each family to the menu items it covers. Every
- * price shown anywhere on the site comes from this file and nowhere else.
- *
- * BEFORE LAUNCH: confirm with the clinic that this menu and these figures are
- * Mela Skin's own. The source PDF is titled for GLO365 and a few item names
- * ("Glo+ Facial Premium") read as another operator's house branding. Prices are
- * one file away from being amended or withdrawn.
+ *  4. GLO2FACIAL and MESOESTETIC PEEL each printed an unreadable fourth tier.
+ *     With the figures gone this no longer matters, but the omission stands:
+ *     both are listed with the three course lengths the sheet sets clearly.
  */
-
-export type PriceTier = {
-  /** Human label — "Single session", "Course of 5", "1 area", "2cc". */
-  label: string;
-  /** Kenyan shillings, as printed. */
-  price: number;
-};
 
 export type MenuItem = {
   name: string;
-  tiers: PriceTier[];
+  /**
+   * How the treatment is sold, in the order the sheet sets it. Either session
+   * counts ("Single session", "Course of 5") or units of what is administered
+   * ("2 areas", "4cc"). Never a figure.
+   */
+  formats: string[];
 };
 
 export type MenuGroup = {
@@ -54,6 +75,10 @@ export type MenuSection = {
   title: string;
   /** One line under the section head. Written for the site, not lifted. */
   blurb: string;
+  /** Key into the icon set in components/icons.tsx. The one canonical glyph
+   *  for this section — the home page and the menu page's own filter both
+   *  read it from here rather than keeping their own copy. */
+  icon: string;
   groups: MenuGroup[];
 };
 
@@ -65,36 +90,23 @@ export const MENU: MenuSection[] = [
     id: "facials",
     title: "Facials",
     blurb:
-      "Three families, sorted by what you want out of the hour: barrier repair, tone, or lift. The price climbs with what the treatment actually does to the skin.",
+      "Three families, sorted by what you want out of the hour: barrier repair, tone, or lift. Above them sit the device-led treatments, where the work goes deeper than a facial does.",
+    icon: "peel",
     groups: [
       {
         name: "Renewal",
         items: [
           {
             name: "Express Hydra Cleanser",
-            tiers: [
-              { label: SINGLE, price: 7000 },
-              { label: course(5), price: 32000 },
-              { label: course(10), price: 52000 },
-              { label: course(20), price: 92000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Clear Blue",
-            tiers: [
-              { label: SINGLE, price: 15000 },
-              { label: course(5), price: 65000 },
-              { label: course(10), price: 115000 },
-              { label: course(20), price: 210000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Oxygen Glass Facial",
-            tiers: [
-              { label: SINGLE, price: 15000 },
-              { label: course(5), price: 65000 },
-              { label: course(10), price: 115000 },
-            ],
+            formats: [SINGLE, course(5), course(10)],
           },
         ],
       },
@@ -103,30 +115,15 @@ export const MENU: MenuSection[] = [
         items: [
           {
             name: "Korean Glass Skin",
-            tiers: [
-              { label: SINGLE, price: 25000 },
-              { label: course(5), price: 95000 },
-              { label: course(10), price: 155000 },
-              { label: course(20), price: 285000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "7 Step K-Beauty Ritual",
-            tiers: [
-              { label: SINGLE, price: 19000 },
-              { label: course(5), price: 90000 },
-              { label: course(10), price: 130000 },
-              { label: course(20), price: 240000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Red Carpet Ready",
-            tiers: [
-              { label: SINGLE, price: 19000 },
-              { label: course(5), price: 90000 },
-              { label: course(10), price: 130000 },
-              { label: course(20), price: 240000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
         ],
       },
@@ -135,110 +132,45 @@ export const MENU: MenuSection[] = [
         items: [
           {
             name: "Lift 360 Facial",
-            tiers: [
-              { label: SINGLE, price: 15000 },
-              { label: course(5), price: 65000 },
-              { label: course(10), price: 115000 },
-              { label: course(20), price: 210000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "24K Uplift",
-            tiers: [
-              { label: SINGLE, price: 25000 },
-              { label: course(5), price: 95000 },
-              { label: course(10), price: 155000 },
-              { label: course(20), price: 285000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Sphere Sculpt Facial",
-            tiers: [
-              { label: SINGLE, price: 15000 },
-              { label: course(5), price: 65000 },
-              { label: course(10), price: 115000 },
-              { label: course(20), price: 210000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
         ],
       },
       {
         name: "Advanced facials & peels",
         items: [
-          {
-            name: "Glo2Facial",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 120000 },
-              { label: course(10), price: 200000 },
-            ],
-          },
+          { name: "Glo2Facial", formats: [SINGLE, course(5), course(10)] },
           {
             name: "Glo+ Facial Premium",
-            tiers: [
-              { label: SINGLE, price: 20000 },
-              { label: course(5), price: 90000 },
-              { label: course(10), price: 160000 },
-              { label: course(20), price: 270000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Glamour X",
-            tiers: [
-              { label: SINGLE, price: 25000 },
-              { label: course(5), price: 95000 },
-              { label: course(10), price: 155000 },
-              { label: course(20), price: 285000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Mesoestetic Peel",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 120000 },
-              { label: course(10), price: 200000 },
-            ],
+            formats: [SINGLE, course(5), course(10)],
           },
-          {
-            name: "BioRePeel",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 120000 },
-              { label: course(10), price: 200000 },
-            ],
-          },
-          {
-            name: "Lhala Peel",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 120000 },
-              { label: course(10), price: 200000 },
-            ],
-          },
+          { name: "BioRePeel", formats: [SINGLE, course(5), course(10)] },
+          { name: "Lhala Peel", formats: [SINGLE, course(5), course(10)] },
           {
             name: "Fractional Laser",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 130000 },
-              { label: course(10), price: 200000 },
-            ],
+            formats: [SINGLE, course(5), course(10)],
           },
           {
             name: "Oxygen Lifting Facial",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 130000 },
-              { label: course(10), price: 200000 },
-            ],
+            formats: [SINGLE, course(5), course(10)],
           },
-          {
-            name: "Virtue RF",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 130000 },
-              { label: course(10), price: 200000 },
-            ],
-          },
+          { name: "Virtue RF", formats: [SINGLE, course(5), course(10)] },
         ],
       },
     ],
@@ -247,43 +179,19 @@ export const MENU: MenuSection[] = [
     id: "rejuvenation",
     title: "Skin rejuvenation",
     blurb:
-      "Laser, radiofrequency and ultrasound. Almost everything here is priced as a course, because one session of any of it is a sample rather than a result.",
+      "Laser, radiofrequency and ultrasound. Almost everything here runs as a course, because one session of any of it is a sample rather than a result.",
+    icon: "laser",
     groups: [
       {
         name: "Laser",
         items: [
-          {
-            name: "Skin Gym Combo",
-            tiers: [
-              { label: SINGLE, price: 35000 },
-              { label: course(5), price: 160000 },
-              { label: course(10), price: 250000 },
-            ],
-          },
+          { name: "Skin Gym Combo", formats: [SINGLE, course(5), course(10)] },
           {
             name: "Picosecond Laser",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 130000 },
-              { label: course(10), price: 200000 },
-            ],
+            formats: [SINGLE, course(5), course(10)],
           },
-          {
-            name: "Carbon Laser",
-            tiers: [
-              { label: SINGLE, price: 25000 },
-              { label: course(5), price: 95000 },
-              { label: course(10), price: 155000 },
-            ],
-          },
-          {
-            name: "Fabulips",
-            tiers: [
-              { label: SINGLE, price: 10000 },
-              { label: course(5), price: 40000 },
-              { label: course(10), price: 65000 },
-            ],
-          },
+          { name: "Carbon Laser", formats: [SINGLE, course(5), course(10)] },
+          { name: "Fabulips", formats: [SINGLE, course(5), course(10)] },
         ],
       },
       {
@@ -291,72 +199,29 @@ export const MENU: MenuSection[] = [
         items: [
           {
             name: "RF Micro-needling",
-            tiers: [
-              { label: SINGLE, price: 52000 },
-              { label: course(3), price: 130000 },
-              { label: course(5), price: 200000 },
-            ],
+            formats: [SINGLE, course(3), course(5)],
           },
           {
             name: "PRP Vampire Facial",
-            tiers: [
-              { label: SINGLE, price: 42000 },
-              { label: course(3), price: 100000 },
-              { label: course(5), price: 140000 },
-            ],
+            formats: [SINGLE, course(3), course(5)],
           },
           {
             name: "Exosome Secret Glow",
-            tiers: [
-              { label: SINGLE, price: 55000 },
-              { label: course(3), price: 130000 },
-              { label: course(5), price: 200000 },
-            ],
+            formats: [SINGLE, course(3), course(5)],
           },
           {
             name: "Histolab Dermapen",
-            tiers: [
-              { label: SINGLE, price: 25000 },
-              { label: course(5), price: 95000 },
-              { label: course(10), price: 155000 },
-            ],
+            formats: [SINGLE, course(5), course(10)],
           },
         ],
       },
       {
         name: "Young Lift",
         items: [
-          {
-            name: "HIFU Face",
-            tiers: [
-              { label: SINGLE, price: 75000 },
-              { label: course(3), price: 195000 },
-            ],
-          },
-          {
-            name: "HIFU Neck / Chin",
-            tiers: [
-              { label: SINGLE, price: 35000 },
-              { label: course(3), price: 90000 },
-              { label: course(5), price: 130000 },
-            ],
-          },
-          {
-            name: "HIFU Golden Eye",
-            tiers: [
-              { label: SINGLE, price: 25000 },
-              { label: course(3), price: 65000 },
-              { label: course(5), price: 95000 },
-            ],
-          },
-          {
-            name: "Wonder Face",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(5), price: 120000 },
-              { label: course(10), price: 200000 },
-            ],
-          },
+          { name: "HIFU Face", formats: [SINGLE, course(3)] },
+          { name: "HIFU Neck / Chin", formats: [SINGLE, course(3), course(5)] },
+          { name: "HIFU Golden Eye", formats: [SINGLE, course(3), course(5)] },
+          { name: "Wonder Face", formats: [SINGLE, course(5), course(10)] },
         ],
       },
     ],
@@ -366,45 +231,26 @@ export const MENU: MenuSection[] = [
     title: "Body & hair",
     blurb:
       "Contouring below the jawline, and the scalp work people come to a dermatology clinic for rather than to a salon.",
+    icon: "body",
     groups: [
       {
         name: "Hair",
         items: [
           {
             name: "Hair Reboot",
-            tiers: [
-              { label: SINGLE, price: 7000 },
-              { label: course(5), price: 32000 },
-              { label: course(10), price: 52000 },
-              { label: course(20), price: 92000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Hair Magic Growth",
-            tiers: [
-              { label: SINGLE, price: 25000 },
-              { label: course(5), price: 95000 },
-              { label: course(10), price: 155000 },
-              { label: course(20), price: 285000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "PRP / PRF",
-            tiers: [
-              { label: SINGLE, price: 42000 },
-              { label: course(3), price: 100000 },
-              { label: course(5), price: 140000 },
-              { label: course(10), price: 250000 },
-            ],
+            formats: [SINGLE, course(3), course(5), course(10)],
           },
           {
             name: "Exosome Hair",
-            tiers: [
-              { label: SINGLE, price: 55000 },
-              { label: course(3), price: 130000 },
-              { label: course(5), price: 200000 },
-              { label: course(10), price: 320000 },
-            ],
+            formats: [SINGLE, course(3), course(5), course(10)],
           },
         ],
       },
@@ -413,39 +259,19 @@ export const MENU: MenuSection[] = [
         items: [
           {
             name: "Sphere Sculpt Body",
-            tiers: [
-              { label: SINGLE, price: 19000 },
-              { label: course(5), price: 92000 },
-              { label: course(10), price: 160000 },
-              { label: course(20), price: 290000 },
-            ],
+            formats: [SINGLE, course(5), course(10), course(20)],
           },
           {
             name: "Lipotropic",
-            tiers: [
-              { label: SINGLE, price: 45000 },
-              { label: course(3), price: 115000 },
-              { label: course(5), price: 160000 },
-              { label: course(10), price: 260000 },
-            ],
+            formats: [SINGLE, course(3), course(5), course(10)],
           },
           {
             name: "Liposonix",
-            tiers: [
-              { label: SINGLE, price: 75000 },
-              { label: course(3), price: 190000 },
-              { label: course(5), price: 290000 },
-              { label: course(10), price: 490000 },
-            ],
+            formats: [SINGLE, course(3), course(5), course(10)],
           },
           {
             name: "HIFU Body",
-            tiers: [
-              { label: SINGLE, price: 92000 },
-              { label: course(3), price: 260000 },
-              { label: course(5), price: 420000 },
-              { label: course(10), price: 690000 },
-            ],
+            formats: [SINGLE, course(3), course(5), course(10)],
           },
         ],
       },
@@ -455,111 +281,29 @@ export const MENU: MenuSection[] = [
     id: "injectables",
     title: "Injectables",
     blurb:
-      "Priced by area or by volume rather than by the hour, so what you pay tracks what actually goes in. Every product on this list is named, so ask which one you are getting.",
+      "Sold by treated area or by volume rather than by appointment, because that is what actually goes in. Every product on this list is named, so ask which one you are getting.",
+    icon: "injectable",
     groups: [
       {
         name: "Botulinum toxin & filler",
         items: [
-          {
-            name: "Botox (Nabota)",
-            tiers: [
-              { label: "1 area", price: 35000 },
-              { label: "2 areas", price: 55000 },
-              { label: "3 areas", price: 75000 },
-            ],
-          },
-          {
-            name: "Botox (Croma)",
-            tiers: [
-              { label: "1 area", price: 45000 },
-              { label: "2 areas", price: 80000 },
-              { label: "3 areas", price: 112000 },
-            ],
-          },
-          {
-            name: "Filler (EPTQ)",
-            tiers: [
-              { label: "1cc", price: 55000 },
-              { label: "2cc", price: 95000 },
-              { label: "3cc", price: 130000 },
-            ],
-          },
-          {
-            name: "Filler (Croma / Aliaxin)",
-            tiers: [
-              { label: "1cc", price: 75000 },
-              { label: "2cc", price: 125000 },
-              { label: "4cc", price: 215000 },
-            ],
-          },
-          {
-            name: "Radiesse / Sculptra",
-            tiers: [
-              { label: SINGLE, price: 125000 },
-              { label: course(2), price: 225000 },
-            ],
-          },
+          { name: "Botox (Nabota)", formats: ["1 area", "2 areas", "3 areas"] },
+          { name: "Botox (Croma)", formats: ["1 area", "2 areas", "3 areas"] },
+          { name: "Filler (EPTQ)", formats: ["1cc", "2cc", "3cc"] },
+          { name: "Filler (Croma / Aliaxin)", formats: ["1cc", "2cc", "4cc"] },
+          { name: "Radiesse / Sculptra", formats: [SINGLE, course(2)] },
         ],
       },
       {
         name: "Biostimulators & skin boosters",
         items: [
-          {
-            name: "Profhilo",
-            tiers: [
-              { label: "2cc", price: 70000 },
-              { label: "4cc", price: 130000 },
-              { label: "6cc", price: 200000 },
-            ],
-          },
-          {
-            name: "Profhilo Structura",
-            tiers: [
-              { label: "2cc", price: 125000 },
-              { label: "4cc", price: 225000 },
-              { label: "6cc", price: 300000 },
-            ],
-          },
-          {
-            name: "Polynucleotide",
-            tiers: [
-              { label: SINGLE, price: 80000 },
-              { label: course(3), price: 210000 },
-              { label: course(5), price: 330000 },
-            ],
-          },
-          {
-            name: "Saypha",
-            tiers: [
-              { label: SINGLE, price: 55000 },
-              { label: course(3), price: 145000 },
-              { label: course(5), price: 235000 },
-            ],
-          },
-          {
-            name: "Exocode",
-            tiers: [
-              { label: SINGLE, price: 75000 },
-              { label: course(3), price: 190000 },
-              { label: course(5), price: 280000 },
-            ],
-          },
-          {
-            name: "HA Magic Glow",
-            tiers: [
-              { label: SINGLE, price: 40000 },
-              { label: course(3), price: 105000 },
-              { label: course(5), price: 165000 },
-            ],
-          },
-          {
-            name: "Infini",
-            tiers: [
-              { label: "3cc", price: 80000 },
-              { label: "6cc", price: 140000 },
-              { label: "9cc", price: 200000 },
-            ],
-          },
+          { name: "Profhilo", formats: ["2cc", "4cc", "6cc"] },
+          { name: "Profhilo Structura", formats: ["2cc", "4cc", "6cc"] },
+          { name: "Polynucleotide", formats: [SINGLE, course(3), course(5)] },
+          { name: "Saypha", formats: [SINGLE, course(3), course(5)] },
+          { name: "Exocode", formats: [SINGLE, course(3), course(5)] },
+          { name: "HA Magic Glow", formats: [SINGLE, course(3), course(5)] },
+          { name: "Infini", formats: ["3cc", "6cc", "9cc"] },
         ],
       },
     ],
@@ -569,152 +313,242 @@ export const MENU: MenuSection[] = [
     title: "Add-ons",
     blurb:
       "Short treatments, most of them well under an hour. A few are worth booking on their own; most get added to something else on the day.",
+    icon: "drip",
     groups: [
       {
         name: "In clinic",
         items: [
-          {
-            name: "Hydra Glow",
-            tiers: [
-              { label: SINGLE, price: 4000 },
-              { label: course(5), price: 16000 },
-              { label: course(10), price: 30000 },
-            ],
-          },
-          {
-            name: "Infusion",
-            tiers: [
-              { label: SINGLE, price: 4000 },
-              { label: course(5), price: 16000 },
-              { label: course(10), price: 30000 },
-            ],
-          },
-          {
-            name: "Medical LED",
-            tiers: [
-              { label: SINGLE, price: 5000 },
-              { label: course(5), price: 20000 },
-              { label: course(10), price: 40000 },
-            ],
-          },
-          {
-            name: "O2 to Derm",
-            tiers: [
-              { label: SINGLE, price: 5000 },
-              { label: course(5), price: 20000 },
-              { label: course(10), price: 40000 },
-            ],
-          },
-          {
-            name: "Skin Tag Removal",
-            tiers: [
-              { label: SINGLE, price: 20000 },
-              { label: course(3), price: 50000 },
-              { label: course(5), price: 75000 },
-            ],
-          },
-          {
-            name: "Filler Dissolve",
-            tiers: [{ label: SINGLE, price: 19500 }],
-          },
+          { name: "Hydra Glow", formats: [SINGLE, course(5), course(10)] },
+          { name: "Infusion", formats: [SINGLE, course(5), course(10)] },
+          { name: "Medical LED", formats: [SINGLE, course(5), course(10)] },
+          { name: "O2 to Derm", formats: [SINGLE, course(5), course(10)] },
+          { name: "Skin Tag Removal", formats: [SINGLE, course(3), course(5)] },
+          { name: "Filler Dissolve", formats: [SINGLE] },
         ],
       },
       {
         name: "IV & infusions",
         items: [
-          {
-            name: "IV Drip",
-            tiers: [
-              { label: SINGLE, price: 32000 },
-              { label: course(5), price: 130000 },
-              { label: course(10), price: 210000 },
-            ],
-          },
-          {
-            name: "NAD+",
-            tiers: [
-              { label: SINGLE, price: 30000 },
-              { label: course(2), price: 55000 },
-              { label: course(4), price: 100000 },
-            ],
-          },
+          { name: "IV Drip", formats: [SINGLE, course(5), course(10)] },
+          { name: "NAD+", formats: [SINGLE, course(2), course(4)] },
         ],
       },
     ],
   },
 ];
 
-/**
- * Thousands separators without `toLocaleString`, which resolves against the
- * runtime's own locale data and can disagree between the prerender and the
- * browser. Prices have to be byte-identical on both sides or React rehydrates
- * over them.
- */
-export function kes(amount: number): string {
-  return `KES ${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-}
-
-/** Every price in a section, flattened — used for the "from" figures. */
-function pricesIn(sectionId: string): number[] {
-  const section = MENU.find((s) => s.id === sectionId);
-  if (!section) return [];
-  return section.groups.flatMap((group) =>
-    group.items.flatMap((item) => item.tiers.map((tier) => tier.price)),
-  );
-}
-
-/** Lowest figure in a section. The "from" price on overview cards. */
-export function fromPrice(sectionId: string): number {
-  const prices = pricesIn(sectionId);
-  return prices.length ? Math.min(...prices) : 0;
-}
-
-/** Lowest figure for one named group inside a section. */
-export function fromPriceForGroup(sectionId: string, groupName: string): number {
-  const section = MENU.find((s) => s.id === sectionId);
-  const group = section?.groups.find((g) => g.name === groupName);
-  if (!group) return 0;
-  const prices = group.items.flatMap((item) => item.tiers.map((t) => t.price));
-  return prices.length ? Math.min(...prices) : 0;
-}
-
-/** Lowest figure for one named item, wherever it sits. */
-export function fromPriceForItem(itemName: string): number {
-  for (const section of MENU) {
-    for (const group of section.groups) {
-      const item = group.items.find((i) => i.name === itemName);
-      if (item) return Math.min(...item.tiers.map((t) => t.price));
-    }
-  }
-  return 0;
-}
-
-/** How many priced items one section lists. */
+/** How many treatments one section lists. */
 export const sectionItemCount = (section: MenuSection): number =>
   section.groups.reduce((n, group) => n + group.items.length, 0);
 
 /**
- * Lowest published figure inside one section — the cheapest tier of the
- * cheapest item, whether that tier is a single session or a course.
+ * Total number of treatments on the menu. Quoted in page copy, in the header
+ * dropdown and in the structured data, so there is one definition of it.
+ *
+ * A count is not a price, which is why this survived the figures leaving.
  */
-export const sectionFrom = (section: MenuSection): number =>
-  Math.min(
-    ...section.groups.flatMap((group) =>
-      group.items.flatMap((item) => item.tiers.map((tier) => tier.price)),
-    ),
-  );
-
-/**
- * The totals, derived from the per-section figures rather than walking the
- * tree a second time. Both are quoted in page copy, in the header dropdown and
- * in the JSON-LD, so there is one definition of each.
- */
-
-/** Total number of priced items on the menu. */
 export const MENU_ITEM_COUNT = MENU.reduce(
   (total, section) => total + sectionItemCount(section),
   0,
 );
 
-/** Lowest published figure anywhere on the menu. */
-export const MENU_FROM = Math.min(...MENU.map(sectionFrom));
+/**
+ * "facials, skin rejuvenation, body & hair, injectables and add-ons" -- the
+ * five section titles, lowercased and joined for a sentence, so page copy
+ * naming the sections cannot list them differently from the menu itself or
+ * go stale when a section is renamed or added.
+ */
+export function sectionTitleList(): string {
+  const titles = MENU.map((section) => section.title.toLowerCase());
+  if (titles.length <= 1) return titles[0] ?? "";
+  return `${titles.slice(0, -1).join(", ")} and ${titles[titles.length - 1]}`;
+}
+
+/* -- How a treatment is sold, read back out of its formats ---------------- */
+
+/**
+ * A treatment's formats, classified.
+ *
+ * WHY THIS EXISTS. The menu page used to print every treatment's formats beside
+ * it as chips, and measured across the thirteen groups that column turned out
+ * to be almost entirely redundant: three groups have one identical pattern
+ * throughout, six more have one pattern covering over half the group. Fifty-eight
+ * rows of "Single session · Course of 5 · Course of 10" is noise that hides the
+ * one row that says something different.
+ *
+ * So the page states a group's pattern once and marks only the treatments that
+ * depart from it, and that needs the formats read as data rather than printed as
+ * strings. `signature` is what makes two treatments comparable.
+ */
+export type Offering =
+  | { kind: "sessions"; single: boolean; courses: number[]; signature: string }
+  | { kind: "area"; counts: number[]; signature: string }
+  | { kind: "volume"; counts: number[]; signature: string };
+
+const COURSE_LABEL = /^Course of (\d+)$/;
+const AREA_LABEL = /^(\d+) areas?$/;
+const VOLUME_LABEL = /^(\d+)cc$/i;
+
+/** "one, two and three" for prose; `or` where the items are alternatives. */
+function series(parts: (string | number)[], joiner: "and" | "or"): string {
+  if (parts.length <= 1) return String(parts[0] ?? "");
+  return `${parts.slice(0, -1).join(", ")} ${joiner} ${parts[parts.length - 1]}`;
+}
+
+export function readOffering(formats: readonly string[]): Offering {
+  const areas = formats
+    .map((f) => AREA_LABEL.exec(f)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number);
+  if (areas.length) {
+    return { kind: "area", counts: areas, signature: `area:${areas.join(",")}` };
+  }
+
+  const volumes = formats
+    .map((f) => VOLUME_LABEL.exec(f)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number);
+  if (volumes.length) {
+    return {
+      kind: "volume",
+      counts: volumes,
+      signature: `cc:${volumes.join(",")}`,
+    };
+  }
+
+  const single = formats.includes(SINGLE);
+  const courses = formats
+    .map((f) => COURSE_LABEL.exec(f)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number)
+    .sort((a, b) => a - b);
+  return {
+    kind: "sessions",
+    single,
+    courses,
+    signature: `s:${single ? 1 : 0}:${courses.join(",")}`,
+  };
+}
+
+/**
+ * How one treatment is sold, as a single line for a table cell.
+ *
+ * One line rather than a label and a value, because in a table the column
+ * heading is the label and repeating it in all fifty-eight cells is the noise
+ * this page has already been through once. Self-describing, so the cell still
+ * makes sense on a phone where the heading is not on screen.
+ *
+ *   1, 5, 10 or 20 sessions
+ *   Course of 3 or 5
+ *   Single session
+ *   1, 2 or 3 areas
+ *   1, 2 or 3cc
+ *
+ * Session counts are numerals, including the single. Radiesse is the reason: it
+ * sells singly or as a course of two, and the worded form gives "Single, 2",
+ * which reads as a typo.
+ */
+export function offeringLine(offering: Offering): string {
+  if (offering.kind === "area") {
+    const list = series(offering.counts, "or");
+    return offering.counts.length === 1 && offering.counts[0] === 1
+      ? "1 area"
+      : `${list} areas`;
+  }
+  if (offering.kind === "volume") {
+    return `${series(offering.counts, "or")}cc`;
+  }
+  const { single, courses } = offering;
+  if (!courses.length) return "Single session";
+  if (!single) return `Course of ${series(courses, "or")}`;
+  return `${series([1, ...courses], "or")} sessions`;
+}
+
+export type MenuRow = {
+  /** The group it belongs to -- the "Type" column, rather than a heading. */
+  group: string;
+  name: string;
+  offering: string;
+};
+
+/** A section's treatments as table rows, in menu order. */
+export function sectionRows(section: MenuSection): MenuRow[] {
+  return section.groups.flatMap((group) =>
+    group.items.map((item) => ({
+      group: group.name,
+      name: item.name,
+      offering: offeringLine(readOffering(item.formats)),
+    })),
+  );
+}
+
+/**
+ * How a section is sold, as a phrase rather than a list.
+ *
+ * The raw `formats` do not summarise: the injectables section alone carries
+ * thirteen distinct labels ("1 area" … "9cc"), and printing them comma-separated
+ * gives a line nobody reads. This collapses them into the four things a reader
+ * actually wants to know — are these one-offs, are there courses and of what
+ * length, and is anything sold by area or by volume.
+ *
+ * Used in the menu page's section head and, in its short form below, in the
+ * header dropdown. Both are derived so a change to the menu cannot leave either
+ * one describing a section that no longer looks like that.
+ */
+
+const COURSE_OF = /^Course of (\d+)$/;
+const BY_AREA = /area/i;
+const BY_VOLUME = /^\d+cc$/i;
+
+function formatsIn(section: MenuSection): string[] {
+  const seen = new Set<string>();
+  for (const group of section.groups) {
+    for (const item of group.items) {
+      for (const format of item.formats) seen.add(format);
+    }
+  }
+  return [...seen];
+}
+
+/** "one, two and three" — an Oxford-comma-free list for prose. */
+function inSeries(parts: (string | number)[]): string {
+  if (parts.length <= 1) return String(parts[0] ?? "");
+  return `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
+}
+
+export function sectionOffering(section: MenuSection): string {
+  const formats = formatsIn(section);
+  const parts: string[] = [];
+
+  if (formats.includes(SINGLE)) parts.push("single sessions");
+
+  const courses = formats
+    .map((format) => COURSE_OF.exec(format)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number)
+    .sort((a, b) => a - b);
+  if (courses.length) parts.push(`courses of ${inSeries(courses)}`);
+
+  if (formats.some((format) => BY_AREA.test(format))) parts.push("by treated area");
+  if (formats.some((format) => BY_VOLUME.test(format))) parts.push("by volume");
+
+  return inSeries(parts);
+}
+
+/**
+ * The same in two or three words, for a dropdown row where the long form
+ * would wrap onto a second line.
+ *
+ * ONLY TWO OUTCOMES NOW, on request: a section either sells by unit (area or
+ * volume) or it sells in sessions, and a course is a form of session rather
+ * than a second category worth naming beside it. This used to distinguish
+ * "Single sessions", "Courses" and "Sessions & courses" depending on which
+ * formats a section happened to mix; all three collapse to "Sessions" here.
+ */
+export function sectionOfferingShort(section: MenuSection): string {
+  const formats = formatsIn(section);
+  const byUnit = formats.some(
+    (format) => BY_AREA.test(format) || BY_VOLUME.test(format),
+  );
+  return byUnit ? "Area or volume" : "Sessions";
+}

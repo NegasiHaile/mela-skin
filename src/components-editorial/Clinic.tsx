@@ -11,14 +11,7 @@ export function Clinician() {
   return (
     <Shell>
       <Card id="clinic" className="mt-4 bg-ms-shell">
-        <PatternField
-          id="ed-clinic"
-          tone="shell"
-          fade="right"
-          scale={430}
-          opacity={0.85}
-          drift={38}
-        />
+        <PatternField tone="light" />
         <Inner>
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
             <Wipe className="lg:col-span-5">
@@ -86,14 +79,7 @@ export function Premises() {
   return (
     <Shell>
       <Card className="mt-4 bg-ms-shell">
-        <PatternField
-          id="ed-premises"
-          tone="shell"
-          fade="left"
-          scale={430}
-          opacity={0.85}
-          drift={38}
-        />
+        <PatternField tone="light" />
         <Inner>
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">

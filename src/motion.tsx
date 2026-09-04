@@ -4,7 +4,6 @@ import {
   m,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
@@ -19,7 +18,6 @@ import { Fragment, useRef, type ReactNode } from "react";
     Lines             headings arrive word by word from behind a mask
     Wipe              images uncover from a clip and settle out of overscale
     Drift             slow counter-scroll on backgrounds and portraits
-    ScrollProgress    a gold hairline across the top of the viewport
 
   Two rules hold it together. Travel is short — 24-32px, never a slide across
   the screen — and everything eases on the same expo-out curve, which is what
@@ -42,6 +40,36 @@ export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 */
 const VIEWPORT = { once: true, margin: "0px 0px -12% 0px" } as const;
 
+/*
+  THE SAME TRIGGER WITH NO DEAD ZONE, for blocks at the very end of a document.
+
+  THE BUG IT FIXES, because it is not obvious and it cost the footer its small
+  print. The margin above holds the trigger line 12% of the viewport above the
+  bottom edge, so a block fires when
+
+      top < scrollY + 0.88 x V
+
+  and scrollY stops at `doc - V`. The highest threshold a reader can ever reach
+  is therefore `doc - 0.12 x V`, and ANY BLOCK WHOSE TOP IS INSIDE THE LAST
+  0.12 x V OF THE DOCUMENT NEVER FIRES. It is not a race or a timing problem:
+  there is no scroll position from which those pixels satisfy the condition.
+
+  That dead zone is 108px at a 900px viewport and 173px at 1440. The footer's
+  copyright line sits 60px from the end of the document on every route, so it
+  was invisible on every screen; the contact strip, at 142px, went the same way
+  on anything taller than about 1190px.
+
+  `margin: "0px"` fires as soon as a single pixel of the block enters the
+  viewport, which has no dead zone at either end. It is only right at the end of
+  a document -- everywhere else the 12% is what stops a block animating while it
+  is still half off the screen -- and at the end of a document the reader has
+  already arrived, so the delay bought nothing there anyway.
+
+  USE IT FOR ANYTHING IN THE LAST 200px OF A PAGE. Today that is the footer and
+  only the footer, on all seven routes.
+*/
+const VIEWPORT_END = { once: true, margin: "0px" } as const;
+
 /* -- Reveal --------------------------------------------------------------- */
 
 /*
@@ -55,6 +83,13 @@ type PassThrough = {
   role?: string;
   "aria-label"?: string;
   "aria-hidden"?: boolean;
+  /**
+   * For a scroll container whose contents are not focusable. The menu rails are
+   * the case: nothing in a treatment card is a link, so without a tab stop on
+   * the scroller itself a keyboard reader can never reach past the cards that
+   * happen to be on screen.
+   */
+  tabIndex?: number;
 };
 
 /** A block that rises into place once, when it enters the viewport. */
@@ -63,6 +98,7 @@ export function Reveal({
   className,
   delay = 0,
   y = 28,
+  eager = false,
   ...rest
 }: {
   children: ReactNode;
@@ -71,6 +107,12 @@ export function Reveal({
   delay?: number;
   /** Travel distance in px. 0 gives a pure fade. */
   y?: number;
+  /**
+   * Fire on the first pixel instead of at 12%. REQUIRED for anything within
+   * about 200px of the end of the document, which otherwise never fires at all
+   * -- see VIEWPORT_END above.
+   */
+  eager?: boolean;
 } & PassThrough) {
   return (
     <m.div
@@ -78,7 +120,7 @@ export function Reveal({
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={VIEWPORT}
+      viewport={eager ? VIEWPORT_END : VIEWPORT}
       transition={{ duration: 0.85, ease: EASE, delay }}
       {...rest}
     >
@@ -100,6 +142,7 @@ export function Stagger({
   step = 0.09,
   delay = 0.04,
   as = "div",
+  eager = false,
   ...rest
 }: {
   children: ReactNode;
@@ -109,6 +152,11 @@ export function Stagger({
   /** Delay before the first child, in seconds. */
   delay?: number;
   as?: "div" | "ul" | "ol" | "dl" | "nav";
+  /**
+   * Fire on the first pixel instead of at 12%. REQUIRED within about 200px of
+   * the end of the document -- see VIEWPORT_END above.
+   */
+  eager?: boolean;
 } & PassThrough) {
   const Tag = m[as];
 
@@ -117,10 +165,12 @@ export function Stagger({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={VIEWPORT}
+      viewport={eager ? VIEWPORT_END : VIEWPORT}
       variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: step, delayChildren: delay } },
+        visible: {
+          transition: { staggerChildren: step, delayChildren: delay },
+        },
       }}
       {...rest}
     >
@@ -150,7 +200,11 @@ export function StaggerItem({
       className={className}
       variants={{
         hidden: { opacity: 0, y },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.8, ease: EASE },
+        },
       }}
       {...rest}
     >
@@ -197,7 +251,9 @@ export function Lines({
       viewport={VIEWPORT}
       variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: step, delayChildren: delay } },
+        visible: {
+          transition: { staggerChildren: step, delayChildren: delay },
+        },
       }}
       aria-label={text}
     >
@@ -212,7 +268,10 @@ export function Lines({
               className="inline-block"
               variants={{
                 hidden: { y: "108%" },
-                visible: { y: "0%", transition: { duration: 0.95, ease: EASE } },
+                visible: {
+                  y: "0%",
+                  transition: { duration: 0.95, ease: EASE },
+                },
               }}
             >
               {word}
@@ -266,7 +325,10 @@ export function Wipe({
         className="h-full w-full"
         variants={{
           hidden: { scale: 1.06 },
-          visible: { scale: 1, transition: { duration: 1.4, ease: EASE, delay } },
+          visible: {
+            scale: 1,
+            transition: { duration: 1.4, ease: EASE, delay },
+          },
         }}
       >
         {children}
@@ -357,22 +419,9 @@ export function ScrollAway({
 
   return (
     <div ref={ref} className={className}>
-      <m.div style={reduce ? undefined : { y, opacity }}>
-        {children}
-      </m.div>
+      <m.div style={reduce ? undefined : { y, opacity }}>{children}</m.div>
     </div>
   );
-}
-
-/** Scroll-linked y for a background layer. Used by PatternField. */
-export function useDriftY(
-  ref: React.RefObject<HTMLElement | null>,
-  distance: number,
-): MotionValue<number> | undefined {
-  const reduce = useReducedMotion();
-  const progress = useSectionProgress(ref);
-  const y = useTransform(progress, [0, 1], [distance, -distance]);
-  return reduce ? undefined : y;
 }
 
 /* -- Ornament ------------------------------------------------------------- */
@@ -388,29 +437,6 @@ export function DrawRule({ className }: { className?: string }) {
       whileInView={{ scaleX: 1, opacity: 1 }}
       viewport={VIEWPORT}
       transition={{ duration: 1.1, ease: EASE }}
-    />
-  );
-}
-
-/**
- * Reading progress, drawn as a gold hairline across the top of the viewport.
- * Springs rather than tracking scroll exactly, so a flick of the wheel reads
- * as momentum instead of as a jump.
- */
-export function ScrollProgress() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 140,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  return (
-    <m.div
-      aria-hidden="true"
-      data-motion="progress"
-      style={{ scaleX }}
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-gradient-to-r from-ms-clay via-ms-gold to-ms-terracotta"
     />
   );
 }
@@ -496,7 +522,9 @@ export function MountStagger({
       animate="visible"
       variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: step, delayChildren: delay } },
+        visible: {
+          transition: { staggerChildren: step, delayChildren: delay },
+        },
       }}
     >
       {children}

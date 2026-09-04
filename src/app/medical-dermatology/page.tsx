@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { BookingCta } from "@/components/BookingCta";
-import { Conditions, ConditionIndex } from "@/components/Conditions";
+import { Conditions } from "@/components/Conditions";
+import { PatternField } from "@/components/brand/PatternField";
 import { GoldDefs } from "@/components/brand/Marks";
 import { PageHero } from "@/components/PageHero";
-import { PatternField } from "@/components/brand/PatternField";
-import { ScrollProgress, Stagger, StaggerItem } from "@/motion";
+import { Stagger, StaggerItem } from "@/motion";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MEDICAL_PAGE, META } from "@/constants";
 import { Lede, PillGhost, PillSolid, SectionHead, Wrap } from "@/components/ui";
@@ -20,52 +20,45 @@ export const metadata: Metadata = {
   The medical half of the offering, from Resources/more-info.md. Ten named
   conditions, each with its own anchor, so a search result or a WhatsApp link
   can land someone directly on the entry they need.
+
+  COLOUR: the site's shell/paper/cream rotation -- see the note in
+  app/page.tsx. Conditions (the sticky index bar and the card grid, one
+  section -- see the note in components/Conditions.tsx for why they are one
+  section rather than two) takes `shell`, this page's closing section takes
+  `paper`, and BookingCta floods `cream` as it always does.
 */
 
 export default function MedicalDermatology() {
   return (
     <>
       <GoldDefs />
-      <ScrollProgress />
       <main>
         <PageHero
           id="hero-medical"
           eyebrow={MEDICAL_PAGE.eyebrow}
           title={MEDICAL_PAGE.title}
           lede={MEDICAL_PAGE.lede}
-          aside={
-            <div className="rounded-[20px] border border-ms-gold/30 bg-ms-espresso/35 p-7 backdrop-blur-sm">
-              <p className="eyebrow text-ms-gold">{MEDICAL_PAGE.asideTitle}</p>
-              <p className="mt-4 font-sans text-[16px] font-light leading-[1.8] text-ms-cream/85">
-                {MEDICAL_PAGE.asideBody}
-              </p>
-            </div>
-          }
         >
           <div className="flex flex-wrap gap-3.5">
             <PillSolid href="/contact" tone="dark" className="min-h-13 px-8">
-              Book a consultation
+              Book an appointment
             </PillSolid>
-            <PillGhost href="/treatment-menu" tone="dark" className="min-h-13 px-8">
-              Menu &amp; prices
+            <PillGhost
+              href="/cosmetic-dermatology"
+              tone="dark"
+              className="min-h-13 px-8"
+            >
+              Cosmetic dermatology
             </PillGhost>
           </div>
         </PageHero>
 
-        <ConditionIndex />
         <Conditions />
 
-        <section className="relative overflow-hidden bg-ms-cream py-24 lg:py-32">
-          <PatternField
-            id="prep"
-            tone="cream"
-            fade="left"
-            scale={520}
-            opacity={0.85}
-            drift={44}
-          />
+        <section className="relative overflow-hidden py-24 lg:py-32">
+          <PatternField tone="light" />
 
-          <Wrap className="relative">
+          <Wrap className="relative z-10">
             <div className="max-w-[700px]">
               <SectionHead title={MEDICAL_PAGE.prepTitle} />
               <Lede className="mt-7">{MEDICAL_PAGE.prepLede}</Lede>
@@ -83,13 +76,13 @@ export default function MedicalDermatology() {
                   y={24}
                   className="border-t border-ms-bronze/25 pt-7"
                 >
-                  <span className="font-display text-[2.4rem] font-light leading-none text-ms-clay">
+                  <span className="font-display text-[2.4rem] font-light leading-none text-ms-terracotta-deep">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="display-caps mt-5 text-[19px] text-ms-cocoa">
+                  <h3 className="display-caps mt-5 text-[21px] text-ms-cocoa">
                     {item.title}
                   </h3>
-                  <p className="mt-4 font-sans text-[16px] font-light leading-[1.8] text-ms-espresso/80">
+                  <p className="mt-4 font-sans text-[17px] font-light leading-[1.7] text-ms-espresso/80">
                     {item.body}
                   </p>
                 </StaggerItem>

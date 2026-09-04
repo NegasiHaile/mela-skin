@@ -257,6 +257,62 @@ export function IconBody({ className }: IconProps) {
   );
 }
 
+/*
+  Sun protection, for the skincare collection. Added 27 Aug 2026 — the shelf
+  needs it and nothing in the treatment set covers it, which is fitting since it
+  is the one thing on that page that is not a treatment.
+*/
+
+export function IconSun({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <circle cx="12" cy="12" r="4.3" />
+      <path d="M12 2.6v2.4" />
+      <path d="M12 19v2.4" />
+      <path d="M2.6 12h2.4" />
+      <path d="M19 12h2.4" />
+      <path d="M5.4 5.4 7.1 7.1" />
+      <path d="M16.9 16.9l1.7 1.7" />
+      <path d="M18.6 5.4 16.9 7.1" />
+      <path d="M7.1 16.9 5.4 18.6" />
+    </svg>
+  );
+}
+
+/*
+  Added 27 Aug 2026 for the two conditions the 26 Aug meeting asked for. Dr.
+  Abseret Hailu, 00:31:40: "We haven't covered hair loss in the list that we
+  currently have. We haven't covered any nail diseases in the list that we
+  have, which is in the wheelhouse of derm."
+
+  `hair` was already taken by the cosmetic hair-restoration family, and the two
+  should not share a mark — one is a treatment you choose, the other a condition
+  you arrive with.
+*/
+
+export function IconHairLoss({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M6.4 21C6.4 14.8 4.6 11 7 4.6" />
+      <path d="M17.6 21C17.6 14.8 15.8 11 18.2 4.6" />
+      <path d="M12 21v-5.2" />
+      <path d="M10.4 11.8 13.9 8.6" />
+      <path d="M10.9 6.9 14.2 4.9" />
+    </svg>
+  );
+}
+
+export function IconNail({ className }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M7.8 20.8v-9.4a4.2 4.2 0 0 1 8.4 0v9.4z" />
+      <path d="M9.9 12.6a2.1 2.1 0 0 1 4.2 0v4.1H9.9z" />
+      {/* The band. A dark line up a nail is the sign that matters most here. */}
+      <path d="M12 12.9v3.4" />
+    </svg>
+  );
+}
+
 /**
  * Name → component, so `services.ts` can carry a plain string rather than a
  * React import. Anything unrecognised falls back to the pigment mark instead
@@ -270,9 +326,11 @@ const REGISTRY: Record<string, ComponentType<IconProps>> = {
   drip: IconDrip,
   eczema: IconEczema,
   hair: IconHair,
+  hairLoss: IconHairLoss,
   injectable: IconInjectable,
   laser: IconLaser,
   mole: IconMole,
+  nail: IconNail,
   peel: IconPeel,
   peelAlt: IconPeelAlt,
   pigment: IconPigment,
@@ -280,6 +338,7 @@ const REGISTRY: Record<string, ComponentType<IconProps>> = {
   rosacea: IconRosacea,
   scar: IconScar,
   stretch: IconStretch,
+  sun: IconSun,
   tag: IconTag,
   tube: IconTube,
   vessel: IconVessel,

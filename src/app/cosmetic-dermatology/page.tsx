@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { BookingCta } from "@/components/BookingCta";
 import { CosmeticFamilies } from "@/components/CosmeticFamilies";
+import { PatternField } from "@/components/brand/PatternField";
 import { GoldDefs } from "@/components/brand/Marks";
 import { PageHero } from "@/components/PageHero";
-import { PatternField } from "@/components/brand/PatternField";
-import { Reveal, ScrollProgress, Wipe } from "@/motion";
+import { Reveal, Wipe } from "@/motion";
 import { SiteFooter } from "@/components/SiteFooter";
 import { COSMETIC_PAGE, META } from "@/constants";
 import { Lede, PillGhost, PillSolid, SectionHead, Wrap } from "@/components/ui";
@@ -21,7 +21,6 @@ export default function CosmeticDermatology() {
   return (
     <>
       <GoldDefs />
-      <ScrollProgress />
       <main>
         <PageHero
           id="hero-cosmetic"
@@ -31,7 +30,10 @@ export default function CosmeticDermatology() {
           aside={
             <dl className="grid gap-5 rounded-[20px] border border-ms-gold/30 bg-ms-espresso/35 p-7 backdrop-blur-sm">
               {COSMETIC_PAGE.stats.map((stat) => (
-                <div key={stat.label} className="flex items-baseline justify-between gap-5">
+                <div
+                  key={stat.label}
+                  className="flex items-baseline justify-between gap-5"
+                >
                   <dt className="font-sans text-[13.5px] font-light text-ms-cream/80">
                     {stat.label}
                   </dt>
@@ -44,28 +46,30 @@ export default function CosmeticDermatology() {
           }
         >
           <div className="flex flex-wrap gap-3.5">
-            <PillSolid href="/treatment-menu" tone="dark" className="min-h-13 px-8">
-              The full menu
+            <PillSolid
+              href="/treatment-menu"
+              tone="dark"
+              className="min-h-13 px-8"
+            >
+              The treatments menu
             </PillSolid>
             <PillGhost href="/contact" tone="dark" className="min-h-13 px-8">
-              Book a consultation
+              Book an appointment
             </PillGhost>
           </div>
         </PageHero>
 
+        {/*
+          COLOUR: the site's shell/paper/cream rotation -- see the note in
+          app/page.tsx. CosmeticFamilies=shell, this closing section=paper,
+          BookingCta=cream (always, on every route: see its own note).
+        */}
         <CosmeticFamilies />
 
-        <section className="relative overflow-hidden bg-ms-shell py-24 lg:py-32">
-          <PatternField
-            id="cosmetic-close"
-            tone="shell"
-            fade="right"
-            scale={520}
-            opacity={0.85}
-            drift={44}
-          />
+        <section className="relative overflow-hidden py-24 lg:py-32">
+          <PatternField tone="light" />
 
-          <Wrap className="relative">
+          <Wrap className="relative z-10">
             <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
               <div className="lg:col-span-6">
                 <SectionHead title={COSMETIC_PAGE.closingTitle} />
@@ -73,9 +77,12 @@ export default function CosmeticDermatology() {
 
                 <Reveal delay={0.2} className="mt-10 flex flex-wrap gap-3.5">
                   <PillSolid href="/treatment-menu" className="min-h-13 px-8">
-                    Menu &amp; prices
+                    The treatments menu
                   </PillSolid>
-                  <PillGhost href="/medical-dermatology" className="min-h-13 px-8">
+                  <PillGhost
+                    href="/medical-dermatology"
+                    className="min-h-13 px-8"
+                  >
                     Medical dermatology
                   </PillGhost>
                 </Reveal>

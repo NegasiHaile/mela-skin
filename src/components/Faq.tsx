@@ -10,6 +10,9 @@ import { Stagger, StaggerItem } from "@/motion";
   on their skin — are the last things that should sit behind a click. The
   two-column grid at lg keeps the run short enough to scan without collapsing
   anything.
+
+  Second of /treatment-menu's shell/paper/cream rotation, `ms-paper` -- see the
+  note on that rotation in app/page.tsx.
 */
 
 export type FaqItem = { q: string; a: string };
@@ -26,18 +29,11 @@ export function Faq({
   return (
     <section
       id="faq"
-      className="relative overflow-hidden bg-ms-cream py-24 lg:py-32"
+      className="relative overflow-hidden py-24 lg:py-32"
     >
-      <PatternField
-        id="faq"
-        tone="cream"
-        fade="left"
-        scale={540}
-        opacity={0.85}
-        drift={44}
-      />
+      <PatternField tone="light" />
 
-      <Wrap className="relative">
+      <Wrap className="relative z-10">
         <div className="max-w-[680px]">
           <SectionHead title={title} />
           {lede ? <Lede className="mt-7">{lede}</Lede> : null}
@@ -53,7 +49,7 @@ export function Faq({
               <dt className="font-display text-[1.5rem] leading-[1.25] tracking-[-0.01em] text-ms-cocoa sm:text-[1.65rem]">
                 {item.q}
               </dt>
-              <dd className="mt-4 font-sans text-[16.5px] font-light leading-[1.85] text-ms-espresso/85">
+              <dd className="mt-4 font-sans text-[17.5px] font-light leading-[1.7] text-ms-espresso/85">
                 {item.a}
               </dd>
             </StaggerItem>

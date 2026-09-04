@@ -73,7 +73,7 @@ export function Treatments() {
   return (
     <Shell>
       <Card id="treatments" className="mt-4 bg-ms-shell">
-        <PatternField id="ed-treatments" tone="shell" fade="right" scale={440} opacity={0.85} drift={40} />
+        <PatternField tone="light" />
         <Inner>
           <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
             <div>
@@ -81,7 +81,7 @@ export function Treatments() {
               <Reveal delay={0.12}>
               <h2 className="mt-8 font-display text-[clamp(1.9rem,3.1vw,2.7rem)] font-normal leading-[1.12] tracking-[-0.014em] text-ms-cocoa">
                 Medical and cosmetic,{" "}
-                <em className="italic text-ms-clay">one roof</em>.
+                <em className="italic text-ms-terracotta">one roof</em>.
               </h2>
               </Reveal>
             </div>

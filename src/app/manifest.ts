@@ -1,16 +1,18 @@
 import type { MetadataRoute } from "next";
-import { brand } from "@/constants";
+import { META, brand } from "@/constants";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: `${brand.name} — ${brand.descriptor}`,
     short_name: brand.name,
-    description:
-      "Medical and cosmetic dermatology built for melanin-rich skin in Westlands, Nairobi.",
+    /* The same sentence the page metadata uses, rather than a second copy
+       of it that had to be found when the clinic moved suburb. */
+    description: META.shortDescription,
     start_url: "/",
     display: "standalone",
-    background_color: "#f3e7d6",
-    theme_color: "#74370c",
+    // Official palette: Primary 7 (cream) and Primary 2 (the flooded ground).
+    background_color: "#f4e7d6",
+    theme_color: "#2c190b",
     icons: [
       {
         src: "/icons/icon-192.png",

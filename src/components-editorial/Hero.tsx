@@ -1,6 +1,6 @@
 import { NAV_FLAT, brand, todo } from "@/constants";
 import { Mount, MountItem, MountStagger, ScrollAway } from "@/motion";
-import { BrandPattern } from "./brand/BrandPattern";
+import { patternTileUrl } from "./brand/BrandPattern";
 import { PatternField } from "./brand/PatternField";
 import { Wordmark } from "./brand/Marks";
 import { ButtonGhost, ButtonPrimary, Card, Shell } from "./ui";
@@ -25,14 +25,7 @@ export function Hero() {
           stops before the photograph slot on the right, which carries the
           pattern at full strength already.
         */}
-        <PatternField
-          id="ed-hero"
-          tone="panel"
-          fade="left"
-          scale={360}
-          opacity={0.5}
-          drift={0}
-        />
+        <PatternField tone="panel" />
 
         {/* Nav */}
         <Mount
@@ -41,7 +34,7 @@ export function Hero() {
           className="relative z-20 flex items-center justify-between gap-6 border-b border-ms-sand/15 px-6 py-5 sm:px-9"
         >
           <a href="#top" aria-label={`${brand.name} home`}>
-            <Wordmark size="sm" tone="text-ms-ivory" priority />
+            <Wordmark size="sm" tone="text-ms-ivory" />
           </a>
 
           <nav
@@ -60,11 +53,12 @@ export function Hero() {
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* The phone number until 2 Sep. It is not a real line. */}
             <a
-              href={brand.phoneHref}
+              href={`mailto:${brand.email}`}
               className="hidden font-sans text-[12px] tracking-[0.05em] text-ms-sand transition-colors hover:text-ms-ivory md:inline"
             >
-              {brand.phone}
+              {brand.email}
             </a>
 
             <details className="relative lg:hidden [&_summary::-webkit-details-marker]:hidden">
@@ -90,10 +84,10 @@ export function Hero() {
                   </a>
                 ))}
                 <a
-                  href={brand.phoneHref}
+                  href={`mailto:${brand.email}`}
                   className="flex min-h-11 items-center border-t border-ms-bronze/20 px-4 font-sans text-[12.5px] text-ms-bronze md:hidden"
                 >
-                  {brand.phone}
+                  {brand.email}
                 </a>
               </nav>
             </details>
@@ -108,13 +102,13 @@ export function Hero() {
               delay={0.2}
               className="flex flex-col justify-center px-7 py-16 sm:px-10 lg:px-14 lg:py-24"
             >
-            {/* <p className="eyebrow text-ms-clay">
-              {brand.descriptor} &middot; Westlands, Nairobi
+            {/* <p className="eyebrow text-ms-terracotta-deep">
+              {brand.descriptor} &middot; {brand.address.area}, {brand.address.city}
             </p> */}
 
               <MountItem y={26}>
                 <h1 className="mt-7 max-w-[15ch] font-display text-[clamp(2.6rem,5vw,4.1rem)] font-normal leading-[1.04] tracking-[-0.02em] text-ms-ivory">
-                  Richer. <em className="italic text-ms-clay">Radiant.</em> SKIN
+                  Richer. <em className="italic text-ms-terracotta">Radiant.</em> SKIN
                   of you.
                 </h1>
               </MountItem>
@@ -149,13 +143,27 @@ export function Hero() {
 
           {/* Photograph slot, on the brand pattern */}
           <div className="relative min-h-[300px] lg:min-h-[620px]">
-            <BrandPattern
-              id="hero"
-              from="#33180a"
-              to="#a86f3a"
-              sparkle="#f3e7d6"
-              scale={235}
+            {/*
+              The tile directly, not a <PatternField>. This is a photograph slot
+              filled with the motif at its own scale and its own colours, inside
+              a card — it is not a section ground, so it is deliberately outside
+              the page-wide lattice that PatternField keeps every section on.
+              Swap it for an <Image> when the portrait exists.
+            */}
+            <div
+              aria-hidden="true"
               className="absolute inset-0 h-full w-full"
+              style={{
+                /*
+                  The tile paints circles on nothing since 1 Sep, so the ground
+                  its interstices used to carry (#F3E7D6) is set here instead.
+                  Same two colours, same result.
+                */
+                backgroundColor: "#f3e7d6",
+                backgroundImage: patternTileUrl("#33180a", "#a86f3a"),
+                backgroundRepeat: "repeat",
+                backgroundSize: "235px 193px",
+              }}
             />
             <span className="eyebrow absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-ms-cream/25 bg-ms-panel/55 px-4 py-2 font-normal text-ms-cream/70 backdrop-blur-[2px]">
               [Hero portrait]
